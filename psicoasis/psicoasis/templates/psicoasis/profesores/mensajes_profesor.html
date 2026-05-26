@@ -1,0 +1,48 @@
+{% comment %}
+ARCHIVO: mensajes_profesor.html
+{% endcomment %}
+{% extends "psicoasis/profesores/base_profesor.html" %}
+{% block title %}Mensajes — Panel Docente{% endblock %}
+{% block topbar_title %}💬 Mensajes con Orientación{% endblock %}
+{% block content %}
+<div class="card" style="max-width:700px;margin:0 auto;">
+  <div class="card-header">
+    <div class="card-title">Conversación con la psicóloga</div>
+    <div class="card-sub">Canal privado y confidencial</div>
+  </div>
+  <div class="card-body">
+    <div class="chat-area" id="chat">
+      {% for msg in conversacion %}
+      <div class="msg-row {% if msg.remitente == request.user %}msg-row-mio{% else %}msg-row-otro{% endif %}">
+        <div class="msg-meta">
+          {% if msg.remitente != request.user %}{{ msg.remitente.get_full_name }} · {% endif %}{{ msg.fecha|date:"d/m H:i" }}
+        </div>
+        <div class="msg-bubble {% if msg.remitente == request.user %}msg-mio{% else %}msg-otro{% endif %}">
+          {{ msg.contenido }}
+          {% if msg.archivo_adjunto %}
+            <div style="margin-top:6px;font-size:.75rem;">
+              📎 <a href="{{ msg.archivo_adjunto.url }}" style="color:inherit;" target="_blank">Archivo adjunto</a>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+      {% empty %}
+        <p style="text-align:center;color:var(--text-xs);font-size:.85rem;margin:auto;">Aún no hay mensajes. ¡Escribe el primero!</p>
+      {% endfor %}
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div style="display:flex;gap:10px;align-items:flex-end;">
+        <div style="flex:1;">{{ form.contenido }}</div>
+        <button type="submit" class="btn btn-primary" style="height:44px;">Enviar</button>
+      </div>
+      <div style="margin-top:8px;">{{ form.archivo_adjunto }}</div>
+    </form>
+  </div>
+</div>
+<script>
+  const chat = document.getElementById('chat');
+  if (chat) chat.scrollTop = chat.scrollHeight;
+</script>
+{% endblock %}

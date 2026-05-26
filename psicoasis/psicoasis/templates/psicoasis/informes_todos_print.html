@@ -1,0 +1,507 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Informes — {{ estudiante.get_full_name }} — PsicoAsis</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    font-size: 11pt;
+    color: #1e2e20;
+    background: white;
+    padding: 0;
+  }
+
+  /* ── Pantalla: controles superiores ── */
+  .screen-controls {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    background: #2d3a2e;
+    color: white;
+    padding: 14px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    z-index: 100;
+    font-family: 'Arial', sans-serif;
+  }
+  .sc-title { font-size: 1rem; font-weight: 600; }
+  .sc-subtitle { font-size: .78rem; opacity: .7; margin-top: 2px; }
+  .sc-btns { display: flex; gap: 10px; }
+  .sc-btn {
+    padding: 9px 20px;
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: .85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .sc-btn-print {
+    background: #5c8a62;
+    color: white;
+  }
+  .sc-btn-print:hover { background: #4d7a52; transform: translateY(-1px); }
+  .sc-btn-back {
+    background: rgba(255,255,255,.15);
+    color: white;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 6px;
+  }
+  .sc-btn-back:hover { background: rgba(255,255,255,.25); }
+
+  /* ── Contenido ── */
+  .doc-wrapper {
+    margin-top: 68px; /* compensar barra fija */
+    padding: 40px 60px;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* ── Portada ── */
+  .cover {
+    text-align: center;
+    padding: 60px 40px;
+    border: 2px solid #2d3a2e;
+    border-radius: 8px;
+    margin-bottom: 48px;
+  }
+  .cover-brand {
+    font-size: 22pt;
+    font-weight: 700;
+    color: #2d3a2e;
+    letter-spacing: -0.5px;
+    margin-bottom: 6px;
+  }
+  .cover-sub {
+    font-size: 10pt;
+    color: #5a6b5b;
+    margin-bottom: 36px;
+  }
+  .cover-title {
+    font-size: 16pt;
+    font-weight: 700;
+    color: #2d3a2e;
+    margin-bottom: 12px;
+    border-bottom: 2px solid #5c8a62;
+    padding-bottom: 12px;
+  }
+  .cover-student {
+    font-size: 13pt;
+    color: #5c8a62;
+    font-weight: 700;
+    margin-bottom: 6px;
+  }
+  .cover-meta { font-size: 9.5pt; color: #7a8e7b; }
+  .cover-count {
+    margin-top: 28px;
+    display: inline-block;
+    background: #eaf3eb;
+    border: 1px solid #c8e0cb;
+    border-radius: 8px;
+    padding: 10px 24px;
+    font-size: 10pt;
+    color: #2d3a2e;
+  }
+
+  /* ── Índice ── */
+  .indice {
+    margin-bottom: 40px;
+    page-break-after: always;
+  }
+  .indice h2 {
+    font-size: 12pt;
+    font-weight: 700;
+    color: #2d3a2e;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border-bottom: 1.5px solid #c8e0cb;
+    padding-bottom: 8px;
+    margin-bottom: 16px;
+  }
+  .indice-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px dotted #c8e0cb;
+    font-size: 9.5pt;
+  }
+  .indice-num {
+    background: #5c8a62;
+    color: white;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 8pt;
+    font-weight: 700;
+    margin-right: 10px;
+  }
+  .indice-fecha { color: #7a8e7b; font-size: 8.5pt; }
+
+  /* ── Cada informe ── */
+  .informe-block {
+    page-break-before: always;
+    margin-bottom: 48px;
+  }
+  .informe-block:first-of-type { page-break-before: avoid; }
+
+  .inf-header {
+    background: #2d3a2e;
+    color: white;
+    padding: 16px 24px;
+    border-radius: 6px 6px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+  .inf-header-num {
+    font-size: 8pt;
+    opacity: .65;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .inf-header-title {
+    font-size: 12pt;
+    font-weight: 700;
+  }
+  .inf-header-right { text-align: right; font-size: 8.5pt; opacity: .8; }
+
+  .inf-body {
+    border: 1px solid #c8e0cb;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    padding: 24px;
+  }
+
+  .inf-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .badge {
+    padding: 3px 10px;
+    border-radius: 100px;
+    font-size: 8.5pt;
+    font-weight: 700;
+  }
+  .badge-blue  { background: #dbeafe; color: #1d4ed8; }
+  .badge-green { background: #dcfce7; color: #166534; }
+  .badge-red   { background: #fee2e2; color: #991b1b; }
+  .badge-yellow{ background: #fef9c3; color: #854d0e; }
+  .badge-orange{ background: #ffedd5; color: #9a3412; }
+
+  .inf-seccion { margin-bottom: 18px; }
+  .inf-seccion-titulo {
+    font-size: 8.5pt;
+    font-weight: 700;
+    color: #2d3a2e;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    border-bottom: 1.5px solid #c8e0cb;
+    padding-bottom: 5px;
+    margin-bottom: 10px;
+  }
+  .inf-grid2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px 24px;
+  }
+  .inf-campo-label {
+    font-size: 7.5pt;
+    font-weight: 700;
+    color: #7a8e7b;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    margin-bottom: 3px;
+  }
+  .inf-campo-valor {
+    font-size: 9.5pt;
+    color: #2d3a2e;
+    line-height: 1.7;
+    white-space: pre-line;
+  }
+
+  .fortaleza-box {
+    background: #eef6ef;
+    border-radius: 6px;
+    padding: 12px;
+  }
+  .riesgo-box {
+    background: #fff5e6;
+    border-radius: 6px;
+    padding: 12px;
+  }
+
+  .firma-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid #c8e0cb;
+  }
+  .firma-item {
+    text-align: center;
+    min-width: 200px;
+  }
+  .firma-linea {
+    border-top: 1.5px solid #2d3a2e;
+    padding-top: 6px;
+    font-size: 8.5pt;
+    color: #5a6b5b;
+  }
+  .firma-nombre { font-weight: 700; font-size: 9pt; color: #2d3a2e; }
+
+  /* ── Separador entre informes ── */
+  .page-break { page-break-after: always; }
+
+  /* ── Pie de página para impresión ── */
+  @media print {
+    .screen-controls { display: none !important; }
+    .doc-wrapper {
+      margin-top: 0 !important;
+      padding: 24px 48px;
+    }
+    body { font-size: 10pt; }
+    .inf-header { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Barra de controles (solo pantalla) -->
+<div class="screen-controls">
+  <div>
+    <div class="sc-title">📄 Informes de {{ estudiante.get_full_name }}</div>
+    <div class="sc-subtitle">{{ informes.count }} informe{{ informes.count|pluralize:"s" }} · Para imprimir o guardar como PDF</div>
+  </div>
+  <div class="sc-btns">
+    <a href="{% url 'estudiante_detalle' estudiante.pk %}" class="sc-btn sc-btn-back">← Volver al estudiante</a>
+    <button class="sc-btn sc-btn-print" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+  </div>
+</div>
+
+<div class="doc-wrapper">
+
+  <!-- PORTADA -->
+  <div class="cover">
+    <div class="cover-brand">PsicoAsis</div>
+    <div class="cover-sub">Psicología Escolar — Bienestar Emocional Educativo</div>
+    <div class="cover-title">Expediente de Informes Psicológicos</div>
+    <div class="cover-student">{{ estudiante.get_full_name }}</div>
+    <div class="cover-meta">Grado {{ estudiante.grado }} · {{ estudiante.edad }} años</div>
+    <div class="cover-count">
+      Total de informes: <strong>{{ informes.count }}</strong>
+    </div>
+  </div>
+
+  <!-- ÍNDICE -->
+  {% if informes.count > 1 %}
+  <div class="indice">
+    <h2>Índice de informes</h2>
+    {% for inf in informes %}
+    <div class="indice-item">
+      <div>
+        <span class="indice-num">{{ forloop.counter }}</span>
+        {{ inf.titulo }}
+        <span style="color:#7a8e7b;font-size:8.5pt"> · {{ inf.get_tipo_display }}</span>
+      </div>
+      <span class="indice-fecha">{{ inf.fecha_creacion|date:"d/m/Y" }}</span>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <!-- INFORMES -->
+  {% for inf in informes %}
+  <div class="informe-block">
+
+    <div class="inf-header">
+      <div>
+        <div class="inf-header-num">Informe {{ forloop.counter }} de {{ informes.count }}</div>
+        <div class="inf-header-title">{{ inf.titulo }}</div>
+      </div>
+      <div class="inf-header-right">
+        {% if inf.fecha_sesion %}Sesión: {{ inf.fecha_sesion|date:"d/m/Y" }}<br>{% endif %}
+        Creado: {{ inf.fecha_creacion|date:"d/m/Y" }}<br>
+        Por: {{ inf.psicologo.get_full_name|default:inf.psicologo.username }}
+        {% if inf.confidencial %}<br><strong>🔒 CONFIDENCIAL</strong>{% endif %}
+      </div>
+    </div>
+
+    <div class="inf-body">
+
+      <div class="inf-badges">
+        <span class="badge badge-blue">{{ inf.get_tipo_display }}</span>
+        {% if inf.nivel_riesgo %}
+          {% if inf.nivel_riesgo == 'bajo' %}<span class="badge badge-green">🟢 Riesgo Bajo</span>
+          {% elif inf.nivel_riesgo == 'medio' %}<span class="badge badge-yellow">🟡 Riesgo Medio</span>
+          {% elif inf.nivel_riesgo == 'alto' %}<span class="badge badge-orange">🟠 Riesgo Alto</span>
+          {% else %}<span class="badge badge-red">🔴 Riesgo Crítico</span>{% endif %}
+        {% endif %}
+        {% if inf.requiere_remision %}<span class="badge badge-red">⚠️ Requiere Remisión</span>{% endif %}
+      </div>
+
+      {% if inf.motivo_consulta or inf.antecedentes or inf.situacion_familiar %}
+      <div class="inf-seccion">
+        <div class="inf-seccion-titulo">🔍 Motivo de consulta y contexto</div>
+        <div class="inf-grid2">
+          {% if inf.motivo_consulta %}
+          <div style="grid-column:1/-1">
+            <div class="inf-campo-label">Motivo de consulta</div>
+            <div class="inf-campo-valor">{{ inf.motivo_consulta }}</div>
+          </div>
+          {% endif %}
+          {% if inf.antecedentes %}
+          <div>
+            <div class="inf-campo-label">Antecedentes</div>
+            <div class="inf-campo-valor">{{ inf.antecedentes }}</div>
+          </div>
+          {% endif %}
+          {% if inf.situacion_familiar %}
+          <div>
+            <div class="inf-campo-label">Situación familiar</div>
+            <div class="inf-campo-valor">{{ inf.situacion_familiar }}</div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if inf.descripcion_conducta or inf.estado_emocional or inf.relaciones_sociales or inf.rendimiento_academico %}
+      <div class="inf-seccion">
+        <div class="inf-seccion-titulo">👁️ Observaciones de la sesión</div>
+        <div class="inf-grid2">
+          {% if inf.descripcion_conducta %}
+          <div>
+            <div class="inf-campo-label">Conducta observada</div>
+            <div class="inf-campo-valor">{{ inf.descripcion_conducta }}</div>
+          </div>
+          {% endif %}
+          {% if inf.estado_emocional %}
+          <div>
+            <div class="inf-campo-label">Estado emocional</div>
+            <div class="inf-campo-valor">{{ inf.estado_emocional }}</div>
+          </div>
+          {% endif %}
+          {% if inf.relaciones_sociales %}
+          <div>
+            <div class="inf-campo-label">Relaciones sociales</div>
+            <div class="inf-campo-valor">{{ inf.relaciones_sociales }}</div>
+          </div>
+          {% endif %}
+          {% if inf.rendimiento_academico %}
+          <div>
+            <div class="inf-campo-label">Rendimiento académico</div>
+            <div class="inf-campo-valor">{{ inf.rendimiento_academico }}</div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+
+      <div class="inf-seccion">
+        <div class="inf-seccion-titulo">🧠 Análisis e impresión psicológica</div>
+        <div class="inf-campo-valor">{{ inf.contenido }}</div>
+        {% if inf.fortalezas or inf.factores_riesgo %}
+        <div class="inf-grid2" style="margin-top:10px">
+          {% if inf.fortalezas %}
+          <div class="fortaleza-box">
+            <div class="inf-campo-label" style="color:#27ae60">✅ Fortalezas</div>
+            <div class="inf-campo-valor">{{ inf.fortalezas }}</div>
+          </div>
+          {% endif %}
+          {% if inf.factores_riesgo %}
+          <div class="riesgo-box">
+            <div class="inf-campo-label" style="color:#e67e22">⚠️ Factores de riesgo</div>
+            <div class="inf-campo-valor">{{ inf.factores_riesgo }}</div>
+          </div>
+          {% endif %}
+        </div>
+        {% endif %}
+      </div>
+
+      {% if inf.recomendaciones or inf.plan_intervencion or inf.acuerdos or inf.proxima_sesion %}
+      <div class="inf-seccion">
+        <div class="inf-seccion-titulo">🗺️ Plan de intervención y recomendaciones</div>
+        <div class="inf-grid2">
+          {% if inf.recomendaciones %}
+          <div>
+            <div class="inf-campo-label">Recomendaciones</div>
+            <div class="inf-campo-valor">{{ inf.recomendaciones }}</div>
+          </div>
+          {% endif %}
+          {% if inf.plan_intervencion %}
+          <div>
+            <div class="inf-campo-label">Plan de intervención</div>
+            <div class="inf-campo-valor">{{ inf.plan_intervencion }}</div>
+          </div>
+          {% endif %}
+          {% if inf.acuerdos %}
+          <div>
+            <div class="inf-campo-label">Acuerdos y compromisos</div>
+            <div class="inf-campo-valor">{{ inf.acuerdos }}</div>
+          </div>
+          {% endif %}
+          {% if inf.proxima_sesion %}
+          <div>
+            <div class="inf-campo-label">Próxima sesión</div>
+            <div class="inf-campo-valor">{{ inf.proxima_sesion }}</div>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+
+      {% if inf.requiere_remision and inf.entidad_remision %}
+      <div class="inf-seccion">
+        <div class="inf-seccion-titulo">🏥 Remisión</div>
+        <div class="inf-campo-valor">Entidad: {{ inf.entidad_remision }}</div>
+      </div>
+      {% endif %}
+
+      <!-- Firma -->
+      <div class="firma-row">
+        <div class="firma-item">
+          <div class="firma-linea">
+            <div class="firma-nombre">{{ inf.psicologo.get_full_name|default:inf.psicologo.username }}</div>
+            <div>Psicóloga Escolar</div>
+          </div>
+        </div>
+        <div class="firma-item">
+          <div class="firma-linea">
+            <div class="firma-nombre">{{ estudiante.get_full_name }}</div>
+            <div>Estudiante — {{ estudiante.grado }}</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /inf-body -->
+  </div><!-- /informe-block -->
+  {% empty %}
+  <div style="text-align:center;padding:60px;color:#7a8e7b">
+    <div style="font-size:3rem;margin-bottom:12px">📄</div>
+    <div>Este estudiante no tiene informes registrados aún.</div>
+  </div>
+  {% endfor %}
+
+</div><!-- /doc-wrapper -->
+
+<script>
+  // Auto-abrir diálogo de impresión si viene con ?print=1
+  if (window.location.search.includes('print=1')) {
+    window.addEventListener('load', () => setTimeout(() => window.print(), 500));
+  }
+</script>
+</body>
+</html>

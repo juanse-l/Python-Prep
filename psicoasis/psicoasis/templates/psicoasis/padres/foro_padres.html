@@ -1,0 +1,123 @@
+{% extends "psicoasis/base_padre.html" %}
+{% block title %}Foro de Padres — PsicoAsis{% endblock %}
+{% block topbar_title %}💬 Foro de Padres{% endblock %}
+{% block nav_foro %}active{% endblock %}
+
+{% block content %}
+<div class="section-hd">
+  <div>
+    <div class="section-title">Foro exclusivo para padres</div>
+    <div class="section-sub">Un espacio de apoyo y aprendizaje para familias</div>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:2fr 1fr;gap:20px;">
+
+  <!-- TEMAS -->
+  <div>
+    <!-- FILTRO CATEGORÍAS -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+      <a href="{% url 'foro_padres' %}" class="btn btn-sm {% if not cat_sel %}btn-primary{% else %}btn-outline{% endif %}">Todos</a>
+      {% for val, label in categorias %}
+      <a href="?categoria={{ val }}" class="btn btn-sm {% if cat_sel == val %}btn-primary{% else %}btn-outline{% endif %}">{{ label }}</a>
+      {% endfor %}
+    </div>
+
+    {% if temas %}
+      {% for tema in temas %}
+      <div class="card" style="margin-bottom:12px;">
+        <div class="card-body" style="padding:16px 20px;">
+          <div style="display:flex;align-items:flex-start;gap:14px;">
+            <div class="item-av" style="background:linear-gradient(135deg,#c4bfe6,#7a72a8);">
+              {% if tema.es_anonimo %}👤{% else %}{{ tema.autor_display|first|upper }}{% endif %}
+            </div>
+            <div style="flex:1;">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+                {% if tema.fijado %}<span style="font-size:.7rem;background:#ffe4cc;color:#7a3200;padding:2px 8px;border-radius:20px;font-weight:700;">📌 Fijado</span>{% endif %}
+                {% if tema.destacado %}<span style="font-size:.7rem;background:#fff3cc;color:#7a5500;padding:2px 8px;border-radius:20px;font-weight:700;">⭐ Destacado</span>{% endif %}
+                <span style="font-size:.7rem;background:var(--sage-xxl);color:var(--sage-d);padding:2px 8px;border-radius:20px;">{{ tema.get_categoria_display }}</span>
+              </div>
+              <a href="{% url 'foro_padres_tema' tema.id %}" style="text-decoration:none;">
+                <div style="font-size:.95rem;font-weight:700;color:var(--text);">{{ tema.titulo }}</div>
+              </a>
+              {% if tema.descripcion %}
+              <div style="font-size:.78rem;color:var(--text-s);margin-top:4px;">{{ tema.descripcion|truncatechars:100 }}</div>
+              {% endif %}
+              <div style="font-size:.7rem;color:var(--text-xs);margin-top:8px;display:flex;gap:14px;">
+                <span>👤 {{ tema.autor_display }}</span>
+                <span>🕐 {{ tema.fecha_creacion|date:"d/m/Y" }}</span>
+                <span>💬 {{ tema.total_respuestas }} respuesta{{ tema.total_respuestas|pluralize }}</span>
+              </div>
+            </div>
+            {% if es_psicologo %}
+            <form method="post" action="{% url 'foro_padres_moderar' tema.id %}">
+              {% csrf_token %}
+              <select name="accion" class="form-select" style="width:auto;font-size:.75rem;padding:4px 8px;" onchange="this.form.submit()">
+                <option value="">Moderar…</option>
+                <option value="destacar">{% if tema.destacado %}Quitar destacado{% else %}Destacar{% endif %}</option>
+                <option value="fijar">{% if tema.fijado %}Desfijar{% else %}Fijar{% endif %}</option>
+                <option value="eliminar">Eliminar</option>
+              </select>
+            </form>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <div style="text-align:center;padding:40px;color:var(--text-xs);">
+        <div style="font-size:2rem;margin-bottom:10px;">🌿</div>
+        <div>Aún no hay temas en esta categoría. ¡Sé el primero en publicar!</div>
+      </div>
+    {% endif %}
+  </div>
+
+  <!-- SIDEBAR: NUEVO TEMA -->
+  <div>
+    {% if es_padre %}
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">✍️ Crear nuevo tema</div>
+        <div class="card-sub">Comparte tu experiencia o pregunta</div>
+      </div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-group">
+            <label class="form-label">Título</label>
+            {{ form.titulo }}
+          </div>
+          <div class="form-group">
+            <label class="form-label">Categoría</label>
+            {{ form.categoria }}
+          </div>
+          <div class="form-group">
+            <label class="form-label">Descripción</label>
+            {{ form.descripcion }}
+          </div>
+          <div class="form-group" style="display:flex;align-items:center;gap:8px;">
+            {{ form.es_anonimo }}
+            <label style="font-size:.82rem;color:var(--text-s);">Publicar de forma anónima</label>
+          </div>
+          {% if form.errors %}<div class="alert-card alert-alta">❌ {{ form.errors }}</div>{% endif %}
+          <button type="submit" class="btn btn-primary" style="width:100%;">Publicar tema</button>
+        </form>
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="card" style="margin-top:16px;">
+      <div class="card-body">
+        <div style="font-size:.82rem;font-weight:600;color:var(--text);margin-bottom:8px;">💡 Guía del foro</div>
+        <ul style="font-size:.75rem;color:var(--text-s);padding-left:16px;line-height:1.8;">
+          <li>Respeta la experiencia de otros padres</li>
+          <li>No compartas información personal de menores</li>
+          <li>Usa el anonimato si lo prefieres</li>
+          <li>La psicóloga modera el contenido</li>
+          <li>Reporta contenido inapropiado</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

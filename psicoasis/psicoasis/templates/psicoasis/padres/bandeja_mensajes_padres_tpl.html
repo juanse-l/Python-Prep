@@ -1,0 +1,72 @@
+{% extends "psicoasis/base.html" %}
+{% block title %}Mensajes — PsicoAsis{% endblock %}
+
+
+
+{% block extra_style %}
+.chat-wrap { display: flex; flex-direction: column; height: 420px; overflow-y: auto; padding: 16px; gap: 4px; background: var(--sage-xxl); border-radius: 12px; border: 1px solid var(--sage-xl); margin-bottom: 14px; }
+.msg-time { font-size: .65rem; color: var(--text-xs); margin-top: 3px; }
+{% endblock %}
+
+{% block content %}
+<div class="section-hd">
+  <div class="section-title">Mensajes privados</div>
+  {% if psicologa %}<div class="section-sub">Conversación con {{ psicologa.get_full_name }}</div>{% endif %}
+</div>
+
+<div class="card">
+  <div class="card-body">
+    {% if not psicologa %}
+      <p style="color:var(--text-xs);">No hay psicóloga registrada en el sistema aún.</p>
+    {% else %}
+      <!-- CHAT -->
+      <div class="chat-wrap" id="chatWrap">
+        {% if conversacion %}
+          {% for msg in conversacion %}
+          <div style="display:flex;flex-direction:column;align-items:{% if msg.remitente == request.user %}flex-end{% else %}flex-start{% endif %};">
+            <div class="msg-bubble {% if msg.remitente == request.user %}msg-mio{% else %}msg-otro{% endif %}">
+              {{ msg.contenido }}
+              {% if msg.archivo_adjunto %}
+              <div style="margin-top:6px;"><a href="{{ msg.archivo_adjunto.url }}" target="_blank" style="color:inherit;font-size:.75rem;">📎 Ver adjunto</a></div>
+              {% endif %}
+            </div>
+            <div class="msg-time">
+              {% if msg.remitente == request.user %}Tú{% else %}{{ psicologa.first_name }}{% endif %} · {{ msg.fecha|date:"d/m H:i" }}
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <div style="text-align:center;color:var(--text-xs);font-size:.85rem;margin:auto;">
+            🌿 Aún no hay mensajes. ¡Inicia la conversación con la psicóloga!
+          </div>
+        {% endif %}
+      </div>
+
+      <!-- FORMULARIO -->
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+          <label class="form-label">Referencia a un hijo (opcional)</label>
+          {{ form.hijo_referencia }}
+        </div>
+        <div class="form-group">
+          {{ form.contenido }}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Adjunto (opcional)</label>
+          {{ form.archivo_adjunto }}
+        </div>
+        {% if form.errors %}<div class="alert-card alert-alta">❌ {{ form.errors }}</div>{% endif %}
+        <button type="submit" class="btn btn-primary">✉️ Enviar mensaje</button>
+      </form>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const wrap = document.getElementById('chatWrap');
+if(wrap) wrap.scrollTop = wrap.scrollHeight;
+</script>
+{% endblock %}

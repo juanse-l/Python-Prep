@@ -1,0 +1,59 @@
+{% extends "psicoasis/base.html" %}
+{% block title %}Responder Alerta — PsicoAsis{% endblock %}
+{% block content %}
+<a href="{% url 'alertas_docentes_psicologo' %}" style="font-size:.83rem;color:#7a9aaa;text-decoration:none;display:inline-flex;align-items:center;gap:5px;margin-bottom:20px;">← Volver a alertas</a>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;">
+  <!-- Detalle de la alerta -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Detalle de la alerta</div>
+    </div>
+    <div class="card-body">
+      <div style="margin-bottom:12px;">
+        <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.8px;color:#7a9aaa;margin-bottom:4px;">Estudiante</div>
+        <div style="font-weight:700;font-size:1rem;">{{ alerta.estudiante.get_full_name }}</div>
+        <div style="font-size:.82rem;color:#4a6070;">Grado {{ alerta.estudiante.grado }}</div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.8px;color:#7a9aaa;margin-bottom:4px;">Categoría</div>
+        <div>{{ alerta.get_categoria_display }}</div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.8px;color:#7a9aaa;margin-bottom:4px;">Urgencia</div>
+        <span class="badge badge-{{ alerta.urgencia }}">{{ alerta.get_urgencia_display }}</span>
+      </div>
+      <div style="margin-bottom:12px;">
+        <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.8px;color:#7a9aaa;margin-bottom:4px;">Descripción</div>
+        <div style="font-size:.88rem;line-height:1.6;background:#f0f4f8;padding:12px;border-radius:10px;">{{ alerta.descripcion }}</div>
+      </div>
+      {% if alerta.conductas_observadas %}
+      <div style="margin-bottom:12px;">
+        <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.8px;color:#7a9aaa;margin-bottom:4px;">Conductas observadas</div>
+        <div style="font-size:.88rem;line-height:1.6;background:#f0f4f8;padding:12px;border-radius:10px;">{{ alerta.conductas_observadas }}</div>
+      </div>
+      {% endif %}
+      <div style="font-size:.75rem;color:#7a9aaa;">Enviada: {{ alerta.fecha_creacion|date:"d/m/Y H:i" }}</div>
+    </div>
+  </div>
+
+  <!-- Responder -->
+  <div class="card">
+    <div class="card-header"><div class="card-title">Responder al docente</div></div>
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label class="form-label">Estado</label>
+          {{ form.estado }}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Respuesta para el docente</label>
+          {{ form.respuesta_psicologo }}
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Enviar respuesta ✅</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

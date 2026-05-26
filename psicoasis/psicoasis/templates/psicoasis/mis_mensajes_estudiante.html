@@ -1,0 +1,74 @@
+{% extends 'psicoasis/base_estudiante.html' %}
+{% block title %}Mensajes — PsicoAsis{% endblock %}
+{% block topbar_title %}💬 Mensajes{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1>Mensajes con la psicóloga</h1>
+  <p>Este es un espacio privado y seguro. Solo tú y la psicóloga pueden leer estos mensajes.</p>
+</div>
+
+{% if not psicologo %}
+<div class="alert alert-warning">No hay ninguna psicóloga registrada en el sistema aún.</div>
+{% else %}
+
+<div class="card" style="overflow:hidden">
+  <div style="padding:14px 20px;border-bottom:1px solid var(--teal-xl);display:flex;align-items:center;gap:12px">
+    <div style="width:38px;height:38px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--teal-d));display:flex;align-items:center;justify-content:center;font-size:.9rem;color:white;font-weight:700">
+      {{ psicologo.first_name|first|upper }}{{ psicologo.last_name|first|upper }}
+    </div>
+    <div>
+      <div style="font-weight:700;font-size:.88rem">{{ psicologo.get_full_name|default:psicologo.username }}</div>
+      <div style="font-size:.72rem;color:var(--text-xs)">Psicóloga Escolar · PsicoAsis</div>
+    </div>
+    <div style="margin-left:auto">
+      <label style="display:flex;align-items:center;gap:6px;font-size:.75rem;color:var(--text-xs);cursor:pointer">
+        <input type="checkbox" id="chkAnonimo"> Enviar como anónimo
+      </label>
+    </div>
+  </div>
+
+  <div class="chat-area" id="chatArea">
+    {% for m in mensajes %}
+    <div style="display:flex;flex-direction:column;{% if m.remitente == request.user %}align-items:flex-end{% else %}align-items:flex-start{% endif %}">
+      {% if m.es_anonimo and m.remitente == request.user %}
+      <div style="font-size:.65rem;color:var(--text-xs);margin-bottom:3px">Enviado como anónimo</div>
+      {% endif %}
+      <div class="msg-bubble {% if m.remitente == request.user %}msg-yo{% else %}msg-ellos{% endif %}">
+        {{ m.contenido }}
+      </div>
+      <div class="msg-meta">{{ m.fecha|date:"d M H:i" }}</div>
+    </div>
+    {% empty %}
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--text-xs);font-size:.85rem;text-align:center">
+      <div>
+        <div style="font-size:2.5rem;margin-bottom:10px">💬</div>
+        Aún no hay mensajes.<br>¡Envía el primero!
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <form method="post" style="padding:14px 16px;border-top:1px solid var(--teal-xl);display:flex;gap:10px;align-items:flex-end">
+    {% csrf_token %}
+    <input type="hidden" name="anonimo" id="inputAnonimo" value="0">
+    <textarea name="contenido" class="form-control" rows="2" placeholder="Escribe tu mensaje..." style="resize:none;flex:1" required></textarea>
+    <button type="submit" class="btn btn-primary">Enviar</button>
+  </form>
+</div>
+
+<div class="alert alert-info" style="margin-top:12px">
+  🔒 <strong>Espacio seguro:</strong> Puedes activar el modo anónimo si no quieres que tu nombre aparezca. La psicóloga podrá responderte de todas formas.
+</div>
+
+<script>
+document.getElementById('chkAnonimo').addEventListener('change', function() {
+  document.getElementById('inputAnonimo').value = this.checked ? '1' : '0';
+});
+// Scroll al fondo
+const ca = document.getElementById('chatArea');
+if (ca) ca.scrollTop = ca.scrollHeight;
+</script>
+{% endif %}
+
+{% endblock %}

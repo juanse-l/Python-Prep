@@ -1,0 +1,232 @@
+{% extends 'psicoasis/base.html' %}
+{% block title %}{{ estudiante.get_full_name }} — PsicoAsis{% endblock %}
+{% block topbar_title %}Detalle Estudiante{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'estudiante_editar' estudiante.pk %}" class="btn btn-outline btn-sm">Editar</a>
+  <a href="{% url 'caso_nuevo' %}?estudiante={{ estudiante.pk }}" class="btn btn-primary btn-sm">+ Nuevo caso</a>
+{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div style="display:flex;align-items:center;gap:16px">
+    <div class="av" style="width:56px;height:56px;font-size:1.1rem;background:linear-gradient(135deg,var(--sage),var(--sage-d));border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700">
+      {{ estudiante.nombre|first }}{{ estudiante.apellido|first }}
+    </div>
+    <div>
+      <h1>{{ estudiante.get_full_name }}</h1>
+      <p>Grado {{ estudiante.grado }} · {{ estudiante.edad }} años</p>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2 mb-6">
+  <!-- Info básica -->
+  <div class="card">
+    <div class="card-header"><span class="card-title">📋 Información del estudiante</span></div>
+    <div class="card-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div>
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-xs);margin-bottom:4px">Nombre completo</div>
+          <div style="font-size:.9rem;color:var(--text)">{{ estudiante.get_full_name }}</div>
+        </div>
+        <div>
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-xs);margin-bottom:4px">Grado</div>
+          <span class="badge badge-green">{{ estudiante.grado }}</span>
+        </div>
+        <div>
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-xs);margin-bottom:4px">Edad</div>
+          <div style="font-size:.9rem">{{ estudiante.edad }} años</div>
+        </div>
+        <div>
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-xs);margin-bottom:4px">Correo</div>
+          <div style="font-size:.9rem">{{ estudiante.email|default:"—" }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acudiente -->
+  <div class="card">
+    <div class="card-header"><span class="card-title">👨‍👩‍👧 Acudiente</span></div>
+    <div class="card-body">
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div>
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-xs);margin-bottom:4px">Nombre</div>
+          <div>{{ estudiante.nombre_acudiente|default:"No registrado" }}</div>
+        </div>
+        <div>
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-xs);margin-bottom:4px">Teléfono</div>
+          <div>{{ estudiante.telefono_acudiente|default:"No registrado" }}</div>
+        </div>
+        {% if estudiante.notas_generales %}
+        <div>
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-xs);margin-bottom:4px">Notas generales</div>
+          <div style="font-size:.85rem;color:var(--text-s);line-height:1.7">{{ estudiante.notas_generales }}</div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Casos -->
+<div class="card mb-6">
+  <div class="card-header">
+    <span class="card-title">📊 Casos ({{ casos.count }})</span>
+    <a href="{% url 'caso_nuevo' %}?estudiante={{ estudiante.pk }}" class="btn btn-outline btn-sm">+ Nuevo caso</a>
+  </div>
+  {% if casos %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Motivo</th><th>Tipo</th><th>Estado</th><th>Apertura</th><th></th></tr></thead>
+      <tbody>
+        {% for c in casos %}
+        <tr>
+          <td style="font-weight:500">{{ c.get_motivo_display }}</td>
+          <td><span class="badge badge-blue">{{ c.get_tipo_atencion_display }}</span></td>
+          <td><span class="badge {% if c.estado == 'activo' %}badge-green{% elif c.estado == 'cerrado' %}badge-gray{% else %}badge-yellow{% endif %}">{{ c.get_estado_display }}</span></td>
+          <td style="font-size:.8rem;color:var(--text-xs)">{{ c.fecha_apertura|date:"d M Y" }}</td>
+          <td style="white-space:nowrap"><a href="{% url 'caso_editar' c.pk %}" class="btn btn-outline btn-sm">✏️</a> <a href="{% url 'caso_eliminar' c.pk %}" class="btn btn-sm" style="background:var(--red);color:white;border:none">🗑️</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state" style="padding:30px">
+    <span class="empty-icon" style="font-size:2rem">📊</span>
+    <div class="empty-title">Sin casos registrados</div>
+    <a href="{% url 'caso_nuevo' %}?estudiante={{ estudiante.pk }}" class="btn btn-primary btn-sm" style="margin-top:10px">+ Abrir caso</a>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Reuniones -->
+<div class="card">
+  <div class="card-header">
+    <span class="card-title">📅 Reuniones ({{ reuniones.count }})</span>
+    <a href="{% url 'reunion_nueva' %}?estudiante={{ estudiante.pk }}" class="btn btn-outline btn-sm">+ Agendar</a>
+  </div>
+  {% if reuniones %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Fecha</th><th>Hora</th><th>Motivo</th><th>Estado</th></tr></thead>
+      <tbody>
+        {% for r in reuniones %}
+        <tr>
+          <td>{{ r.fecha|date:"d M Y" }}</td>
+          <td>{{ r.hora|time:"g:i A" }}</td>
+          <td style="font-size:.85rem">{{ r.motivo|truncatewords:6 }}</td>
+          <td><span class="badge {% if r.estado == 'confirmada' %}badge-green{% elif r.estado == 'pendiente' %}badge-yellow{% elif r.estado == 'realizada' %}badge-blue{% else %}badge-red{% endif %}">{{ r.get_estado_display }}</span></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state" style="padding:30px">
+    <span class="empty-icon" style="font-size:2rem">📅</span>
+    <div class="empty-title">Sin reuniones</div>
+    <a href="{% url 'reunion_nueva' %}?estudiante={{ estudiante.pk %}" class="btn btn-primary btn-sm" style="margin-top:10px">+ Agendar reunión</a>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Informes -->
+<div class="card" style="margin-top:24px">
+  <div class="card-header">
+    <span class="card-title">📄 Informes ({{ informes.count }})</span>
+    <div style="display:flex;gap:8px;align-items:center">
+      {% if informes.count > 1 %}
+      <a href="{% url 'informes_estudiante_todos' estudiante.pk %}" target="_blank"
+         class="btn btn-primary btn-sm"
+         title="Abrir todos los informes en una sola página para imprimir o guardar como PDF">
+        🖨️ Imprimir / descargar todos ({{ informes.count }})
+      </a>
+      {% endif %}
+      <a href="{% url 'informe_nuevo' %}?estudiante={{ estudiante.pk }}" class="btn btn-outline btn-sm">+ Nuevo informe</a>
+    </div>
+  </div>
+  {% if informes %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Tipo</th>
+          <th>Riesgo</th>
+          <th>Fecha</th>
+          <th style="text-align:center">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for inf in informes %}
+        <tr>
+          <td style="font-weight:500">{{ inf.titulo|truncatewords:6 }}</td>
+          <td><span class="badge badge-blue">{{ inf.get_tipo_display }}</span></td>
+          <td>
+            {% if inf.nivel_riesgo %}
+              {% if inf.nivel_riesgo == 'bajo' %}<span class="badge badge-green">🟢 Bajo</span>
+              {% elif inf.nivel_riesgo == 'medio' %}<span class="badge badge-yellow">🟡 Medio</span>
+              {% elif inf.nivel_riesgo == 'alto' %}<span style="background:#ffedd5;color:#9a3412;padding:2px 8px;border-radius:8px;font-size:.75rem;font-weight:700">🟠 Alto</span>
+              {% else %}<span class="badge badge-red">🔴 Crítico</span>{% endif %}
+            {% else %}<span style="color:var(--text-xs);font-size:.8rem">—</span>{% endif %}
+          </td>
+          <td style="font-size:.8rem;color:var(--text-xs)">{{ inf.fecha_creacion|date:"d M Y" }}</td>
+          <td style="white-space:nowrap;text-align:center">
+            <a href="{% url 'informe_detalle' inf.pk %}" class="btn btn-outline btn-sm" title="Ver informe">👁️ Ver</a>
+            <a href="{% url 'informe_detalle' inf.pk %}" target="_blank"
+               class="btn btn-sm" style="background:var(--sage-xxl);color:var(--sage);border:1px solid var(--sage-xl)"
+               title="Imprimir / descargar este informe">🖨️</a>
+            <a href="{% url 'informe_editar' inf.pk %}" class="btn btn-outline btn-sm" title="Editar">✏️</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state" style="padding:30px">
+    <span class="empty-icon" style="font-size:2rem">📄</span>
+    <div class="empty-title">Sin informes registrados</div>
+    <a href="{% url 'informe_nuevo' %}?estudiante={{ estudiante.pk %}" class="btn btn-primary btn-sm" style="margin-top:10px">+ Crear primer informe</a>
+  </div>
+  {% endif %}
+
+<!-- Check-ins Emocionales -->
+{% if checkins or usuario_vinculado %}
+<div class="card" style="margin-bottom:20px">
+  <div style="padding:16px 20px;border-bottom:1px solid var(--sage-xl);display:flex;justify-content:space-between;align-items:center">
+    <span class="card-title">💚 Historial Emocional (check-ins)</span>
+    {% if usuario_vinculado %}
+    <a href="{% url 'bandeja_mensajes_psicologo' %}?con={{ usuario_vinculado.pk }}" class="btn btn-sm btn-outline">💬 Enviar mensaje</a>
+    {% endif %}
+  </div>
+  {% if checkins %}
+  <div style="padding:16px 20px;display:flex;flex-wrap:wrap;gap:10px">
+    {% for c in checkins %}
+    <div style="padding:10px 14px;background:var(--sage-xxl);border-radius:10px;border:1px solid var(--sage-xl);text-align:center;min-width:80px">
+      <div style="font-size:1.6rem">{{ c.get_emocion_display|slice:":2" }}</div>
+      <div style="font-size:.72rem;font-weight:600;color:var(--text-s);margin-top:3px">{{ c.get_emocion_display|slice:"3:" }}</div>
+      <div style="font-size:.65rem;color:var(--text-xs)">{{ c.fecha|date:"d M" }}</div>
+      {% if c.nota_privada %}
+      <div title="{{ c.nota_privada }}" style="cursor:help;font-size:.7rem;color:var(--sage-d);margin-top:3px">📝 nota</div>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div style="padding:20px;text-align:center;color:var(--text-xs);font-size:.85rem">
+    {% if usuario_vinculado %}
+      Este estudiante aún no ha registrado check-ins emocionales.
+    {% else %}
+      <span style="color:var(--orange)">⚠️ Este estudiante no tiene cuenta vinculada.</span><br>
+      <a href="{% url 'cuentas_estudiantes' %}" style="color:var(--sage-d);font-size:.8rem;font-weight:600">Gestionar cuentas →</a>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endif %}
+
+</div>
+{% endblock %}

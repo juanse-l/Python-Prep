@@ -1,0 +1,49 @@
+{% comment %}recomendaciones_padre.html{% endcomment %}
+{% extends "psicoasis/base_padre.html" %}
+{% block title %}Recomendaciones — PsicoAsis{% endblock %}
+{% block topbar_title %}💡 Recomendaciones{% endblock %}
+{% block nav_rec %}active{% endblock %}
+
+{% block content %}
+<div class="section-hd">
+  <div>
+    <div class="section-title">Mis Recomendaciones</div>
+    <div class="section-sub">Recursos y consejos personalizados para tu acompañamiento</div>
+  </div>
+</div>
+
+{% if recomendaciones %}
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;">
+    {% for rec in recomendaciones %}
+    <div class="card">
+      <div class="card-body">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <span style="font-size:.7rem;background:var(--sage-xxl);color:var(--sage-d);padding:3px 10px;border-radius:20px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;">{{ rec.get_tipo_display }}</span>
+          <span style="font-size:.68rem;color:var(--text-xs);">{{ rec.fecha_creacion|date:"d/m/Y" }}</span>
+        </div>
+        <div style="font-size:.95rem;font-weight:700;color:var(--text);margin-bottom:8px;">{{ rec.titulo }}</div>
+        <div style="font-size:.8rem;color:var(--text-s);line-height:1.6;margin-bottom:12px;">{{ rec.contenido }}</div>
+        {% if rec.hijo %}
+        <div style="font-size:.72rem;color:var(--text-xs);margin-bottom:10px;">
+          💡 Relacionado con el estado de <strong>{{ rec.hijo.get_full_name }}</strong>
+          {% if rec.trigger_emocion %}· emoción: {{ rec.trigger_emocion }}{% endif %}
+        </div>
+        {% endif %}
+        {% if rec.url_recurso %}
+        <a href="{{ rec.url_recurso }}" target="_blank" class="btn btn-outline btn-sm">Ver recurso externo →</a>
+        {% endif %}
+        <div style="font-size:.68rem;color:var(--text-xs);margin-top:8px;">
+          Enviado por: {{ rec.get_generada_por_display }}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div style="text-align:center;padding:60px;color:var(--text-xs);">
+    <div style="font-size:2.5rem;margin-bottom:10px;">💡</div>
+    <div style="font-weight:600;margin-bottom:6px;">Aún no tienes recomendaciones</div>
+    <div style="font-size:.85rem;">La psicóloga y el sistema te enviarán recursos según el estado emocional de tu hijo/a.</div>
+  </div>
+{% endif %}
+{% endblock %}

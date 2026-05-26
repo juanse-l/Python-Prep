@@ -1,0 +1,24 @@
+{% extends "psicoasis/base.html" %}
+{% block title %}Nuevo Profesor — PsicoAsis{% endblock %}
+{% block content %}
+<a href="{% url 'profesores_list' %}" style="font-size:.83rem;color:#7a9aaa;text-decoration:none;margin-bottom:20px;display:inline-block;">← Volver</a>
+<div class="card" style="max-width:500px;">
+  <div class="card-header">
+    <div class="card-title">+ Crear cuenta de profesor</div>
+    <div class="card-sub">El docente podrá acceder al portal con estas credenciales</div>
+  </div>
+  <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form-group">
+        <label class="form-label">{{ field.label }}</label>
+        {{ field }}
+        {% if field.errors %}<div style="color:#d94f4f;font-size:.78rem;margin-top:4px;">{{ field.errors.0 }}</div>{% endif %}
+      </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Crear cuenta ✅</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

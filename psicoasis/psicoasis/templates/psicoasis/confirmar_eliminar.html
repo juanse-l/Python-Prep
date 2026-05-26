@@ -1,0 +1,20 @@
+{% extends 'psicoasis/base.html' %}
+{% block title %}Confirmar eliminación — PsicoAsis{% endblock %}
+{% block topbar_title %}Confirmar eliminación{% endblock %}
+{% block content %}
+<div class="page-header"><h1>⚠️ Confirmar eliminación</h1></div>
+<div class="card" style="max-width:480px">
+  <div class="card-body" style="padding:28px;text-align:center">
+    <div style="font-size:3rem;margin-bottom:16px">🗑️</div>
+    <p style="font-size:.95rem;margin-bottom:8px">¿Estás seguro de que deseas eliminar</p>
+    <p style="font-weight:700;font-size:1rem;color:var(--red);margin-bottom:24px">{{ objeto }}?</p>
+    <p style="font-size:.8rem;color:var(--text-xs);margin-bottom:24px">Esta acción no se puede deshacer.</p>
+    <div style="display:flex;gap:12px;justify-content:center">
+      <form method="post">{% csrf_token %}
+        <button type="submit" class="btn" style="background:var(--red);color:white;border:none">Sí, eliminar</button>
+      </form>
+      <a href="{{ cancelar_url }}" class="btn btn-outline">Cancelar</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

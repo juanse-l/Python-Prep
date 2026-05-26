@@ -1,0 +1,77 @@
+{% extends "psicoasis/base.html" %}
+{% load extras %}
+{% block title %}Padres y Tutores — PsicoAsis{% endblock %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+  <div>
+    <h1 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;">👨‍👩‍👧 Padres y Tutores</h1>
+    <p style="color:#7a9aaa;font-size:.85rem;margin-top:4px;">{{ padres|length }} cuenta{{ padres|length|pluralize }} registrada{{ padres|length|pluralize }}</p>
+  </div>
+  <a href="{% url 'padre_nuevo' %}" class="btn btn-primary">+ Nuevo padre/tutor</a>
+</div>
+
+<div class="card">
+  <div class="card-body" style="padding:0;">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Usuario</th>
+            <th>Rol</th>
+            <th>Hijos vinculados</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for padre in padres %}
+          <tr>
+            <td><strong>{{ padre.get_full_name|default:padre.username }}</strong></td>
+            <td style="color:#7a9aaa;font-size:.85rem;">{{ padre.username }}</td>
+            <td>
+              {% with padre.perfil.rol as rol %}
+                {% if rol == 'padre' %}Padre/Madre{% else %}Tutor/Acudiente{% endif %}
+              {% endwith %}
+            </td>
+            <td>
+              {% with vinculos_count|get_item:padre.id as n %}
+                {% if n %}{{ n }} hijo{{ n|pluralize }}{% else %}<span style="color:#7a9aaa;">Sin vincular</span>{% endif %}
+              {% endwith %}
+            </td>
+            <td>
+              <a href="{% url 'padre_vincular' padre.id %}" class="btn btn-secondary btn-sm">Vincular hijo</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" style="text-align:center;color:#7a9aaa;padding:30px;">
+              No hay padres/tutores registrados. <a href="{% url 'padre_nuevo' %}">Crear el primero</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Acceso rápido -->
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:16px;">
+  <a href="{% url 'citas_padres_psicologo' %}" style="text-decoration:none;">
+    <div class="card" style="margin-bottom:0;">
+      <div class="card-body" style="display:flex;align-items:center;gap:14px;">
+        <span style="font-size:1.8rem;">📅</span>
+        <div><div style="font-weight:700;">Citas de padres</div><div style="font-size:.78rem;color:#7a9aaa;">Gestionar citas</div></div>
+      </div>
+    </div>
+  </a>
+  <a href="{% url 'bandeja_mensajes_padres' %}" style="text-decoration:none;">
+    <div class="card" style="margin-bottom:0;">
+      <div class="card-body" style="display:flex;align-items:center;gap:14px;">
+        <span style="font-size:1.8rem;">💬</span>
+        <div><div style="font-weight:700;">Mensajes</div><div style="font-size:.78rem;color:#7a9aaa;">Chat con padres</div></div>
+      </div>
+    </div>
+  </a>
+</div>
+{% endblock %}

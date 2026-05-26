@@ -1,0 +1,44 @@
+{% extends 'psicoasis/base.html' %}
+{% block title %}Solicitud de {{ cita.nombre }} — PsicoAsis{% endblock %}
+{% block topbar_title %}Solicitud de Cita{% endblock %}
+{% block content %}
+<div class="page-header"><h1>Solicitud de {{ cita.nombre }}</h1></div>
+<div class="grid-2">
+  <div class="card">
+    <div class="card-header"><span class="card-title">Datos del solicitante</span></div>
+    <div class="card-body" style="padding-top:16px;display:flex;flex-direction:column;gap:14px">
+      <div><div style="font-size:.72rem;color:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:.6px">Nombre</div><div style="font-size:.9rem;margin-top:3px">{{ cita.nombre }}</div></div>
+      <div><div style="font-size:.72rem;color:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:.6px">Rol</div><div style="font-size:.9rem;margin-top:3px">{{ cita.get_rol_display }}</div></div>
+      {% if cita.email %}<div><div style="font-size:.72rem;color:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:.6px">Email</div><div style="font-size:.9rem;margin-top:3px">{{ cita.email }}</div></div>{% endif %}
+      {% if cita.telefono %}<div><div style="font-size:.72rem;color:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:.6px">Teléfono</div><div style="font-size:.9rem;margin-top:3px">{{ cita.telefono }}</div></div>{% endif %}
+      {% if cita.fecha_preferida %}<div><div style="font-size:.72rem;color:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:.6px">Fecha preferida</div><div style="font-size:.9rem;margin-top:3px">{{ cita.fecha_preferida|date:"d/m/Y" }} {% if cita.hora_preferida %}a las {{ cita.hora_preferida|time:"g:i A" }}{% endif %}</div></div>{% endif %}
+      <div><div style="font-size:.72rem;color:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:.6px">Motivo de consulta</div><div style="font-size:.9rem;margin-top:3px;line-height:1.7">{{ cita.motivo }}</div></div>
+      <div><div style="font-size:.72rem;color:var(--text-xs);font-weight:600;text-transform:uppercase;letter-spacing:.6px">Solicitud recibida</div><div style="font-size:.9rem;margin-top:3px">{{ cita.fecha_solicitud|date:"d/m/Y" }} {{ cita.fecha_solicitud|time:"g:i A" }}</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="card-title">Gestionar solicitud</span></div>
+    <div class="card-body" style="padding-top:16px">
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label class="form-label">Estado</label>
+          <select name="estado" class="form-control">
+            <option value="pendiente" {% if cita.estado == 'pendiente' %}selected{% endif %}>Pendiente</option>
+            <option value="atendida" {% if cita.estado == 'atendida' %}selected{% endif %}>Atendida</option>
+            <option value="cancelada" {% if cita.estado == 'cancelada' %}selected{% endif %}>Cancelada</option>
+          </select>
+        </div>
+        <div class="form-group mt-4">
+          <label class="form-label">Notas internas</label>
+          <textarea name="notas_internas" class="form-control" rows="4" placeholder="Notas sobre esta solicitud...">{{ cita.notas_internas }}</textarea>
+        </div>
+        <div style="display:flex;gap:10px;margin-top:20px">
+          <button type="submit" class="btn btn-primary">Guardar cambios</button>
+          <a href="{% url 'reunion_nueva' %}?fecha={{ cita.fecha_preferida|date:'Y-m-d' }}" class="btn btn-outline">+ Crear cita en calendario</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

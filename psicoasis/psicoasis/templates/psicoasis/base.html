@@ -1,0 +1,436 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}PsicoAsis{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --sage:      #4f8a5a;
+    --sage-d:    #326640;
+    --sage-l:    #78b085;
+    --sage-xl:   #bcd9c3;
+    --sage-xxl:  #eaf4ed;
+    --sage-soft: #f0f7f2;
+    --cream:     #faf8f5;
+    --warm:      #f5ede3;
+    --blush:     #dfc8b2;
+    --earth:     #7a5c4a;
+    --text:      #1a2b1c;
+    --text-s:    #485b4a;
+    --text-xs:   #7a917b;
+    --white:     #ffffff;
+    --border:    rgba(79,138,90,.11);
+    --sidebar-w: 258px;
+    --red:       #dc3545;
+    --orange:    #e07c3e;
+    --blue:      #3d6cc0;
+    --green:     #3a9e60;
+    --purple:    #7c5cbf;
+    --shadow-sm: 0 1px 3px rgba(26,43,28,.07),0 1px 2px rgba(26,43,28,.04);
+    --shadow:    0 4px 16px rgba(26,43,28,.08),0 2px 6px rgba(26,43,28,.04);
+    --shadow-lg: 0 12px 40px rgba(26,43,28,.12),0 4px 12px rgba(26,43,28,.05);
+    --radius-sm: 8px;
+    --radius:    14px;
+    --radius-lg: 20px;
+  }
+  html, body {
+    height: 100%;
+    font-family: 'Inter', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    -webkit-font-smoothing: antialiased;
+  }
+  .app { display: flex; min-height: 100vh; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: var(--sidebar-w);
+    background: linear-gradient(180deg,#0d1a0f 0%,#152018 45%,#1a2b1c 100%);
+    display: flex; flex-direction: column;
+    position: fixed; top:0; left:0; bottom:0; z-index:50;
+    transition: transform .28s cubic-bezier(.4,0,.2,1);
+  }
+  .sb-brand {
+    padding: 20px 18px 16px;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    flex-shrink: 0;
+  }
+  .sb-brand-inner { display:flex; align-items:center; gap:12px; }
+  .sb-brand-logo {
+    height:34px; width:34px; border-radius:10px; object-fit:contain;
+    background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.12);
+    padding:3px; flex-shrink:0;
+  }
+  .sb-logo { font-family:'Playfair Display',serif; font-size:1.22rem; font-weight:700; color:white; letter-spacing:-.3px; line-height:1; }
+  .sb-logo span { color:#78b085; }
+  .sb-sub { font-size:.59rem; color:rgba(255,255,255,.27); letter-spacing:1.5px; text-transform:uppercase; margin-top:3px; }
+  .sb-user {
+    padding:12px 18px; display:flex; align-items:center; gap:11px;
+    background:rgba(255,255,255,.04); border-bottom:1px solid rgba(255,255,255,.05); flex-shrink:0;
+  }
+  .sb-av {
+    width:34px; height:34px; border-radius:50%;
+    background:linear-gradient(135deg,var(--sage),var(--sage-d));
+    display:flex; align-items:center; justify-content:center;
+    font-size:.7rem; font-weight:700; color:white; min-width:34px;
+    border:2px solid rgba(255,255,255,.13); flex-shrink:0;
+  }
+  .sb-info { min-width:0; }
+  .sb-name { font-size:.8rem; font-weight:600; color:white; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .sb-role { font-size:.62rem; color:rgba(255,255,255,.27); margin-top:1px; }
+  .sb-nav { flex:1; padding:12px 10px; overflow-y:auto; scrollbar-width:none; }
+  .sb-nav::-webkit-scrollbar { display:none; }
+  .sb-section { font-size:.57rem; font-weight:700; letter-spacing:1.8px; text-transform:uppercase; color:rgba(255,255,255,.17); padding:14px 10px 5px; }
+  .nav-item {
+    display:flex; align-items:center; gap:10px;
+    padding:8.5px 10px; border-radius:var(--radius-sm);
+    text-decoration:none; color:rgba(255,255,255,.47);
+    font-size:.79rem; font-weight:400; transition:all .16s;
+    margin-bottom:1px; position:relative;
+  }
+  .nav-item .ni-icon { width:18px; text-align:center; font-size:.81rem; opacity:.6; flex-shrink:0; transition:opacity .16s; }
+  .nav-item:hover { background:rgba(255,255,255,.07); color:rgba(255,255,255,.9); }
+  .nav-item:hover .ni-icon { opacity:1; }
+  .nav-item.active { background:rgba(79,138,90,.22); color:white; font-weight:500; }
+  .nav-item.active .ni-icon { opacity:1; color:#78b085; }
+  .nav-item.active::before { content:''; position:absolute; left:0; top:50%; transform:translateY(-50%); width:3px; height:54%; background:#78b085; border-radius:0 3px 3px 0; }
+  .nav-badge { margin-left:auto; background:#e74c3c; color:white; border-radius:50px; font-size:.56rem; font-weight:700; min-width:17px; height:17px; display:inline-flex; align-items:center; justify-content:center; padding:0 5px; }
+  .sb-foot { padding:10px; border-top:1px solid rgba(255,255,255,.06); flex-shrink:0; }
+  .sb-logout { display:flex; align-items:center; gap:10px; padding:8.5px 10px; border-radius:var(--radius-sm); text-decoration:none; color:rgba(255,255,255,.27); font-size:.76rem; transition:all .16s; }
+  .sb-logout:hover { background:rgba(220,53,69,.12); color:#ff6b6b; }
+
+  /* MAIN */
+  .main { margin-left:var(--sidebar-w); flex:1; display:flex; flex-direction:column; min-height:100vh; }
+  .topbar { height:60px; background:white; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:12px; padding:0 24px; position:sticky; top:0; z-index:30; box-shadow:var(--shadow-sm); }
+  #menuBtn { display:none; background:none; border:1.5px solid rgba(79,138,90,.2); border-radius:var(--radius-sm); padding:7px 9px; cursor:pointer; color:var(--text-s); transition:all .16s; }
+  #menuBtn:hover { border-color:var(--sage); color:var(--sage); }
+  .tb-title { font-family:'Playfair Display',serif; font-size:1rem; font-weight:600; color:var(--text); }
+  .tb-search { flex:1; max-width:320px; margin-left:auto; display:flex; align-items:center; gap:8px; background:var(--sage-soft); border:1.5px solid transparent; border-radius:50px; padding:0 14px; transition:all .2s; }
+  .tb-search:focus-within { border-color:var(--sage); background:white; box-shadow:0 0 0 3px rgba(79,138,90,.1); }
+  .tb-search input { border:none; background:transparent; font-family:'Inter',sans-serif; font-size:.81rem; color:var(--text); outline:none; padding:8px 0; width:100%; }
+  .tb-search input::placeholder { color:var(--text-xs); }
+  .tb-search-icon { color:var(--text-xs); font-size:.78rem; flex-shrink:0; }
+  .tb-actions { display:flex; align-items:center; gap:8px; }
+
+  /* BUTTONS */
+  .btn { display:inline-flex; align-items:center; gap:6px; padding:8px 16px; border-radius:50px; border:none; font-family:'Inter',sans-serif; font-size:.79rem; font-weight:500; cursor:pointer; text-decoration:none; transition:all .16s; white-space:nowrap; }
+  .btn-primary { background:linear-gradient(135deg,var(--sage),var(--sage-d)); color:white; box-shadow:0 2px 8px rgba(79,138,90,.3); }
+  .btn-primary:hover { transform:translateY(-1px); box-shadow:0 5px 16px rgba(50,102,64,.4); color:white; }
+  .btn-outline { background:transparent; border:1.5px solid rgba(79,138,90,.25); color:var(--text-s); }
+  .btn-outline:hover { border-color:var(--sage); color:var(--sage); background:var(--sage-soft); }
+  .btn-sm { padding:6px 12px; font-size:.74rem; }
+  .btn-danger { background:#fff3f3; color:var(--red); border:1px solid #f8cdd1; }
+  .btn-danger:hover { background:var(--red); color:white; border-color:var(--red); }
+  .btn-ghost { background:transparent; color:var(--text-s); }
+  .btn-ghost:hover { background:var(--sage-soft); color:var(--text); }
+
+  /* PAGE */
+  .page-content { flex:1; padding:24px; }
+  .messages { padding:10px 24px 0; }
+  .msg { padding:10px 15px; border-radius:var(--radius-sm); margin-bottom:7px; font-size:.81rem; display:flex; align-items:center; gap:9px; animation:msgIn .2s ease; }
+  @keyframes msgIn { from{opacity:0;transform:translateY(-5px)} to{opacity:1;transform:none} }
+  .msg-ok   { background:#f0faf3; color:#1a6e38; border-left:3px solid var(--green); }
+  .msg-err  { background:#fff3f3; color:#b82c3e; border-left:3px solid var(--red); }
+  .msg-info { background:#f0f4ff; color:#1e40af; border-left:3px solid var(--blue); }
+
+  /* CARDS */
+  .card { background:white; border-radius:var(--radius-lg); border:1px solid var(--border); box-shadow:var(--shadow-sm); overflow:hidden; transition:box-shadow .2s; }
+  .card:hover { box-shadow:var(--shadow); }
+  .card-header { padding:16px 20px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .card-title { font-family:'Playfair Display',serif; font-size:.96rem; font-weight:600; color:var(--text); }
+  .card-body { padding:20px; }
+
+  /* STATS */
+  .stats-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:14px; margin-bottom:20px; }
+  .stat-card { background:white; border-radius:var(--radius-lg); padding:18px 20px; display:flex; align-items:center; gap:14px; border:1px solid var(--border); box-shadow:var(--shadow-sm); transition:all .2s; }
+  .stat-card:hover { transform:translateY(-2px); box-shadow:var(--shadow); }
+  .stat-icon { width:46px; height:46px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.15rem; min-width:46px; }
+  .si-green  { background:linear-gradient(135deg,#cff2d8,#b5e8c6); color:#22703a; }
+  .si-orange { background:linear-gradient(135deg,#fde0cc,#f9c9a8); color:#8f4e1e; }
+  .si-blue   { background:linear-gradient(135deg,#d0deff,#b8cafc); color:#2d4fa0; }
+  .si-purple { background:linear-gradient(135deg,#e8d8ff,#d4bcfc); color:#5a3ca0; }
+  .stat-num { font-family:'Playfair Display',serif; font-size:1.6rem; font-weight:700; color:var(--text); line-height:1; }
+  .stat-label { font-size:.73rem; color:var(--text-xs); margin-top:3px; }
+  .stat-sub   { font-size:.66rem; color:var(--sage); font-weight:600; margin-top:2px; }
+
+  /* TABLE */
+  .table-wrap { overflow-x:auto; }
+  table { width:100%; border-collapse:collapse; }
+  thead th { background:var(--sage-soft); padding:10px 15px; font-size:.67rem; font-weight:700; letter-spacing:1px; text-transform:uppercase; color:var(--text-s); text-align:left; }
+  thead th:first-child { border-radius:var(--radius-sm) 0 0 var(--radius-sm); }
+  thead th:last-child  { border-radius:0 var(--radius-sm) var(--radius-sm) 0; }
+  tbody tr { border-bottom:1px solid rgba(79,138,90,.06); transition:background .14s; }
+  tbody tr:hover { background:var(--sage-soft); }
+  tbody td { padding:12px 15px; font-size:.81rem; color:var(--text-s); vertical-align:middle; }
+  tbody td:first-child { color:var(--text); font-weight:500; }
+  tbody tr:last-child { border-bottom:none; }
+
+  /* AVATAR */
+  .av { border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:white; }
+  .av-36     { width:34px; height:34px; font-size:.71rem; min-width:34px; }
+  .av-green  { background:linear-gradient(135deg,var(--sage),var(--sage-d)); }
+  .av-orange { background:linear-gradient(135deg,#e07c3e,#c05a20); }
+  .av-blue   { background:linear-gradient(135deg,#4a72d4,#2d52b0); }
+
+  /* BADGES */
+  .badge { display:inline-flex; align-items:center; gap:4px; padding:3px 9px; border-radius:50px; font-size:.67rem; font-weight:600; letter-spacing:.2px; }
+  .badge-green  { background:#e4f8eb; color:#1a6e38; }
+  .badge-yellow { background:#fef8e0; color:#7a5f00; }
+  .badge-red    { background:#fff2f3; color:#a8202e; }
+  .badge-blue   { background:#eef2ff; color:#1e3a8a; }
+  .badge-gray   { background:#f2f4f3; color:var(--text-s); }
+  .badge-purple { background:#f3eeff; color:#5a3ca0; }
+  .badge-orange { background:#fff4ea; color:#8a4a1a; }
+
+  /* FORMS */
+  .form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .form-group { margin-bottom:15px; }
+  .form-group.full { grid-column:1 / -1; }
+  .form-label { display:block; font-size:.66rem; font-weight:700; letter-spacing:.9px; text-transform:uppercase; color:var(--text-s); margin-bottom:6px; }
+  .form-control { width:100%; padding:10px 12px; border:1.5px solid #dae8dc; border-radius:var(--radius-sm); font-family:'Inter',sans-serif; font-size:.83rem; color:var(--text); background:var(--sage-soft); outline:none; transition:all .16s; resize:vertical; }
+  .form-control:focus { border-color:var(--sage); background:white; box-shadow:0 0 0 3px rgba(79,138,90,.1); }
+  .form-control::placeholder { color:#a8bfaa; }
+  select.form-control { cursor:pointer; appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%237a917b' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 12px center; padding-right:34px; }
+
+  /* EMPTY STATE */
+  .empty-state { text-align:center; padding:52px 20px; }
+  .empty-icon { font-size:2.5rem; margin-bottom:12px; display:block; opacity:.4; }
+  .empty-title { font-family:'Playfair Display',serif; font-size:1rem; color:var(--text); margin-bottom:8px; }
+  .empty-desc { color:var(--text-xs); font-size:.8rem; line-height:1.75; margin-bottom:18px; max-width:300px; margin-left:auto; margin-right:auto; }
+
+  /* HELPERS */
+  .grid-2    { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  .grid-3    { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+  .grid-4    { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; }
+  .grid-main { display:grid; grid-template-columns:2fr 1fr; gap:16px; }
+  .flex { display:flex; }
+  .flex-col { flex-direction:column; }
+  .items-center { align-items:center; }
+  .justify-between { justify-content:space-between; }
+  .gap-2 { gap:8px; } .gap-3 { gap:12px; } .gap-4 { gap:16px; }
+  .mb-3 { margin-bottom:12px; } .mb-4 { margin-bottom:16px; } .mb-5 { margin-bottom:20px; } .mb-6 { margin-bottom:24px; }
+  .w-full { width:100%; }
+  .text-right { text-align:right; } .text-center { text-align:center; }
+  .divider { border:none; border-top:1px solid var(--border); margin:16px 0; }
+
+  .page-header { margin-bottom:22px; }
+  .page-header h1 { font-family:'Playfair Display',serif; font-size:1.5rem; font-weight:600; color:var(--text); margin-bottom:4px; }
+  .page-header p { color:var(--text-s); font-size:.83rem; }
+  .page-header-row { display:flex; align-items:flex-start; justify-content:space-between; gap:14px; flex-wrap:wrap; }
+
+  .wellness-card { background:white; border-radius:var(--radius-lg); border:1px solid var(--border); overflow:hidden; transition:all .22s; display:flex; flex-direction:column; }
+  .wellness-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-lg); }
+  .wc-top { padding:24px 20px; background:linear-gradient(135deg,var(--sage-xxl),var(--cream)); text-align:center; }
+  .wc-emoji { font-size:2.2rem; margin-bottom:10px; display:block; }
+  .wc-title { font-family:'Playfair Display',serif; font-size:.92rem; color:var(--text); margin-bottom:3px; }
+  .wc-cat   { font-size:.66rem; color:var(--text-xs); letter-spacing:.5px; }
+  .wc-body  { padding:16px 20px; flex:1; display:flex; flex-direction:column; justify-content:space-between; }
+  .wc-desc  { font-size:.8rem; color:var(--text-s); line-height:1.75; margin-bottom:14px; }
+
+  .info-row { display:flex; gap:6px; align-items:flex-start; margin-bottom:10px; }
+  .info-label { color:var(--text-xs); min-width:115px; flex-shrink:0; font-size:.68rem; text-transform:uppercase; letter-spacing:.6px; font-weight:700; padding-top:2px; }
+  .info-value { font-size:.83rem; color:var(--text); }
+
+  .overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.42); z-index:40; backdrop-filter:blur(2px); }
+  .overlay.active { display:block; }
+
+  /* RESPONSIVE */
+  @media (max-width:960px) {
+    .sidebar { transform:translateX(-100%); }
+    .sidebar.open { transform:translateX(0); }
+    .main { margin-left:0; }
+    .stats-grid { grid-template-columns:repeat(2,1fr); }
+    .grid-main,.grid-2,.grid-3,.grid-4 { grid-template-columns:1fr; }
+    .form-grid { grid-template-columns:1fr; }
+    .topbar { padding:0 16px; }
+    .page-content { padding:16px; }
+    #menuBtn { display:flex !important; }
+    .tb-search { display:none; }
+  }
+  @media (max-width:480px) {
+    .stats-grid { grid-template-columns:1fr; }
+    .page-header h1 { font-size:1.28rem; }
+  }
+</style>
+{% block extra_css %}{% endblock %}
+</head>
+<body>
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+<div class="app">
+
+{% if user.is_authenticated %}
+<aside class="sidebar" id="sidebar">
+  <div class="sb-brand">
+    <div class="sb-brand-inner">
+      <img src="{% static 'psicoasis/logo.png' %}" alt="Logo" class="sb-brand-logo">
+      <div>
+        <div class="sb-logo">Psico<span>Asis</span></div>
+        <div class="sb-sub">Psicología Escolar</div>
+      </div>
+    </div>
+  </div>
+  <div class="sb-user">
+    <div class="sb-av">{{ user.first_name|first|upper }}{{ user.last_name|first|upper }}</div>
+    <div class="sb-info">
+      <div class="sb-name">{{ user.get_full_name|default:user.username }}</div>
+      <div class="sb-role">
+        {% with rol=user.perfil.rol %}
+          {% if rol == 'estudiante' %}Estudiante
+          {% elif rol == 'padre' or rol == 'tutor' %}Padre / Tutor
+          {% elif rol == 'profesor' %}Docente
+          {% else %}Psicóloga Escolar{% endif %}
+        {% endwith %}
+      </div>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-section">Principal</div>
+    <a href="{% url 'dashboard' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+      <i class="fa-solid fa-house ni-icon"></i> Panel principal
+    </a>
+    <a href="{% url 'notificaciones' %}" class="nav-item {% if 'notificacion' in request.resolver_match.url_name or request.resolver_match.url_name == 'citas_publicas' %}active{% endif %}">
+      <i class="fa-solid fa-bell ni-icon"></i>
+      <span style="flex:1">Notificaciones</span>
+      {% with notif_count=notif_no_leidas %}{% if notif_count %}<span class="nav-badge">{{ notif_count }}</span>{% endif %}{% endwith %}
+    </a>
+    <div class="sb-section">Comunidad</div>
+    <a href="{% url 'estudiantes_list' %}" class="nav-item {% if 'estudiante' in request.resolver_match.url_name or 'caso' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fa-solid fa-user-graduate ni-icon"></i> Estudiantes
+    </a>
+    <a href="{% url 'docentes_list' %}" class="nav-item {% if 'docente' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fa-solid fa-chalkboard-user ni-icon"></i> Docentes
+    </a>
+    <a href="{% url 'aseo_list' %}" class="nav-item {% if 'aseo' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fa-solid fa-broom ni-icon"></i> Servicio de Aseo
+    </a>
+    <a href="{% url 'reuniones_list' %}" class="nav-item {% if 'reunion' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fa-solid fa-handshake ni-icon"></i> Reuniones
+    </a>
+    <a href="{% url 'calendario' %}" class="nav-item {% if 'calendario' in request.resolver_match.url_name or 'agenda' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fa-solid fa-calendar-days ni-icon"></i> Calendario
+    </a>
+    <a href="{% url 'informes_list' %}" class="nav-item {% if 'informe' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fa-solid fa-file-lines ni-icon"></i> Informes
+    </a>
+    <div class="sb-section">Bienestar</div>
+    <a href="{% url 'bienestar' %}" class="nav-item {% if request.resolver_match.url_name in 'bienestar,herramientas_autocuidado,biblioteca_emocional,recursos_multimedia,mini_planes,vlog_salud_mental' %}active{% endif %}">
+      <i class="fa-solid fa-seedling ni-icon"></i> Centro Bienestar
+    </a>
+    <a href="{% url 'foros' %}" class="nav-item {% if 'foro' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fa-solid fa-comments ni-icon"></i> Foros
+    </a>
+    <div class="sb-section">Comunicación</div>
+    <a href="{% url 'bandeja_mensajes_psicologo' %}" class="nav-item {% if 'mensajes' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fa-solid fa-envelope ni-icon"></i> Mensajes estudiantes
+    </a>
+    <a href="{% url 'cuentas_estudiantes' %}" class="nav-item {% if 'cuentas' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fa-solid fa-users-gear ni-icon"></i> Cuentas estudiantes
+    </a>
+    <a href="{% url 'foro_emocional_psicologo' %}" class="nav-item {% if 'foro_emocional' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fa-solid fa-heart-pulse ni-icon"></i> Foro Emocional
+    </a>
+    <div class="sb-section">Profesores</div>
+    <a href="{% url 'profesores_list' %}" class="nav-item {% if 'profesores' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fa-solid fa-person-chalkboard ni-icon"></i> Profesores
+    </a>
+    <a href="{% url 'alertas_docentes_psicologo' %}" class="nav-item {% if 'alertas_docentes' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fa-solid fa-triangle-exclamation ni-icon"></i> Alertas docentes
+    </a>
+    <a href="{% url 'bienestar_docentes_psicologo' %}" class="nav-item {% if 'bienestar_docentes' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fa-solid fa-spa ni-icon"></i> Bienestar docente
+    </a>
+    <div class="sb-section">Padres y Tutores</div>
+    <a href="{% url 'padres_list' %}" class="nav-item {% if 'padres' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fa-solid fa-people-roof ni-icon"></i> Padres / Tutores
+    </a>
+    <a href="{% url 'citas_padres_psicologo' %}" class="nav-item {% if 'citas_padres' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fa-solid fa-calendar-check ni-icon"></i> Citas de padres
+    </a>
+    <a href="{% url 'bandeja_mensajes_padres' %}" class="nav-item {% if 'bandeja_mensajes_padres' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fa-solid fa-message ni-icon"></i> Mensajes padres
+    </a>
+    <div class="sb-section">Inteligencia Artificial</div>
+    <a href="{% url 'asistente_ia' %}" class="nav-item {% if 'asistente' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fa-solid fa-robot ni-icon"></i> PsicoIA
+    </a>
+    <div class="sb-section">General</div>
+    <a href="{% url 'buscar' %}" class="nav-item {% if 'buscar' in request.resolver_match.url_name %}active{% endif %}">
+      <i class="fa-solid fa-magnifying-glass ni-icon"></i> Buscar
+    </a>
+    <a href="{% url 'home' %}" class="nav-item">
+      <i class="fa-solid fa-globe ni-icon"></i> Sitio público
+    </a>
+  </nav>
+  <div class="sb-foot">
+    <a href="{% url 'registro' %}" class="nav-item" style="margin-bottom:4px">
+      <i class="fa-solid fa-user-plus ni-icon"></i> Nuevo usuario
+    </a>
+    <a href="{% url 'logout' %}" class="sb-logout">
+      <i class="fa-solid fa-right-from-bracket" style="width:18px;text-align:center;font-size:.8rem"></i>
+      Cerrar sesión
+    </a>
+  </div>
+</aside>
+
+<div class="main">
+  <header class="topbar">
+    <button id="menuBtn" onclick="toggleSidebar()" aria-label="Menú" style="display:none">
+      <i class="fa-solid fa-bars" style="font-size:.87rem"></i>
+    </button>
+    <span class="tb-title">{% block topbar_title %}PsicoAsis{% endblock %}</span>
+    <form action="{% url 'buscar' %}" method="get" class="tb-search">
+      <i class="fa-solid fa-magnifying-glass tb-search-icon"></i>
+      <input type="text" name="q" placeholder="Buscar estudiantes, reuniones..." value="{{ request.GET.q|default:'' }}">
+    </form>
+    <div class="tb-actions">{% block topbar_actions %}{% endblock %}</div>
+  </header>
+
+  {% if messages %}
+  <div class="messages">
+    {% for m in messages %}
+    <div class="msg {% if m.tags == 'error' %}msg-err{% elif m.tags == 'success' %}msg-ok{% else %}msg-info{% endif %}">
+      <i class="fa-solid {% if m.tags == 'error' %}fa-circle-xmark{% elif m.tags == 'success' %}fa-circle-check{% else %}fa-circle-info{% endif %}" style="font-size:.88rem;flex-shrink:0"></i>
+      {{ m }}
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  <main class="page-content">{% block content %}{% endblock %}</main>
+</div>
+
+{% else %}
+<div style="width:100%">{% block auth_content %}{% endblock %}</div>
+{% endif %}
+</div>
+
+<script>
+function toggleSidebar() {
+  const sb = document.getElementById('sidebar');
+  const ov = document.getElementById('overlay');
+  const open = sb.classList.toggle('open');
+  ov.classList.toggle('active', open);
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('active');
+}
+if (window.innerWidth <= 960) {
+  const b = document.getElementById('menuBtn');
+  if (b) b.style.display = 'flex';
+}
+window.addEventListener('resize', () => {
+  const b = document.getElementById('menuBtn');
+  if (b) b.style.display = window.innerWidth <= 960 ? 'flex' : 'none';
+  if (window.innerWidth > 960) closeSidebar();
+});
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

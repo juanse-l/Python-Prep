@@ -1,0 +1,73 @@
+{% comment %}
+ESTE ARCHIVO CONTIENE TRES TEMPLATES:
+1. padres_list.html        → Lista de padres (psicóloga)
+2. padre_nuevo.html        → Crear cuenta de padre
+3. padre_vincular.html     → Vincular padre con hijo
+4. padre_privacidad.html   → Configurar privacidad
+5. citas_padres_psicologo.html → Gestión de citas
+6. foro_padres_tema.html   → Detalle de tema del foro
+
+Crea un archivo .html separado para cada uno.
+{% endcomment %}
+
+{# ══ 1. padres_list.html ══ #}
+{# {% extends "psicoasis/base.html" %} #}
+{# {% block content %} #}
+
+<div class="section-hd">
+  <div class="section-title">👨‍👩‍👧 Padres y Tutores registrados</div>
+  <a href="{% url 'padre_nuevo' %}" class="btn btn-primary">+ Registrar padre</a>
+</div>
+
+{% if padres %}
+<div class="card">
+  <div class="card-body" style="padding:0;">
+    <table style="width:100%;border-collapse:collapse;">
+      <thead>
+        <tr style="background:var(--teal-xxl,#eef7f2);font-size:.72rem;text-transform:uppercase;letter-spacing:.5px;color:var(--text-xs);">
+          <th style="padding:12px 18px;text-align:left;">Padre / Tutor</th>
+          <th style="padding:12px 18px;text-align:left;">Correo</th>
+          <th style="padding:12px 18px;text-align:center;">Hijos vinculados</th>
+          <th style="padding:12px 18px;text-align:left;">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for padre in padres %}
+        <tr style="border-top:1px solid var(--teal-xl,#cde8d8);">
+          <td style="padding:14px 18px;">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#6a9b7e,#3d6b52);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:.85rem;">
+                {{ padre.first_name|first|upper }}{{ padre.last_name|first|upper }}
+              </div>
+              <div>
+                <div style="font-weight:600;font-size:.88rem;">{{ padre.get_full_name }}</div>
+                <div style="font-size:.72rem;color:var(--text-xs);">{{ padre.perfil.get_rol_display }}</div>
+              </div>
+            </div>
+          </td>
+          <td style="padding:14px 18px;font-size:.85rem;color:var(--text-s);">{{ padre.email }}</td>
+          <td style="padding:14px 18px;text-align:center;">
+            <span style="background:#eef7f2;color:#3d6b52;font-weight:700;padding:3px 12px;border-radius:20px;font-size:.8rem;">
+              {{ vinculos_count|get_item:padre.id|default:0 }}
+            </span>
+          </td>
+          <td style="padding:14px 18px;">
+            <div style="display:flex;gap:6px;">
+              <a href="{% url 'padre_vincular' padre.id %}" class="btn btn-outline btn-sm">🔗 Vincular</a>
+              <a href="{% url 'bandeja_mensajes_padres' %}?padre_id={{ padre.id }}" class="btn btn-outline btn-sm">✉️ Mensajes</a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% else %}
+<div style="text-align:center;padding:48px;color:var(--text-xs);">
+  <div style="font-size:2.5rem;margin-bottom:12px;">👨‍👩‍👧</div>
+  <div style="font-weight:600;margin-bottom:6px;">Aún no hay padres registrados</div>
+  <div style="font-size:.85rem;">Registra el primer padre/tutor para vincularlos con sus hijos.</div>
+  <a href="{% url 'padre_nuevo' %}" class="btn btn-primary" style="margin-top:16px;">+ Registrar padre</a>
+</div>
+{% endif %}

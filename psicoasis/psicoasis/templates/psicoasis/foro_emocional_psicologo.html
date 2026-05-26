@@ -1,0 +1,122 @@
+{% extends 'psicoasis/base.html' %}
+{% block title %}Foro Emocional — PsicoAsis{% endblock %}
+{% block topbar_title %}💌 Foro Emocional{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1>💌 Foro Emocional para Estudiantes</h1>
+  <p>Publica estrategias, mensajes y recursos de bienestar que serán visibles para todos tus estudiantes.</p>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1.2fr;gap:24px;align-items:start">
+
+  <!-- Formulario nueva publicación -->
+  <div class="card" style="position:sticky;top:70px">
+    <div class="card-header">
+      <div class="card-title">✏️ Nueva publicación</div>
+      <div class="card-sub">Visible inmediatamente para todos los estudiantes</div>
+    </div>
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+        <input type="hidden" name="action" value="crear">
+
+        <div class="form-group">
+          <label class="form-label">Título *</label>
+          <input type="text" name="titulo" class="form-control" placeholder="Ej: 3 técnicas para calmar la ansiedad" required>
+        </div>
+
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <div class="form-group">
+            <label class="form-label">Categoría</label>
+            <select name="categoria" class="form-control">
+              {% for val, label in categorias %}
+              <option value="{{ val }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Tipo</label>
+            <select name="tipo" class="form-control">
+              {% for val, label in tipos %}
+              <option value="{{ val }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Contenido *</label>
+          <textarea name="contenido" class="form-control" rows="7"
+            placeholder="Escribe aquí tu estrategia, mensaje o reflexión. Puedes usar párrafos cortos para que sea fácil de leer..." required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">URL de imagen (opcional)</label>
+          <input type="url" name="imagen_url" class="form-control" placeholder="https://... imagen ilustrativa">
+          <div style="font-size:.72rem;color:var(--text-xs);margin-top:4px">Agrega una imagen para hacer la publicación más visual</div>
+        </div>
+
+        <label style="display:flex;align-items:center;gap:10px;cursor:pointer;margin-bottom:18px;padding:12px;background:var(--sage-xxl);border-radius:10px;border:1.5px solid var(--sage-xl)">
+          <input type="checkbox" name="fijado" value="1">
+          <div>
+            <div style="font-size:.85rem;font-weight:700">📌 Fijar publicación</div>
+            <div style="font-size:.72rem;color:var(--text-xs)">Aparecerá siempre al inicio del foro</div>
+          </div>
+        </label>
+
+        <button type="submit" class="btn btn-primary" style="width:100%">Publicar →</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Lista de publicaciones -->
+  <div>
+    <div style="font-weight:700;font-size:.9rem;color:var(--text-s);margin-bottom:14px">
+      {{ publicaciones|length }} publicación(es) tuya(s)
+    </div>
+
+    {% for pub in publicaciones %}
+    <div class="card" style="margin-bottom:14px;{% if pub.fijado %}border-color:var(--sage);{% endif %}{% if not pub.activo %}opacity:.5;{% endif %}">
+      <div style="padding:14px 18px">
+        <div style="display:flex;align-items:flex-start;gap:12px">
+          <div style="flex:1">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:5px">
+              {% if pub.fijado %}<span style="font-size:.7rem;background:#fff8e8;color:#b8860b;border:1px solid #f5d88a;padding:2px 9px;border-radius:12px;font-weight:700">📌 Fijado</span>{% endif %}
+              <span style="font-size:.7rem;background:var(--sage-xxl);color:var(--sage-d);padding:2px 9px;border-radius:12px;font-weight:600">{{ pub.get_tipo_display }}</span>
+              <span style="font-size:.7rem;color:var(--text-xs)">{{ pub.get_categoria_display }}</span>
+            </div>
+            <div style="font-weight:700;font-size:.9rem;color:var(--text);margin-bottom:4px">{{ pub.titulo }}</div>
+            <div style="font-size:.78rem;color:var(--text-s);line-height:1.6">{{ pub.contenido|truncatechars:120 }}</div>
+            <div style="font-size:.7rem;color:var(--text-xs);margin-top:6px">{{ pub.fecha_creacion|date:"d M Y · H:i" }}</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px;min-width:90px">
+            <form method="post" style="margin:0">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="fijar">
+              <input type="hidden" name="pk" value="{{ pub.pk }}">
+              <button type="submit" class="btn btn-sm btn-outline" style="width:100%;font-size:.72rem">
+                {% if pub.fijado %}📌 Desfijar{% else %}📌 Fijar{% endif %}
+              </button>
+            </form>
+            <form method="post" style="margin:0" onsubmit="return confirm('¿Eliminar esta publicación?')">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="eliminar">
+              <input type="hidden" name="pk" value="{{ pub.pk }}">
+              <button type="submit" class="btn btn-sm" style="width:100%;background:#fdeaea;color:#c0392b;border:1px solid #e8b8b8;font-size:.72rem">🗑 Eliminar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div style="text-align:center;padding:40px;color:var(--text-xs);background:white;border-radius:16px;border:1px solid var(--sage-xl)">
+      <div style="font-size:2.5rem;margin-bottom:12px">📝</div>
+      <div style="font-weight:600;color:var(--text-s);margin-bottom:6px">Aún no has publicado nada</div>
+      <p style="font-size:.82rem">Usa el formulario para publicar tu primera estrategia o mensaje para los estudiantes.</p>
+    </div>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

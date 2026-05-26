@@ -1,0 +1,96 @@
+{% extends 'psicoasis/base.html' %}
+{% block title %}Estudiantes — PsicoAsis{% endblock %}
+{% block topbar_title %}Estudiantes{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'estudiante_nuevo' %}" class="btn btn-primary btn-sm">+ Nuevo estudiante</a>
+{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div class="page-header-row">
+    <div>
+      <h1>Estudiantes 👥</h1>
+      <p>{{ total }} estudiante{{ total|pluralize }} activo{{ total|pluralize }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- FILTROS -->
+<div class="card mb-6">
+  <div class="card-body" style="padding:16px 20px">
+    <form method="get" style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
+      <div style="flex:1;min-width:200px">
+        <label class="form-label">Buscar</label>
+        <input type="text" name="q" class="form-control" placeholder="Nombre, apellido o grado..." value="{{ query }}" style="margin:0">
+      </div>
+      <div style="min-width:140px">
+        <label class="form-label">Grado</label>
+        <select name="grado" class="form-control" style="margin:0">
+          <option value="">Todos</option>
+          {% for val, lbl in grados %}
+          <option value="{{ val }}" {% if grado_filtro == val %}selected{% endif %}>{{ lbl }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary" style="height:44px">Filtrar</button>
+      {% if query or grado_filtro %}
+      <a href="{% url 'estudiantes_list' %}" class="btn btn-outline" style="height:44px">Limpiar</a>
+      {% endif %}
+    </form>
+  </div>
+</div>
+
+<!-- TABLA -->
+<div class="card">
+  {% if estudiantes %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Estudiante</th>
+          <th>Grado</th>
+          <th>Edad</th>
+          <th>Acudiente</th>
+          <th>Teléfono</th>
+          <th>Registro</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for e in estudiantes %}
+        <tr>
+          <td>
+            <div class="flex items-center gap-2">
+              <div class="av av-36 {% cycle 'av-green' 'av-orange' 'av-blue' %}">{{ e.nombre|first }}{{ e.apellido|first }}</div>
+              <div>
+                <div style="font-weight:600;font-size:.88rem">{{ e.nombre }} {{ e.apellido }}</div>
+                {% if e.email %}<div style="font-size:.72rem;color:var(--text-xs)">{{ e.email }}</div>{% endif %}
+              </div>
+            </div>
+          </td>
+          <td><span class="badge badge-green">{{ e.grado }}</span></td>
+          <td>{{ e.edad }} años</td>
+          <td style="font-size:.84rem">{{ e.nombre_acudiente|default:"—" }}</td>
+          <td style="font-size:.84rem">{{ e.telefono_acudiente|default:"—" }}</td>
+          <td style="font-size:.8rem;color:var(--text-xs)">{{ e.fecha_registro|date:"d M Y" }}</td>
+          <td>
+            <div class="flex gap-2">
+              <a href="{% url 'estudiante_detalle' e.pk %}" class="btn btn-outline btn-sm">Ver</a>
+              <a href="{% url 'estudiante_editar' e.pk %}" class="btn btn-outline btn-sm">Editar</a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <span class="empty-icon">👥</span>
+    <div class="empty-title">Sin estudiantes</div>
+    <p class="empty-desc">{% if query %}No se encontraron resultados para "{{ query }}".{% else %}Aún no hay estudiantes registrados.{% endif %}</p>
+    <a href="{% url 'estudiante_nuevo' %}" class="btn btn-primary btn-sm">+ Nuevo estudiante</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

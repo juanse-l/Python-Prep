@@ -1,0 +1,101 @@
+{% extends 'psicoasis/base.html' %}
+{% block title %}Foros — PsicoAsis{% endblock %}
+{% block topbar_title %}Foros y Espacios{% endblock %}
+{% block content %}
+<div class="page-header"><h1>Foros y Espacios de Reflexión 🌸</h1><p>Espacios para compartir, aprender y acompañarse mutuamente</p></div>
+
+<div class="grid-main">
+  <div>
+    <!-- Filtros de categoría -->
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
+      <a href="{% url 'foros' %}" class="btn {% if not categoria_filtro %}btn-primary{% else %}btn-outline{% endif %} btn-sm">Todos</a>
+      {% for val, label in categorias %}
+      <a href="{% url 'foros' %}?cat={{ val }}" class="btn {% if categoria_filtro == val %}btn-primary{% else %}btn-outline{% endif %} btn-sm">{{ label }}</a>
+      {% endfor %}
+    </div>
+
+    {% if temas %}
+    <div style="display:flex;flex-direction:column;gap:12px">
+      {% for t in temas %}
+      <a href="{% url 'foro_tema' t.pk %}" style="text-decoration:none">
+        <div class="card" style="cursor:pointer;transition:all .2s" onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(45,58,46,.1)'" onmouseleave="this.style.transform='';this.style.boxShadow=''">
+          <div class="card-body" style="display:flex;gap:16px;align-items:flex-start;padding:18px 20px">
+            <div style="background:var(--sage-xxl);border-radius:12px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.4rem">
+              {% if t.categoria == 'bienestar' %}🌿{% elif t.categoria == 'estudiantes' %}🧑‍🎓{% elif t.categoria == 'docentes' %}🎓{% elif t.categoria == 'familias' %}👨‍👩‍👧{% elif t.categoria == 'academico' %}📚{% else %}💬{% endif %}
+            </div>
+            <div style="flex:1">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+                {% if t.fijado %}<span style="font-size:.7rem;background:#fff9e6;color:#e8a020;border-radius:6px;padding:2px 8px;font-weight:600">📌 Fijado</span>{% endif %}
+                <span style="font-size:.72rem;background:var(--sage-xxl);color:var(--sage);border-radius:6px;padding:2px 8px">{{ t.get_categoria_display }}</span>
+              </div>
+              <div style="font-weight:600;font-size:.92rem;color:var(--text);margin-bottom:4px">{{ t.titulo }}</div>
+              {% if t.descripcion %}<p style="font-size:.8rem;color:var(--text-s);line-height:1.6">{{ t.descripcion|truncatewords:15 }}</p>{% endif %}
+              <div style="font-size:.72rem;color:var(--text-xs);margin-top:8px">
+                💬 {{ t.total_respuestas }} respuesta{{ t.total_respuestas|pluralize }} · 
+                por {{ t.autor.first_name|default:t.autor.username }} · 
+                {{ t.fecha_creacion|date:"d/m/Y" }}
+              </div>
+            </div>
+            <div style="color:var(--text-xs);font-size:1.2rem">›</div>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="card">
+      <div class="empty-state">
+        <span class="empty-icon">🌸</span>
+        <div class="empty-title">Sé el primero en crear un tema</div>
+        <p class="empty-desc">Los foros son espacios seguros para reflexionar y compartir experiencias sobre bienestar emocional.</p>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Columna lateral -->
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <!-- Nuevo tema -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">✍️ Crear nuevo tema</span></div>
+      <div class="card-body" style="padding:16px">
+        <form method="post" action="{% url 'foro_nuevo_tema' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label class="form-label">Título del tema *</label>
+            <input type="text" name="titulo" class="form-control" placeholder="¿Sobre qué quieres conversar?" required>
+          </div>
+          <div class="form-group mt-3">
+            <label class="form-label">Categoría</label>
+            <select name="categoria" class="form-control">
+              {% for val, label in form.fields.categoria.choices %}
+              <option value="{{ val }}">{{ label }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="form-group mt-3">
+            <label class="form-label">Descripción (opcional)</label>
+            <textarea name="descripcion" class="form-control" rows="3" placeholder="Describe brevemente el tema..."></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary w-full mt-3" style="justify-content:center">Crear tema 🌿</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Normas del foro -->
+    <div class="card" style="background:linear-gradient(135deg,#1e3320,#3a5c3e);border:none">
+      <div class="card-body">
+        <div style="font-size:1.4rem;margin-bottom:10px">🌱</div>
+        <h4 style="color:white;font-family:'Playfair Display',serif;font-size:.95rem;margin-bottom:12px">Normas del Foro</h4>
+        <ul style="color:rgba(255,255,255,.75);font-size:.78rem;line-height:2;padding-left:16px">
+          <li>Respeta a todos los participantes</li>
+          <li>Usa un lenguaje amable y constructivo</li>
+          <li>Cuida la información personal</li>
+          <li>Apoya sin juzgar las experiencias de otros</li>
+          <li>Si necesitas apoyo urgente, contacta a Laura</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

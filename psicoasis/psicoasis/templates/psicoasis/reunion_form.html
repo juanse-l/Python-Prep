@@ -1,0 +1,119 @@
+{% extends 'psicoasis/base.html' %}
+{% block title %}{{ titulo }} — PsicoAsis{% endblock %}
+{% block topbar_title %}{{ titulo }}{% endblock %}
+{% block content %}
+
+<div class="page-header"><h1>{{ titulo }} 📅</h1></div>
+<div style="max-width:700px">
+<div class="card">
+  <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-grid">
+        <div class="form-group full">
+          <label class="form-label">Estudiante *</label>
+          <div style="display:flex;gap:8px;align-items:flex-start">
+            <select name="estudiante" class="form-control" required style="flex:1">
+              <option value="">Seleccionar estudiante</option>
+              {% for e in estudiantes %}
+              <option value="{{ e.pk }}" {% if form.estudiante.value|stringformat:"s" == e.pk|stringformat:"s" %}selected{% endif %}>{{ e.apellido }}, {{ e.nombre }} — {{ e.grado }}</option>
+              {% endfor %}
+            </select>
+            <a href="{% url 'estudiante_nuevo' %}?next={{ request.path }}" class="btn btn-outline btn-sm" style="white-space:nowrap;flex-shrink:0;align-self:center" title="Registrar nuevo estudiante">+ Nuevo estudiante</a>
+          </div>
+          <p style="font-size:.75rem;color:var(--text-xs);margin-top:4px">¿El estudiante no aparece en la lista? <a href="{% url 'estudiante_nuevo' %}?next={{ request.path }}" style="color:var(--sage)">Regístralo aquí</a>.</p>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Fecha *</label>
+          <input type="date" name="fecha" class="form-control" value="{{ form.fecha.value|default:'' }}" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Hora *</label>
+          <input type="time" name="hora" class="form-control" value="{{ form.hora.value|default:'' }}" required>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Motivo *</label>
+          <input type="text" name="motivo" class="form-control" value="{{ form.motivo.value|default:'' }}" required placeholder="Motivo de la reunión">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Estado</label>
+          <select name="estado" id="id_estado" class="form-control" onchange="toggleAplazado(this.value)">
+            <option value="pendiente" {% if form.estado.value == 'pendiente' %}selected{% endif %}>Pendiente</option>
+            <option value="confirmada" {% if form.estado.value == 'confirmada' %}selected{% endif %}>Confirmada</option>
+            <option value="realizada" {% if form.estado.value == 'realizada' %}selected{% endif %}>Realizada</option>
+            <option value="cancelada" {% if form.estado.value == 'cancelada' %}selected{% endif %}>Cancelada</option>
+            <option value="aplazada" {% if form.estado.value == 'aplazada' %}selected{% endif %}>Aplazada</option>
+          </select>
+
+          <!-- Mini-calendario de aplazamiento -->
+          <div id="aplazado-panel" style="display:none;margin-top:12px;background:var(--sage-xxl,#f4f9f4);border:1.5px solid #c8e0cb;border-radius:12px;padding:16px">
+            <p style="font-size:.78rem;font-weight:700;color:var(--text-s);margin-bottom:10px">📅 ¿Para cuándo se aplaza?</p>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+              <div>
+                <label style="font-size:.75rem;color:var(--text-xs);display:block;margin-bottom:4px">Nueva fecha *</label>
+                <input type="date" name="fecha_aplazada" id="id_fecha_aplazada" class="form-control" value="{{ form.fecha_aplazada.value|default:'' }}" style="font-size:.85rem">
+              </div>
+              <div>
+                <label style="font-size:.75rem;color:var(--text-xs);display:block;margin-bottom:4px">Nueva hora *</label>
+                <input type="time" name="hora_aplazada" id="id_hora_aplazada" class="form-control" value="{{ form.hora_aplazada.value|default:'' }}" style="font-size:.85rem">
+              </div>
+            </div>
+            <!-- Resumen visual -->
+            <div id="aplazado-resumen" style="margin-top:10px;display:none;background:#fff;border-radius:8px;padding:10px 12px;font-size:.8rem;color:var(--text-s);border:1px solid #d4e8d6">
+              🕐 Cita aplazada para el <strong id="resumen-fecha"></strong> a las <strong id="resumen-hora"></strong>
+            </div>
+          </div>
+        </div>
+
+        <script>
+        function toggleAplazado(val) {
+          const panel = document.getElementById('aplazado-panel');
+          panel.style.display = (val === 'aplazada') ? 'block' : 'none';
+        }
+        // Mostrar resumen en tiempo real
+        function actualizarResumen() {
+          const f = document.getElementById('id_fecha_aplazada').value;
+          const h = document.getElementById('id_hora_aplazada').value;
+          const resumen = document.getElementById('aplazado-resumen');
+          if (f && h) {
+            const fecha = new Date(f + 'T' + h);
+            const opciones = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+            document.getElementById('resumen-fecha').textContent = fecha.toLocaleDateString('es-CO', opciones);
+            const [hh, mm] = h.split(':');
+            const h12 = parseInt(hh) > 12 ? `${parseInt(hh)-12}:${mm} p.m.` : `${hh}:${mm} a.m.`;
+            document.getElementById('resumen-hora').textContent = h12;
+            resumen.style.display = 'block';
+          } else {
+            resumen.style.display = 'none';
+          }
+        }
+        document.addEventListener('DOMContentLoaded', function() {
+          toggleAplazado(document.getElementById('id_estado').value);
+          document.getElementById('id_fecha_aplazada').addEventListener('change', actualizarResumen);
+          document.getElementById('id_hora_aplazada').addEventListener('change', actualizarResumen);
+          actualizarResumen();
+        });
+        </script>
+        <div class="form-group">
+          <label class="form-label">Tipo de atención</label>
+          <select name="tipo_atencion" class="form-control">
+            <option value="regular" {% if form.tipo_atencion.value == 'regular' %}selected{% endif %}>Regular</option>
+            <option value="urgente" {% if form.tipo_atencion.value == 'urgente' %}selected{% endif %}>Urgente</option>
+            <option value="prioritario" {% if form.tipo_atencion.value == 'prioritario' %}selected{% endif %}>Prioritario</option>
+            <option value="seguimiento" {% if form.tipo_atencion.value == 'seguimiento' %}selected{% endif %}>Seguimiento</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Notas</label>
+          <textarea name="notas" class="form-control" rows="3" placeholder="Observaciones de la reunión...">{{ form.notas.value|default:'' }}</textarea>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <button type="submit" class="btn btn-primary">Guardar reunión</button>
+        <a href="{% url 'reuniones_list' %}" class="btn btn-outline">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+</div>
+{% endblock %}

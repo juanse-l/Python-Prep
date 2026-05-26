@@ -1,0 +1,103 @@
+{% extends 'psicoasis/base.html' %}
+{% block title %}Mensajes de Estudiantes — PsicoAsis{% endblock %}
+{% block topbar_title %}💬 Mensajes de Estudiantes{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1>💬 Mensajes de Estudiantes</h1>
+  <p>Conversaciones privadas con tus estudiantes.</p>
+</div>
+
+<div style="display:grid;grid-template-columns:280px 1fr;gap:20px;height:calc(100vh - 220px);min-height:500px">
+
+  <!-- Lista de conversaciones -->
+  <div class="card" style="overflow-y:auto;margin-bottom:0">
+    <div style="padding:14px 16px;border-bottom:1px solid var(--sage-xl);font-weight:700;font-size:.85rem">Conversaciones</div>
+    {% for conv in conversaciones %}
+    <a href="?con={{ conv.usuario.pk }}" style="display:block;padding:12px 16px;text-decoration:none;color:var(--text);border-bottom:1px solid var(--sage-xxl);{% if chat_user.pk == conv.usuario.pk %}background:var(--sage-xxl){% endif %};transition:background .15s" 
+       onmouseover="this.style.background='var(--sage-xxl)'" onmouseout="this.style.background='{% if chat_user.pk == conv.usuario.pk %}var(--sage-xxl){% else %}transparent{% endif %}'">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--sage),var(--sage-d));display:flex;align-items:center;justify-content:center;font-size:.8rem;color:white;font-weight:700;min-width:36px">
+          {{ conv.usuario.first_name|first|upper }}{{ conv.usuario.last_name|first|upper }}
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-weight:600;font-size:.82rem;{% if conv.no_leidos %}color:var(--sage-d){% endif %}">
+            {% if conv.ultimo.es_anonimo and conv.ultimo.remitente != request.user %}
+              Estudiante anónimo
+            {% else %}
+              {{ conv.usuario.get_full_name|default:conv.usuario.username }}
+            {% endif %}
+          </div>
+          <div style="font-size:.72rem;color:var(--text-xs);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ conv.ultimo.contenido|truncatechars:35 }}</div>
+        </div>
+        {% if conv.no_leidos %}
+        <span style="background:var(--red);color:white;border-radius:50%;font-size:.6rem;font-weight:700;min-width:18px;height:18px;display:flex;align-items:center;justify-content:center">{{ conv.no_leidos }}</span>
+        {% endif %}
+      </div>
+    </a>
+    {% empty %}
+    <div style="padding:28px;text-align:center;color:var(--text-xs);font-size:.82rem">
+      Ningún estudiante te ha escrito aún.
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Chat activo -->
+  <div class="card" style="display:flex;flex-direction:column;overflow:hidden;margin-bottom:0">
+    {% if chat_user %}
+    <div style="padding:14px 18px;border-bottom:1px solid var(--sage-xl);display:flex;align-items:center;gap:12px">
+      <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--sage),var(--sage-d));display:flex;align-items:center;justify-content:center;font-size:.8rem;color:white;font-weight:700">
+        {{ chat_user.first_name|first|upper }}{{ chat_user.last_name|first|upper }}
+      </div>
+      <div>
+        <div style="font-weight:700;font-size:.88rem">{{ chat_user.get_full_name|default:chat_user.username }}</div>
+        <div style="font-size:.7rem;color:var(--text-xs)">Estudiante</div>
+      </div>
+    </div>
+
+    <div style="flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:8px" id="chatArea">
+      {% for m in mensajes_chat %}
+      <div style="display:flex;flex-direction:column;{% if m.remitente == request.user %}align-items:flex-end{% else %}align-items:flex-start{% endif %}">
+        {% if m.es_anonimo %}
+        <div style="font-size:.63rem;color:var(--text-xs);margin-bottom:2px">🎭 Mensaje anónimo</div>
+        {% endif %}
+        <div style="max-width:72%;padding:10px 14px;border-radius:14px;font-size:.85rem;line-height:1.6;
+          {% if m.remitente == request.user %}
+            background:linear-gradient(135deg,var(--sage),var(--sage-d));color:white;border-bottom-right-radius:4px
+          {% else %}
+            background:var(--sage-xxl);color:var(--text);border:1px solid var(--sage-xl);border-bottom-left-radius:4px
+          {% endif %}">
+          {{ m.contenido }}
+        </div>
+        <div style="font-size:.65rem;color:var(--text-xs);margin-top:3px">{{ m.fecha|date:"d M H:i" }}</div>
+      </div>
+      {% empty %}
+      <div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--text-xs);font-size:.85rem">
+        Inicia la conversación con este estudiante.
+      </div>
+      {% endfor %}
+    </div>
+
+    <form method="post" style="padding:14px 16px;border-top:1px solid var(--sage-xl);display:flex;gap:10px">
+      {% csrf_token %}
+      <textarea name="contenido" class="form-control" rows="2" placeholder="Escribe tu respuesta..." style="resize:none;flex:1" required></textarea>
+      <button type="submit" class="btn btn-primary">Enviar</button>
+    </form>
+
+    {% else %}
+    <div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--text-xs);text-align:center;padding:40px">
+      <div>
+        <div style="font-size:3rem;margin-bottom:12px">💬</div>
+        Selecciona una conversación de la izquierda para responder.
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+const ca = document.getElementById('chatArea');
+if (ca) ca.scrollTop = ca.scrollHeight;
+</script>
+
+{% endblock %}

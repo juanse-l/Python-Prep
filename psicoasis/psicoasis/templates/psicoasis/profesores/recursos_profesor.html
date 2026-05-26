@@ -1,0 +1,61 @@
+{% extends "psicoasis/profesores/base_profesor.html" %}
+{% block title %}Recursos Docentes — Panel Docente{% endblock %}
+{% block topbar_title %}📚 Recursos para Docentes{% endblock %}
+{% block content %}
+
+<!-- Filtro por categoría -->
+<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px;">
+  <a href="{% url 'recursos_profesor' %}" class="btn btn-sm {% if not cat_filter %}btn-primary{% else %}btn-secondary{% endif %}">Todos</a>
+  {% for val, label in categorias %}
+  <a href="?cat={{ val }}" class="btn btn-sm {% if cat_filter == val %}btn-primary{% else %}btn-secondary{% endif %}">{{ label }}</a>
+  {% endfor %}
+</div>
+
+{% if recursos %}
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;">
+    {% for r in recursos %}
+    <div class="card" style="margin-bottom:0;">
+      <div class="card-body">
+        <div style="font-size:1.6rem;margin-bottom:10px;">
+          {% if r.tipo == 'guia' %}📄{% elif r.tipo == 'estrategia' %}🛠️{% elif r.tipo == 'protocolo' %}📋{% elif r.tipo == 'video' %}🎥{% else %}🖼️{% endif %}
+        </div>
+        <div style="font-size:.75rem;color:var(--text-xs);margin-bottom:6px;">{{ r.get_categoria_display }}</div>
+        <div style="font-weight:700;font-size:.95rem;margin-bottom:8px;">{{ r.titulo }}</div>
+        <div style="font-size:.82rem;color:var(--text-s);margin-bottom:14px;">{{ r.descripcion|truncatechars:100 }}</div>
+
+        {% if r.url_externo %}
+          <a href="{{ r.url_externo }}" target="_blank" class="btn btn-primary btn-sm">Ver recurso 🔗</a>
+        {% elif r.archivo %}
+          <a href="{{ r.archivo.url }}" target="_blank" class="btn btn-primary btn-sm">Descargar 📥</a>
+        {% elif r.contenido %}
+          <button onclick="toggleContenido({{ r.pk }})" class="btn btn-secondary btn-sm">Leer contenido</button>
+          <div id="contenido-{{ r.pk }}" style="display:none;margin-top:12px;padding:12px;background:var(--indigo-xxl);border-radius:10px;font-size:.83rem;line-height:1.6;">
+            {{ r.contenido|linebreaks }}
+          </div>
+        {% endif %}
+
+        <div style="margin-top:10px;font-size:.72rem;color:var(--text-xs);">
+          {{ r.fecha_creacion|date:"d/m/Y" }}
+          {% if r.autor %} · {{ r.autor.get_full_name }}{% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="card" style="max-width:500px;margin:0 auto;text-align:center;">
+    <div class="card-body" style="padding:40px;">
+      <div style="font-size:2.5rem;margin-bottom:12px;">📚</div>
+      <div style="font-size:1rem;font-weight:700;margin-bottom:8px;">Sin recursos disponibles</div>
+      <div style="font-size:.85rem;color:var(--text-xs);">La psicóloga aún no ha publicado recursos en esta categoría.</div>
+    </div>
+  </div>
+{% endif %}
+
+<script>
+function toggleContenido(pk) {
+  const el = document.getElementById('contenido-' + pk);
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+}
+</script>
+{% endblock %}

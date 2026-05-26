@@ -1,0 +1,239 @@
+{% extends 'psicoasis/base.html' %}
+{% load extras %}
+{% block title %}Calendario — PsicoAsis{% endblock %}
+{% block topbar_title %}Calendario{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'reunion_nueva' %}" class="btn btn-primary btn-sm">+ Nueva cita</a>
+{% endblock %}
+{% block content %}
+
+<style>
+.cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-bottom:6px; }
+.cal-header-day { text-align:center; font-size:.72rem; font-weight:700; color:var(--text-xs); text-transform:uppercase; letter-spacing:.6px; padding:8px 4px; }
+.cal-day {
+  min-height:80px; background:white; border-radius:10px; padding:6px 8px;
+  border:1.5px solid transparent; cursor:pointer; transition:all .2s;
+  position:relative;
+}
+.cal-day:hover { border-color:var(--sage-l); background:var(--sage-xxl); }
+.cal-day.today { border-color:var(--sage); background:var(--sage-xxl); }
+.cal-day.today .cal-day-num { background:var(--sage); color:white; border-radius:50%; width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center; }
+.cal-day.empty { background:transparent; border:none; cursor:default; }
+.cal-day-num { font-size:.82rem; font-weight:600; color:var(--text-s); }
+.cal-event { background:var(--sage); color:white; border-radius:5px; font-size:.65rem; padding:2px 6px; margin-top:3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; cursor:pointer; }
+.cal-event.pendiente { background:#e8a020; }
+.cal-event.confirmada { background:#2ecc71; }
+.cal-event.realizada { background:#7a9e7e; }
+.cal-event.cancelada { background:#e74c3c; }
+.cal-event.mas { background:var(--text-xs); font-weight:600; }
+
+/* Modal */
+.modal-overlay { display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center; }
+.modal-overlay.open { display:flex; }
+.modal-box { background:white;border-radius:20px;padding:28px;width:100%;max-width:520px;max-height:85vh;overflow-y:auto;box-shadow:0 24px 60px rgba(0,0,0,.2); }
+.modal-title { font-family:'Playfair Display',serif;font-size:1.2rem;margin-bottom:18px;color:var(--text); }
+</style>
+
+<div class="page-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+  <div>
+    <h1>Calendario 📅</h1>
+    <p>{{ nombre_mes }} {{ year }}</p>
+  </div>
+  <div style="display:flex;gap:8px">
+    <a href="{% url 'calendario' %}?month={{ prev_month }}&year={{ prev_year }}" class="btn btn-outline btn-sm">‹ Anterior</a>
+    <a href="{% url 'calendario' %}" class="btn btn-outline btn-sm">Hoy</a>
+    <a href="{% url 'calendario' %}?month={{ next_month }}&year={{ next_year }}" class="btn btn-outline btn-sm">Siguiente ›</a>
+  </div>
+</div>
+
+<div class="grid-main">
+  <!-- CALENDARIO VISUAL -->
+  <div>
+    <div class="card" style="padding:20px">
+      <!-- Días de semana -->
+      <div class="cal-grid">
+        {% for dia in "LunMarMiéJueViéSábDom"|make_list %}{% endfor %}
+        <div class="cal-header-day">Lun</div>
+        <div class="cal-header-day">Mar</div>
+        <div class="cal-header-day">Mié</div>
+        <div class="cal-header-day">Jue</div>
+        <div class="cal-header-day">Vie</div>
+        <div class="cal-header-day">Sáb</div>
+        <div class="cal-header-day">Dom</div>
+      </div>
+
+      <!-- Semanas -->
+      {% for semana in cal %}
+      <div class="cal-grid">
+        {% for dia in semana %}
+        {% if dia == 0 %}
+        <div class="cal-day empty"></div>
+        {% else %}
+        <div class="cal-day {% if dia == hoy.day and month == hoy.month and year == hoy.year %}today{% endif %}"
+             onclick="abrirDia({{ dia }}, '{{ year }}-{% if month < 10 %}0{% endif %}{{ month }}-{% if dia < 10 %}0{% endif %}{{ dia }}')">
+          <div class="cal-day-num">{{ dia }}</div>
+          {% if reuniones_por_dia|get_item:dia %}
+            {% for r in reuniones_por_dia|get_item:dia %}
+              {% if forloop.counter <= 2 %}
+              <div class="cal-event {{ r.estado }}" title="{{ r.hora|time:'g:i A' }} — {{ r.estudiante.get_full_name }}">
+                {{ r.hora|time:"g:i" }} {{ r.estudiante.nombre|truncatechars:8 }}
+              </div>
+              {% elif forloop.counter == 3 %}
+              <div class="cal-event mas">+{{ reuniones_por_dia|get_item:dia|length|add:"-2" }} más</div>
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        </div>
+        {% endif %}
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Resumen del mes -->
+    <div class="card mt-4">
+      <div class="card-header"><span class="card-title">Citas de {{ nombre_mes }}</span></div>
+      {% if reuniones_mes %}
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Estudiante</th><th>Fecha</th><th>Hora</th><th>Estado</th><th></th></tr></thead>
+          <tbody>
+            {% for r in reuniones_mes %}
+            <tr>
+              <td style="font-weight:600;font-size:.84rem">{{ r.estudiante.get_full_name }}</td>
+              <td><span class="badge {% if r.fecha == hoy %}badge-green{% else %}badge-gray{% endif %}">{% if r.fecha == hoy %}Hoy{% else %}{{ r.fecha|date:"d M" }}{% endif %}</span></td>
+              <td style="font-size:.82rem">{{ r.hora|time:"g:i A" }}</td>
+              <td><span class="badge {% if r.estado == 'confirmada' %}badge-green{% elif r.estado == 'pendiente' %}badge-yellow{% elif r.estado == 'realizada' %}badge-blue{% else %}badge-red{% endif %}">{{ r.get_estado_display }}</span></td>
+              <td><a href="{% url 'reunion_editar' r.pk %}" class="btn btn-outline btn-sm">Editar</a></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <div class="empty-state" style="padding:24px">
+        <span class="empty-icon">📅</span>
+        <div class="empty-title">Sin citas en {{ nombre_mes }}</div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- COLUMNA LATERAL -->
+  <div style="display:flex;flex-direction:column;gap:16px">
+    <!-- Agendar cita rápida -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">📌 Agendar cita</span></div>
+      <div class="card-body" style="padding:16px">
+        <form method="post" action="{% url 'reunion_nueva' %}">
+          {% csrf_token %}
+          <div class="form-group">
+            <label class="form-label">Estudiante</label>
+            <select name="estudiante" class="form-control" required>
+              <option value="">— Seleccionar —</option>
+              {% for e in estudiantes %}
+              <option value="{{ e.pk }}">{{ e.nombre }} {{ e.apellido }} ({{ e.grado }})</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px">
+            <div class="form-group">
+              <label class="form-label">Fecha</label>
+              <input type="date" name="fecha" class="form-control" id="fechaRapida" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Hora</label>
+              <input type="time" name="hora" class="form-control" required>
+            </div>
+          </div>
+          <div class="form-group mt-2">
+            <label class="form-label">Motivo</label>
+            <input type="text" name="motivo" class="form-control" placeholder="Motivo de la cita" required>
+          </div>
+          <button type="submit" class="btn btn-primary w-full mt-3" style="justify-content:center">Agendar cita 📅</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Próximas citas -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">Próximas citas</span></div>
+      {% if proximas_reuniones %}
+      <div style="padding:0 8px">
+        {% for r in proximas_reuniones %}
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:12px 8px;border-bottom:1px solid var(--border);">
+          <div style="text-align:center;min-width:36px">
+            <div style="font-size:.65rem;color:var(--text-xs);text-transform:uppercase">{{ r.fecha|date:"M" }}</div>
+            <div style="font-size:1.1rem;font-weight:700;color:var(--sage);line-height:1">{{ r.fecha|date:"d" }}</div>
+          </div>
+          <div style="flex:1">
+            <div style="font-weight:600;font-size:.82rem">{{ r.estudiante.nombre }} {{ r.estudiante.apellido }}</div>
+            <div style="font-size:.72rem;color:var(--text-xs)">{{ r.hora|time:"g:i A" }} · {{ r.motivo|truncatewords:4 }}</div>
+          </div>
+          <span class="badge {% if r.estado == 'confirmada' %}badge-green{% elif r.estado == 'pendiente' %}badge-yellow{% else %}badge-gray{% endif %}" style="font-size:.65rem">{{ r.get_estado_display }}</span>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div style="padding:20px;text-align:center;color:var(--text-xs);font-size:.82rem">Sin próximas citas</div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- MODAL PARA DÍA -->
+<div class="modal-overlay" id="diaModal">
+  <div class="modal-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 class="modal-title" id="modalTitulo">Citas del día</h3>
+      <button onclick="cerrarModal()" style="background:none;border:none;font-size:1.4rem;cursor:pointer;color:var(--text-xs)">×</button>
+    </div>
+    <div id="modalCitas"></div>
+    <a id="modalAgendar" href="#" class="btn btn-primary w-full mt-4" style="justify-content:center">+ Agendar cita en este día</a>
+  </div>
+</div>
+
+<script>
+// Datos de reuniones para el modal
+const reunionesPorDia = {
+  {% for dia, lista in reuniones_por_dia.items %}
+  {{ dia }}: [{% for r in lista %}{ hora:'{{ r.hora|time:"g:i A" }}', nombre:'{{ r.estudiante.get_full_name }}', motivo:'{{ r.motivo|truncatewords:5 }}', estado:'{{ r.estado }}', pk:{{ r.pk }} },{% endfor %}],
+  {% endfor %}
+};
+
+const nombres_meses = ['','Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+
+function abrirDia(dia, fecha) {
+  const modal = document.getElementById('diaModal');
+  document.getElementById('modalTitulo').textContent = `${dia} de {{ nombre_mes }} {{ year }}`;
+  document.getElementById('modalAgendar').href = `/reuniones/nueva/?fecha=${fecha}`;
+  
+  const cont = document.getElementById('modalCitas');
+  const citas = reunionesPorDia[dia] || [];
+  
+  if (citas.length === 0) {
+    cont.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-xs)">
+      <div style="font-size:2rem;margin-bottom:8px">📅</div>
+      <div>Sin citas programadas para este día.</div>
+    </div>`;
+  } else {
+    cont.innerHTML = citas.map(c => `
+      <div style="background:var(--sage-xxl);border-radius:12px;padding:14px;margin-bottom:10px;border-left:4px solid var(--sage)">
+        <div style="font-weight:600;font-size:.9rem">${c.hora} — ${c.nombre}</div>
+        <div style="font-size:.78rem;color:var(--text-s);margin-top:4px">${c.motivo}</div>
+        <div style="margin-top:8px"><a href="/reuniones/${c.pk}/editar/" class="btn btn-outline btn-sm" style="font-size:.72rem">Editar cita</a></div>
+      </div>
+    `).join('');
+  }
+  modal.classList.add('open');
+}
+
+function cerrarModal() {
+  document.getElementById('diaModal').classList.remove('open');
+}
+
+document.getElementById('diaModal').addEventListener('click', function(e) {
+  if (e.target === this) cerrarModal();
+});
+</script>
+{% endblock %}

@@ -1,0 +1,108 @@
+{% extends "psicoasis/base.html" %}
+{% block title %}Profesores — PsicoAsis{% endblock %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+  <div>
+    <h1 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;">👩‍🏫 Profesores</h1>
+    <p style="color:#7a9aaa;font-size:.85rem;margin-top:4px;">{{ profesores|length }} docente{{ profesores|length|pluralize }} con cuenta activa</p>
+  </div>
+  <a href="{% url 'profesor_nuevo' %}" class="btn btn-primary">+ Nuevo profesor</a>
+</div>
+
+<div class="card">
+  <div class="card-body" style="padding:0;">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Docente</th>
+            <th>Área</th>
+            <th>Grados</th>
+            <th>Alertas pendientes</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for prof in profesores %}
+          <tr>
+            <td>
+              <div style="font-weight:600;">{{ prof.get_full_name|default:prof.username }}</div>
+              <div style="font-size:.75rem;color:#7a9aaa;">{{ prof.email }}</div>
+            </td>
+            <td>
+              {% if prof.perfil_profesor.docente %}
+                {{ prof.perfil_profesor.docente.get_area_display }}
+              {% else %}
+                <span style="color:#7a9aaa;">Sin vincular</span>
+              {% endif %}
+            </td>
+            <td style="font-size:.82rem;">
+              {% if prof.perfil_profesor.docente %}
+                {{ prof.perfil_profesor.docente.grados_a_cargo|default:"—" }}
+              {% else %}—{% endif %}
+            </td>
+            <td>
+              {% with alertas_pendientes|get_item:prof.id as n %}
+                {% if n and n > 0 %}
+                  <span class="badge badge-urgente">{{ n }} pendiente{{ n|pluralize }}</span>
+                {% else %}
+                  <span style="color:#7a9aaa;font-size:.8rem;">—</span>
+                {% endif %}
+              {% endwith %}
+            </td>
+            <td>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                <a href="{% url 'profesor_vincular' prof.id %}" class="btn btn-secondary btn-sm">Vincular</a>
+                <a href="{% url 'alertas_docentes_psicologo' %}?prof={{ prof.id }}" class="btn btn-secondary btn-sm">Alertas</a>
+              </div>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5" style="text-align:center;color:#7a9aaa;padding:30px;">
+              No hay profesores con cuenta. <a href="{% url 'profesor_nuevo' %}">Crear el primero</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Acceso rápido -->
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:16px;">
+  <a href="{% url 'alertas_docentes_psicologo' %}" style="text-decoration:none;">
+    <div class="card" style="margin-bottom:0;transition:transform .15s;" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
+      <div class="card-body" style="display:flex;align-items:center;gap:14px;">
+        <span style="font-size:1.8rem;">🚨</span>
+        <div><div style="font-weight:700;">Alertas de docentes</div><div style="font-size:.78rem;color:#7a9aaa;">Bandeja de alertas</div></div>
+      </div>
+    </div>
+  </a>
+  <a href="{% url 'citas_profesores_psicologo' %}" style="text-decoration:none;">
+    <div class="card" style="margin-bottom:0;transition:transform .15s;" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
+      <div class="card-body" style="display:flex;align-items:center;gap:14px;">
+        <span style="font-size:1.8rem;">📅</span>
+        <div><div style="font-weight:700;">Citas de profesores</div><div style="font-size:.78rem;color:#7a9aaa;">Gestionar citas</div></div>
+      </div>
+    </div>
+  </a>
+  <a href="{% url 'bandeja_mensajes_prof_psicologo' %}" style="text-decoration:none;">
+    <div class="card" style="margin-bottom:0;transition:transform .15s;" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
+      <div class="card-body" style="display:flex;align-items:center;gap:14px;">
+        <span style="font-size:1.8rem;">💬</span>
+        <div><div style="font-weight:700;">Mensajes</div><div style="font-size:.78rem;color:#7a9aaa;">Chat con docentes</div></div>
+      </div>
+    </div>
+  </a>
+  <a href="{% url 'bienestar_docentes_psicologo' %}" style="text-decoration:none;">
+    <div class="card" style="margin-bottom:0;transition:transform .15s;" onmouseenter="this.style.transform='translateY(-2px)'" onmouseleave="this.style.transform=''">
+      <div class="card-body" style="display:flex;align-items:center;gap:14px;">
+        <span style="font-size:1.8rem;">🧘</span>
+        <div><div style="font-weight:700;">Bienestar docente</div><div style="font-size:.78rem;color:#7a9aaa;">Check-ins y alertas</div></div>
+      </div>
+    </div>
+  </a>
+</div>
+{% endblock %}

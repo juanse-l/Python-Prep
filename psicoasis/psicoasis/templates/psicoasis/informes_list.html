@@ -1,0 +1,37 @@
+{% extends 'psicoasis/base.html' %}
+{% block title %}Informes — PsicoAsis{% endblock %}
+{% block topbar_title %}Informes{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'informe_nuevo' %}" class="btn btn-primary btn-sm">+ Nuevo informe</a>
+{% endblock %}
+{% block content %}
+
+<div class="page-header"><h1>Informes 📋</h1><p>Documentación de casos y seguimientos</p></div>
+
+<div class="card">
+  {% if informes %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Título</th><th>Tipo</th><th>Estudiante</th><th>Fecha</th></tr></thead>
+      <tbody>
+        {% for inf in informes %}
+        <tr onclick="window.location='{% url 'informe_detalle' inf.pk %}'" style="cursor:pointer;" onmouseover="this.style.background='var(--sage-xxl)'" onmouseout="this.style.background=''">
+          <td style="font-weight:600"><a href="{% url 'informe_detalle' inf.pk %}" style="color:var(--text);text-decoration:none;">{{ inf.titulo }}</a></td>
+          <td><span class="badge badge-blue">{{ inf.get_tipo_display }}</span></td>
+          <td>{{ inf.estudiante.get_full_name|default:"General" }}</td>
+          <td style="font-size:.82rem;color:var(--text-xs)">{{ inf.fecha_creacion|date:"d M Y" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <span class="empty-icon">📋</span>
+    <div class="empty-title">Sin informes</div>
+    <p class="empty-desc">Aún no hay informes creados.</p>
+    <a href="{% url 'informe_nuevo' %}" class="btn btn-primary btn-sm">+ Crear informe</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

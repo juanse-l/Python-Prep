@@ -1,0 +1,222 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}Panel de Padres — PsicoAsis{% endblock %}</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --sage: #6a9b7e; --sage-d: #3d6b52; --sage-l: #96c4a8; --sage-xl: #cde8d8; --sage-xxl: #eef7f2;
+    --warm: #8a7a6a; --warm-l: #c4b8aa; --warm-xxl: #f7f3ef;
+    --cream: #faf8f5; --text: #1a2a1e; --text-s: #4a6050; --text-xs: #7a9a80;
+    --white: #ffffff; --sidebar-w: 240px;
+    --orange: #e07c3e; --red: #d94f4f; --blue: #4a7fa8;
+  }
+  html, body { height: 100%; font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--text); }
+  .app { display: flex; min-height: 100vh; }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: var(--sidebar-w); min-height: 100vh;
+    background: linear-gradient(180deg, #0d1f14 0%, #122018 60%, #192a1e 100%);
+    display: flex; flex-direction: column;
+    position: fixed; top: 0; left: 0; bottom: 0; z-index: 50;
+  }
+  .sb-brand { padding: 22px 20px 16px; border-bottom: 1px solid rgba(255,255,255,.07); }
+  .sb-logo { font-family: 'Playfair Display', serif; font-size: 1.3rem; font-weight: 700; color: white; }
+  .sb-logo span { color: var(--sage-l); }
+  .sb-role-badge { font-size: .65rem; background: rgba(106,155,126,.25); color: var(--sage-l); padding: 3px 10px; border-radius: 20px; display: inline-block; margin-top: 5px; letter-spacing: .5px; }
+
+  .sb-user { padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,.07); display: flex; align-items: center; gap: 10px; }
+  .sb-av { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--sage), var(--sage-d)); display: flex; align-items: center; justify-content: center; font-size: .85rem; color: white; font-weight: 700; min-width: 36px; }
+  .sb-name { font-size: .82rem; font-weight: 600; color: white; line-height: 1.2; }
+  .sb-grade { font-size: .7rem; color: rgba(255,255,255,.4); }
+
+  .sb-nav { flex: 1; padding: 14px 0; overflow-y: auto; }
+  .sb-section { font-size: .6rem; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,.25); padding: 10px 20px 4px; }
+  .nav-item { display: flex; align-items: center; gap: 10px; padding: 10px 20px; font-size: .83rem; color: rgba(255,255,255,.6); text-decoration: none; cursor: pointer; transition: all .15s; border-left: 3px solid transparent; position: relative; }
+  .nav-item:hover { background: rgba(106,155,126,.12); color: white; border-left-color: rgba(106,155,126,.4); }
+  .nav-item.active { background: rgba(106,155,126,.18); color: var(--sage-l); border-left-color: var(--sage); font-weight: 600; }
+  .nav-icon { font-size: 1rem; min-width: 20px; text-align: center; }
+  .nav-badge { position: absolute; right: 16px; background: var(--red); color: white; font-size: .6rem; font-weight: 700; padding: 2px 6px; border-radius: 10px; min-width: 18px; text-align: center; }
+
+  .sb-foot { padding: 14px 0; border-top: 1px solid rgba(255,255,255,.07); }
+  .sb-logout { display: flex; align-items: center; gap: 10px; padding: 10px 20px; font-size: .82rem; color: rgba(255,255,255,.4); text-decoration: none; transition: color .15s; }
+  .sb-logout:hover { color: #e07c7c; }
+
+  /* MAIN */
+  .main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+  .topbar { height: 58px; background: white; border-bottom: 1px solid var(--sage-xl); display: flex; align-items: center; padding: 0 28px; gap: 16px; position: sticky; top: 0; z-index: 40; }
+  .topbar-title { font-size: .95rem; font-weight: 600; color: var(--text); flex: 1; }
+  .topbar-badge { font-size: .72rem; background: var(--sage-xxl); color: var(--sage-d); padding: 4px 12px; border-radius: 20px; font-weight: 600; border: 1px solid var(--sage-xl); }
+  .notif-btn { position: relative; text-decoration: none; }
+  .notif-dot { position: absolute; top: -3px; right: -3px; width: 10px; height: 10px; background: var(--red); border-radius: 50%; border: 2px solid white; }
+
+  .content { flex: 1; padding: 28px; max-width: 1100px; }
+
+  /* CARDS */
+  .card { background: white; border-radius: 16px; border: 1px solid var(--sage-xl); margin-bottom: 20px; overflow: hidden; }
+  .card-header { padding: 18px 22px 0; }
+  .card-body { padding: 22px; }
+  .card-title { font-size: 1rem; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+  .card-sub { font-size: .78rem; color: var(--text-xs); }
+
+  /* STAT CARDS */
+  .stat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 16px; margin-bottom: 24px; }
+  .stat-card { background: white; border-radius: 16px; border: 1px solid var(--sage-xl); padding: 20px; display: flex; flex-direction: column; gap: 8px; }
+  .stat-card.alert { border-color: #ffd6d6; background: #fff7f7; }
+  .stat-icon { font-size: 1.6rem; }
+  .stat-val { font-family: 'Playfair Display', serif; font-size: 2rem; font-weight: 700; color: var(--text); line-height: 1; }
+  .stat-label { font-size: .75rem; color: var(--text-xs); }
+
+  /* EMOCION BADGES */
+  .emo { display: inline-flex; align-items: center; gap: 5px; padding: 5px 12px; border-radius: 20px; font-size: .78rem; font-weight: 600; }
+  .emo-muy_bien { background: #d4f5e2; color: #1a6e3a; }
+  .emo-bien { background: #d8edff; color: #1a4d80; }
+  .emo-regular { background: #fff3cc; color: #6d4c00; }
+  .emo-mal { background: #ffe4cc; color: #7a3200; }
+  .emo-muy_mal { background: #ffd6d6; color: #8a1a1a; }
+
+  /* ALERTS */
+  .alert-card { border-radius: 12px; padding: 14px 18px; margin-bottom: 10px; display: flex; gap: 12px; align-items: flex-start; }
+  .alert-alta { background: #fff2f2; border: 1px solid #ffd6d6; }
+  .alert-media { background: #fff9ed; border: 1px solid #ffe4b3; }
+  .alert-baja { background: var(--sage-xxl); border: 1px solid var(--sage-xl); }
+
+  /* FORMS */
+  .form-group { margin-bottom: 18px; }
+  .form-label { display: block; font-size: .72rem; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--text-s); margin-bottom: 7px; }
+  .form-control, .form-select { width: 100%; padding: 11px 14px; border: 1.5px solid var(--sage-xl); border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: .88rem; color: var(--text); background: var(--sage-xxl); outline: none; transition: all .2s; }
+  .form-control:focus, .form-select:focus { border-color: var(--sage); background: white; box-shadow: 0 0 0 3px rgba(106,155,126,.12); }
+  textarea.form-control { resize: vertical; }
+
+  /* BUTTONS */
+  .btn { padding: 10px 20px; border-radius: 10px; font-family: 'DM Sans', sans-serif; font-size: .85rem; font-weight: 600; cursor: pointer; border: none; transition: all .2s; text-decoration: none; display: inline-flex; align-items: center; gap: 7px; }
+  .btn-primary { background: linear-gradient(135deg, var(--sage), var(--sage-d)); color: white; }
+  .btn-primary:hover { filter: brightness(1.08); transform: translateY(-1px); }
+  .btn-outline { background: white; border: 1.5px solid var(--sage-xl); color: var(--text-s); }
+  .btn-outline:hover { border-color: var(--sage); color: var(--sage-d); }
+  .btn-danger { background: #ffeaea; color: var(--red); border: 1.5px solid #ffd0d0; }
+  .btn-danger:hover { background: var(--red); color: white; }
+  .btn-sm { padding: 6px 14px; font-size: .78rem; border-radius: 8px; }
+
+  /* SECTION HEADER */
+  .section-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: 1.35rem; font-weight: 700; color: var(--text); }
+  .section-sub { font-size: .8rem; color: var(--text-xs); margin-top: 2px; }
+
+  /* LISTS */
+  .item-row { display: flex; align-items: center; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--sage-xl); }
+  .item-row:last-child { border-bottom: none; }
+  .item-av { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--sage-l), var(--sage)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; font-size: .9rem; min-width: 40px; }
+  .item-info { flex: 1; }
+  .item-name { font-size: .9rem; font-weight: 600; color: var(--text); }
+  .item-meta { font-size: .75rem; color: var(--text-xs); margin-top: 2px; }
+
+  /* ESTADO CITA */
+  .badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: .72rem; font-weight: 700; }
+  .badge-pendiente { background: #fff3cc; color: #7a5500; }
+  .badge-confirmada { background: #d4f5e2; color: #1a5e30; }
+  .badge-realizada { background: #e0e0e0; color: #555; }
+  .badge-cancelada { background: #ffd6d6; color: #8a1a1a; }
+
+  /* MESSAGES */
+  .msg-bubble { padding: 12px 16px; border-radius: 14px; margin-bottom: 10px; max-width: 75%; }
+  .msg-mio { background: var(--sage); color: white; margin-left: auto; border-bottom-right-radius: 4px; }
+  .msg-otro { background: var(--sage-xxl); color: var(--text); border: 1px solid var(--sage-xl); border-bottom-left-radius: 4px; }
+  .msg-meta { font-size: .68rem; opacity: .7; margin-top: 5px; }
+
+  /* RESPONSIVE */
+  @media(max-width:768px){
+    .sidebar { transform: translateX(-100%); }
+    .main { margin-left: 0; }
+    .content { padding: 16px; }
+  }
+
+  {% block extra_style %}{% endblock %}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <div class="sb-logo">Psico<span>Asis</span></div>
+      <div class="sb-role-badge">👨‍👩‍👧 Padre / Tutor</div>
+    </div>
+    <div class="sb-user">
+      <div class="sb-av">{{ request.user.first_name|first|upper }}{{ request.user.last_name|first|upper }}</div>
+      <div>
+        <div class="sb-name">{{ request.user.get_full_name|default:request.user.username }}</div>
+        <div class="sb-grade">{% if request.user.perfil.rol == 'tutor' %}Tutor/a Legal{% else %}Padre / Madre{% endif %}</div>
+      </div>
+    </div>
+    <nav class="sb-nav">
+      <div class="sb-section">Principal</div>
+      <a href="{% url 'dashboard_padre' %}" class="nav-item {% block nav_dashboard %}{% endblock %}">
+        <span class="nav-icon">🏠</span> Mi Panel
+        {% if contadores.notificaciones %}<span class="nav-badge">{{ contadores.notificaciones }}</span>{% endif %}
+      </a>
+      <a href="{% url 'notificaciones_padre' %}" class="nav-item {% block nav_notif %}{% endblock %}">
+        <span class="nav-icon">🔔</span> Alertas
+      </a>
+
+      <div class="sb-section">Mis Hijos</div>
+      {% for v in vinculos %}
+      <a href="{% url 'seguimiento_emocional_hijo' v.hijo.id %}" class="nav-item">
+        <span class="nav-icon">👧</span> {{ v.hijo.nombre }} {{ v.hijo.apellido|slice:":1" }}.
+      </a>
+      {% endfor %}
+
+      <div class="sb-section">Comunicación</div>
+      <a href="{% url 'citas_padre' %}" class="nav-item {% block nav_citas %}{% endblock %}">
+        <span class="nav-icon">📅</span> Mis Citas
+        {% if contadores.citas_pendientes %}<span class="nav-badge">{{ contadores.citas_pendientes }}</span>{% endif %}
+      </a>
+      <a href="{% url 'mensajes_padre' %}" class="nav-item {% block nav_mensajes %}{% endblock %}">
+        <span class="nav-icon">✉️</span> Mensajes
+        {% if contadores.mensajes %}<span class="nav-badge">{{ contadores.mensajes }}</span>{% endif %}
+      </a>
+      <a href="{% url 'foro_padres' %}" class="nav-item {% block nav_foro %}{% endblock %}">
+        <span class="nav-icon">💬</span> Foro de Padres
+      </a>
+
+      <div class="sb-section">Recursos</div>
+      <a href="{% url 'recomendaciones_padre' %}" class="nav-item {% block nav_rec %}{% endblock %}">
+        <span class="nav-icon">💡</span> Recomendaciones
+        {% if contadores.recomendaciones %}<span class="nav-badge">{{ contadores.recomendaciones }}</span>{% endif %}
+      </a>
+    </nav>
+    <div class="sb-foot">
+      <a href="{% url 'logout' %}" class="sb-logout">
+        <span>🚪</span> Cerrar sesión
+      </a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+    <div class="topbar">
+      <div class="topbar-title">{% block topbar_title %}Panel de Padres{% endblock %}</div>
+      <span class="topbar-badge">👨‍👩‍👧 PsicoAsis Familias</span>
+    </div>
+    <div class="content">
+      {% if messages %}
+        {% for msg in messages %}
+          <div class="alert-card alert-{% if msg.tags == 'error' %}alta{% elif msg.tags == 'warning' %}media{% else %}baja{% endif %}" style="margin-bottom:16px;">
+            <span>{% if msg.tags == 'error' %}❌{% elif msg.tags == 'warning' %}⚠️{% else %}✅{% endif %}</span>
+            <div>{{ msg }}</div>
+          </div>
+        {% endfor %}
+      {% endif %}
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+</div>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

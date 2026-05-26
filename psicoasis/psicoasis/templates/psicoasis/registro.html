@@ -1,0 +1,212 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crear cuenta — PsicoAsis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --sage: #7a9e7e; --sage-d: #4d7a52; --sage-l: #a8c5ad; --sage-xl: #d4e8d6; --sage-xxl: #eef6ef;
+    --teal: #4a8fa0; --teal-d: #2d6878; --teal-xl: #c2e4ed; --teal-xxl: #ebf7fa;
+    --cream: #faf7f3; --text: #2d3a2e; --text-s: #5a6b5b; --text-xs: #8a9e8b;
+  }
+  *, body { font-family: 'DM Sans', sans-serif; }
+  body { min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr; background: var(--cream); }
+
+  .left-panel {
+    background: linear-gradient(160deg, #1e3320 0%, #2d4a30 50%, #3a5c3e 100%);
+    display: flex; flex-direction: column; justify-content: space-between; padding: 48px;
+    position: relative; overflow: hidden;
+  }
+  .lp-shape { position: absolute; border-radius: 50%; background: rgba(122,158,126,.15); pointer-events: none; }
+  .lp-s1 { width: 400px; height: 400px; top: -100px; right: -100px; }
+  .lp-s2 { width: 250px; height: 250px; bottom: 80px; left: -80px; }
+  .lp-brand { position: relative; z-index: 1; }
+  .lp-logo { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: white; }
+  .lp-logo span { color: var(--sage-l); }
+  .lp-tagline { font-size: .75rem; color: rgba(255,255,255,.4); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 4px; }
+  .lp-center { position: relative; z-index: 1; text-align: center; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+  .lp-emoji { font-size: 4rem; margin-bottom: 20px; animation: breathe 4s ease-in-out infinite; }
+  @keyframes breathe { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
+  .lp-headline { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-style: italic; color: white; line-height: 1.35; margin-bottom: 16px; }
+  .lp-quote { font-size: .85rem; color: rgba(255,255,255,.5); line-height: 1.8; max-width: 300px; }
+  .lp-bottom { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 10px; }
+  .lp-step { display: flex; align-items: center; gap: 12px; }
+  .lp-step-num { width: 26px; height: 26px; border-radius: 50%; background: rgba(122,158,126,.3); border: 1px solid rgba(122,158,126,.5); display: flex; align-items: center; justify-content: center; font-size: .72rem; color: var(--sage-l); font-weight: 700; min-width: 26px; }
+  .lp-step-text { font-size: .8rem; color: rgba(255,255,255,.55); }
+
+  .right-panel { display: flex; align-items: center; justify-content: center; padding: 40px; overflow-y: auto; }
+  .register-box { width: 100%; max-width: 460px; }
+  .rb-welcome { font-family: 'Playfair Display', serif; font-size: 1.7rem; font-weight: 600; color: var(--text); margin-bottom: 6px; }
+  .rb-sub { color: var(--text-s); font-size: .88rem; line-height: 1.6; margin-bottom: 28px; }
+
+  /* ROL SELECTOR */
+  .rol-selector { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px; }
+  .rol-card { border: 2px solid #e0e8e1; border-radius: 14px; padding: 18px 14px; cursor: pointer; text-align: center; transition: all .2s; background: var(--sage-xxl); position: relative; }
+  .rol-card:hover { border-color: var(--sage); background: white; }
+  .rol-card.selected { border-color: var(--sage-d); background: white; box-shadow: 0 4px 14px rgba(77,122,82,.15); }
+  .rol-card input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .rol-icon { font-size: 2.2rem; display: block; margin-bottom: 8px; }
+  .rol-name { font-weight: 700; font-size: .9rem; color: var(--text); }
+  .rol-desc { font-size: .72rem; color: var(--text-xs); margin-top: 4px; line-height: 1.4; }
+  .rol-check { position: absolute; top: 10px; right: 10px; width: 18px; height: 18px; border-radius: 50%; background: var(--sage-d); color: white; font-size: .6rem; display: none; align-items: center; justify-content: center; }
+  .rol-card.selected .rol-check { display: flex; }
+
+  .form-group { margin-bottom: 16px; }
+  .form-label { display: block; font-size: .7rem; font-weight: 700; letter-spacing: .8px; text-transform: uppercase; color: var(--text-s); margin-bottom: 7px; }
+  .form-input { width: 100%; padding: 12px 14px; border: 1.5px solid #e0e8e1; border-radius: 12px; font-family: 'DM Sans', sans-serif; font-size: .88rem; color: var(--text); background: var(--sage-xxl); outline: none; transition: all .2s; }
+  .form-input:focus { border-color: var(--sage); background: white; box-shadow: 0 0 0 3px rgba(122,158,126,.12); }
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .hint { font-size: .72rem; color: var(--text-xs); margin-top: 4px; }
+  .error-box { background: #fef0f0; color: #c0392b; padding: 12px 16px; border-radius: 12px; font-size: .82rem; border-left: 3px solid #e05c5c; margin-bottom: 18px; }
+  .error-box li { margin-left: 14px; margin-top: 3px; }
+
+  .register-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--sage), var(--sage-d)); color: white; border: none; border-radius: 14px; font-family: 'DM Sans', sans-serif; font-size: .93rem; font-weight: 600; cursor: pointer; transition: all .3s; margin-top: 6px; }
+  .register-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(122,158,126,.4); }
+  .rb-login { display: block; text-align: center; margin-top: 18px; font-size: .83rem; color: var(--text-xs); }
+  .rb-login a { color: var(--sage-d); font-weight: 600; text-decoration: none; }
+
+  /* ESTUDIANTE extra field */
+  #campoGrado { display: none; }
+
+  @media (max-width: 768px) {
+    body { grid-template-columns: 1fr; }
+    .left-panel { display: none; }
+    .right-panel { padding: 28px 20px; }
+    .grid-2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="left-panel">
+  <div class="lp-shape lp-s1"></div>
+  <div class="lp-shape lp-s2"></div>
+  <div class="lp-brand">
+    <div class="lp-logo">Psico<span>Asis</span></div>
+    <div class="lp-tagline">Psicología Escolar</div>
+  </div>
+  <div class="lp-center">
+    <div class="lp-emoji" id="lpEmoji">🌱</div>
+    <div class="lp-headline" id="lpHeadline">Únete a PsicoAsis</div>
+    <p class="lp-quote" id="lpQuote">Crea tu cuenta y empieza a gestionar el bienestar emocional de la comunidad escolar.</p>
+  </div>
+  <div class="lp-bottom">
+    <div class="lp-step"><div class="lp-step-num">1</div><div class="lp-step-text">Elige tu rol en la comunidad</div></div>
+    <div class="lp-step"><div class="lp-step-num">2</div><div class="lp-step-text">Crea tu cuenta con tus datos</div></div>
+    <div class="lp-step"><div class="lp-step-num">3</div><div class="lp-step-text">Accede a tu panel personalizado</div></div>
+  </div>
+</div>
+
+<div class="right-panel">
+  <div class="register-box">
+    <h1 class="rb-welcome">Crear cuenta 🌿</h1>
+    <p class="rb-sub">¿Quién eres en la comunidad PsicoAsis?</p>
+
+    {% if form.errors %}
+    <div class="error-box">
+      <strong>Por favor corrige estos errores:</strong>
+      <ul>
+        {% for field, errors in form.errors.items %}
+          {% for error in errors %}<li>{% if field != '__all__' %}{{ field|capfirst }}: {% endif %}{{ error }}</li>{% endfor %}
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <form method="post" id="registerForm">
+      {% csrf_token %}
+
+      <!-- Selección de rol -->
+      <div class="rol-selector">
+        <label class="rol-card" id="cardPsicologo" onclick="selectRol('psicologo')">
+          <input type="radio" name="rol" value="psicologo" {% if not form.rol.value or form.rol.value == 'psicologo' %}checked{% endif %}>
+          <div class="rol-check">✓</div>
+          <span class="rol-icon">🧠</span>
+          <div class="rol-name">Psicólogo/a</div>
+          <div class="rol-desc">Soy parte del equipo de orientación o psicología del colegio</div>
+        </label>
+        <label class="rol-card" id="cardEstudiante" onclick="selectRol('estudiante')">
+          <input type="radio" name="rol" value="estudiante" {% if form.rol.value == 'estudiante' %}checked{% endif %}>
+          <div class="rol-check">✓</div>
+          <span class="rol-icon">🎒</span>
+          <div class="rol-name">Estudiante</div>
+          <div class="rol-desc">Soy estudiante del colegio y quiero acceder a mi espacio de bienestar</div>
+        </label>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Nombre *</label>
+          <input type="text" name="first_name" class="form-input" value="{{ form.first_name.value|default:'' }}" placeholder="Tu nombre" required autofocus>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Apellido *</label>
+          <input type="text" name="last_name" class="form-input" value="{{ form.last_name.value|default:'' }}" placeholder="Tu apellido" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Correo electrónico *</label>
+        <input type="email" name="email" class="form-input" value="{{ form.email.value|default:'' }}" placeholder="tu@correo.com" required>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Nombre de usuario *</label>
+        <input type="text" name="username" class="form-input" value="{{ form.username.value|default:'' }}" placeholder="ej: maria.psico o juan.8a" required>
+        <p class="hint">Solo letras, números y @/./+/-/_</p>
+      </div>
+
+      <div id="campoGrado" class="form-group">
+        <label class="form-label">Grado (opcional)</label>
+        <input type="text" name="grado" class="form-input" value="{{ form.grado.value|default:'' }}" placeholder="Ej: 8A, 10B">
+        <p class="hint">Facilita que la psicóloga vincule tu perfil</p>
+      </div>
+
+      <div class="grid-2">
+        <div class="form-group">
+          <label class="form-label">Contraseña *</label>
+          <input type="password" name="password" class="form-input" placeholder="Mínimo 8 caracteres" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirmar contraseña *</label>
+          <input type="password" name="password2" class="form-input" placeholder="Repite la contraseña" required>
+        </div>
+      </div>
+
+      <button type="submit" class="register-btn" id="btnSubmit">Crear mi cuenta →</button>
+    </form>
+
+    <p class="rb-login">¿Ya tienes cuenta? <a href="{% url 'login' %}">Inicia sesión aquí</a></p>
+  </div>
+</div>
+
+<script>
+const rolData = {
+  psicologo: { emoji: '🧠', headline: 'Gestiona el bienestar escolar', quote: 'Tu espacio para acompañar a estudiantes, registrar casos y gestionar el bienestar emocional de toda la comunidad.', btn: 'Crear cuenta de psicólogo/a →' },
+  estudiante: { emoji: '🎒', headline: 'Tu espacio de bienestar', quote: 'Accede a tus citas, registra cómo te sientes cada día, comunícate con la psicóloga y descubre recursos de bienestar.', btn: 'Crear mi cuenta de estudiante →' }
+};
+
+function selectRol(rol) {
+  document.getElementById('cardPsicologo').classList.toggle('selected', rol === 'psicologo');
+  document.getElementById('cardEstudiante').classList.toggle('selected', rol === 'estudiante');
+  document.getElementById('campoGrado').style.display = rol === 'estudiante' ? 'block' : 'none';
+  const d = rolData[rol];
+  document.getElementById('lpEmoji').textContent = d.emoji;
+  document.getElementById('lpHeadline').textContent = d.headline;
+  document.getElementById('lpQuote').textContent = d.quote;
+  document.getElementById('btnSubmit').textContent = d.btn;
+}
+
+// Init
+const checked = document.querySelector('input[name="rol"]:checked');
+if (checked) selectRol(checked.value);
+else selectRol('psicologo');
+</script>
+
+</body>
+</html>

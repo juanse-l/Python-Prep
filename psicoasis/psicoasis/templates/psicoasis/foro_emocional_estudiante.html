@@ -1,0 +1,81 @@
+{% extends 'psicoasis/base_estudiante.html' %}
+{% block title %}Foro Emocional — PsicoAsis{% endblock %}
+{% block topbar_title %}💌 Foro Emocional{% endblock %}
+{% block extra_css %}
+<style>
+  .pub-card { background:white; border-radius:18px; border:1px solid var(--teal-xl); margin-bottom:18px; overflow:hidden; transition:box-shadow .2s; }
+  .pub-card:hover { box-shadow:0 6px 20px rgba(74,143,160,.12); }
+  .pub-card.fijado { border-color:var(--teal); box-shadow:0 0 0 2px rgba(74,143,160,.15); }
+  .pub-header { padding:18px 22px 0; display:flex; align-items:flex-start; gap:14px; }
+  .pub-icon { width:48px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:1.5rem; min-width:48px; }
+  .pub-body { padding:14px 22px 20px; }
+  .pub-titulo { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; color:var(--text); margin-bottom:10px; }
+  .pub-contenido { font-size:.88rem; color:var(--text-s); line-height:1.75; }
+  .pub-footer { padding:10px 22px 16px; display:flex; align-items:center; gap:10px; border-top:1px solid var(--teal-xxl); }
+  .badge-tipo { padding:4px 12px; border-radius:20px; font-size:.7rem; font-weight:700; }
+  .pin-badge { background:#fff8e8; color:#b8860b; border:1px solid #f5d88a; font-size:.7rem; padding:3px 10px; border-radius:20px; font-weight:700; }
+  .cat-pill { padding:5px 14px; border-radius:20px; border:1.5px solid var(--teal-xl); background:var(--teal-xxl); font-size:.75rem; color:var(--teal-d); cursor:pointer; font-family:'DM Sans',sans-serif; transition:all .15s; text-decoration:none; }
+  .cat-pill:hover, .cat-pill.active { background:var(--teal); color:white; border-color:var(--teal); }
+</style>
+{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1>💌 Foro Emocional</h1>
+  <p>Estrategias, mensajes y recursos de bienestar emocional publicados por tu psicóloga.</p>
+</div>
+
+<!-- Filtros -->
+<div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px">
+  <a href="{% url 'foro_emocional_estudiante' %}" class="cat-pill {% if not cat_activa %}active{% endif %}">🌿 Todos</a>
+  {% for val, label in categorias %}
+  <a href="?cat={{ val }}" class="cat-pill {% if cat_activa == val %}active{% endif %}">{{ label }}</a>
+  {% endfor %}
+</div>
+
+<!-- Publicaciones fijadas primero -->
+{% for pub in publicaciones %}
+<div class="pub-card {% if pub.fijado %}fijado{% endif %}">
+  <div class="pub-header">
+    <div class="pub-icon" style="
+      {% if pub.tipo == 'estrategia' %}background:#e8f5e9;{% elif pub.tipo == 'reflexion' %}background:#f0eef9;{% elif pub.tipo == 'recurso' %}background:#fff3e8;{% else %}background:#e8f7fa;{% endif %}">
+      {{ pub.get_tipo_display|slice:":2" }}
+    </div>
+    <div style="flex:1">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px">
+        {% if pub.fijado %}<span class="pin-badge">📌 Destacado</span>{% endif %}
+        <span class="badge-tipo" style="{% if pub.tipo == 'estrategia' %}background:#e8f5e9;color:#2a6a3a;{% elif pub.tipo == 'reflexion' %}background:#f0eef9;color:#5a4298;{% elif pub.tipo == 'recurso' %}background:#fff3e8;color:#8a4a10;{% else %}background:#e8f7fa;color:#1a5a6a;{% endif %}">
+          {{ pub.get_tipo_display }}
+        </span>
+        <span style="font-size:.72rem;color:var(--text-xs)">{{ pub.get_categoria_display }}</span>
+      </div>
+      <div style="font-size:.72rem;color:var(--text-xs)">
+        Por tu psicóloga · {{ pub.fecha_creacion|date:"d \d\e F \d\e Y" }}
+      </div>
+    </div>
+  </div>
+
+  <div class="pub-body">
+    <div class="pub-titulo">{{ pub.titulo }}</div>
+    {% if pub.imagen_url %}
+    <div style="margin-bottom:14px;border-radius:12px;overflow:hidden;max-height:200px">
+      <img src="{{ pub.imagen_url }}" alt="Imagen" style="width:100%;object-fit:cover;max-height:200px" onerror="this.style.display='none'">
+    </div>
+    {% endif %}
+    <div class="pub-contenido">{{ pub.contenido|linebreaksbr }}</div>
+  </div>
+
+  <div class="pub-footer">
+    <a href="{% url 'foro_publicacion_detalle' pub.pk %}" class="btn btn-sm btn-outline">Leer completo →</a>
+    <span style="margin-left:auto;font-size:.75rem;color:var(--text-xs)">💚 De tu psicóloga para ti</span>
+  </div>
+</div>
+{% empty %}
+<div style="text-align:center;padding:60px 20px;color:var(--text-xs)">
+  <div style="font-size:3rem;margin-bottom:14px">📭</div>
+  <div style="font-weight:600;color:var(--text-s);margin-bottom:6px">Aún no hay publicaciones</div>
+  <p style="font-size:.85rem">Tu psicóloga publicará estrategias y mensajes de bienestar muy pronto.</p>
+</div>
+{% endfor %}
+
+{% endblock %}

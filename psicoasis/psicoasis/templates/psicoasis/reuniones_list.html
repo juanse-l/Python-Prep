@@ -1,0 +1,65 @@
+{% extends 'psicoasis/base.html' %}
+{% block title %}Reuniones — PsicoAsis{% endblock %}
+{% block topbar_title %}Reuniones{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'reunion_nueva' %}" class="btn btn-primary btn-sm">+ Nueva reunión</a>
+{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div class="page-header-row">
+    <div>
+      <h1>Reuniones 💬</h1>
+      <p>{{ total }} reunión{{ total|pluralize:"es" }} en total</p>
+    </div>
+    <form method="get" style="display:flex;gap:10px">
+      <select name="estado" class="form-control" style="min-width:160px">
+        <option value="">Todos los estados</option>
+        <option value="pendiente" {% if estado_filtro == 'pendiente' %}selected{% endif %}>Pendiente</option>
+        <option value="confirmada" {% if estado_filtro == 'confirmada' %}selected{% endif %}>Confirmada</option>
+        <option value="realizada" {% if estado_filtro == 'realizada' %}selected{% endif %}>Realizada</option>
+        <option value="cancelada" {% if estado_filtro == 'cancelada' %}selected{% endif %}>Cancelada</option>
+      </select>
+      <button type="submit" class="btn btn-outline">Filtrar</button>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  {% if reuniones %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Estudiante</th><th>Fecha</th><th>Hora</th><th>Motivo</th><th>Tipo</th><th>Estado</th><th></th></tr></thead>
+      <tbody>
+        {% for r in reuniones %}
+        <tr>
+          <td>
+            <div class="flex items-center gap-2">
+              <div class="av av-36 av-green">{{ r.estudiante.nombre|first }}{{ r.estudiante.apellido|first }}</div>
+              <div>
+                <div style="font-weight:600;font-size:.85rem">{{ r.estudiante.nombre }} {{ r.estudiante.apellido }}</div>
+                <div style="font-size:.72rem;color:var(--text-xs)">{{ r.estudiante.grado }}</div>
+              </div>
+            </div>
+          </td>
+          <td>{{ r.fecha|date:"d M Y" }}</td>
+          <td>{{ r.hora|time:"g:i A" }}</td>
+          <td style="font-size:.83rem;max-width:150px">{{ r.motivo|truncatewords:5 }}</td>
+          <td><span class="badge badge-blue">{{ r.get_tipo_atencion_display }}</span></td>
+          <td><span class="badge {% if r.estado == 'confirmada' %}badge-green{% elif r.estado == 'pendiente' %}badge-yellow{% elif r.estado == 'realizada' %}badge-blue{% else %}badge-red{% endif %}">{{ r.get_estado_display }}</span></td>
+          <td><a href="{% url 'reunion_editar' r.pk %}" class="btn btn-outline btn-sm">Editar</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <span class="empty-icon">💬</span>
+    <div class="empty-title">Sin reuniones</div>
+    <p class="empty-desc">Aún no hay reuniones registradas.</p>
+    <a href="{% url 'reunion_nueva' %}" class="btn btn-primary btn-sm">+ Nueva reunión</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

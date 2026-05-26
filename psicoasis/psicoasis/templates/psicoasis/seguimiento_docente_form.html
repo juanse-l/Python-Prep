@@ -1,0 +1,45 @@
+{% extends 'psicoasis/base.html' %}
+{% block title %}Nuevo Seguimiento — PsicoAsis{% endblock %}
+{% block topbar_title %}Nuevo Seguimiento Docente{% endblock %}
+{% block content %}
+<div class="page-header"><h1>Registrar Seguimiento Docente 📋</h1></div>
+<div class="card" style="max-width:600px">
+  <div class="card-body" style="padding:28px">
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label class="form-label">Docente *</label>
+        <select name="docente" class="form-control" required>
+          <option value="">— Seleccionar docente —</option>
+          {% for d in docentes %}
+          <option value="{{ d.pk }}" {% if doc_pre and doc_pre.pk == d.pk %}selected{% endif %}>{{ d.nombre }} {{ d.apellido }} — {{ d.get_area_display }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group mt-3">
+        <label class="form-label">Motivo</label>
+        <select name="motivo" class="form-control">
+          {% for val, label in form.fields.motivo.choices %}
+          <option value="{{ val }}">{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-group mt-3">
+        <label class="form-label">Descripción *</label>
+        <textarea name="descripcion" class="form-control" rows="4" required></textarea>
+      </div>
+      <div class="form-group mt-3">
+        <label class="form-label">Estado</label>
+        <select name="estado" class="form-control">
+          <option value="activo">Activo</option>
+          <option value="cerrado">Cerrado</option>
+        </select>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:24px">
+        <button type="submit" class="btn btn-primary">Registrar seguimiento</button>
+        <a href="{% url 'docentes_list' %}" class="btn btn-outline">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

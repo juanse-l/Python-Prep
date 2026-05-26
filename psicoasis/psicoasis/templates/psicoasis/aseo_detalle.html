@@ -1,0 +1,73 @@
+{% extends 'psicoasis/base.html' %}
+{% block title %}{{ persona.get_full_name }} — PsicoAsis{% endblock %}
+{% block topbar_title %}Detalle Personal de Aseo{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'aseo_editar' persona.pk %}" class="btn btn-outline btn-sm">Editar</a>
+  <a href="{% url 'aseo_list' %}" class="btn btn-primary btn-sm">← Volver</a>
+{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div style="display:flex;align-items:center;gap:16px">
+    <div class="av" style="width:56px;height:56px;font-size:1.1rem;background:linear-gradient(135deg,var(--sage),var(--sage-d));border-radius:50%;display:flex;align-items:center;justify-content:center;color:white;font-weight:700">
+      {{ persona.nombre|first }}{{ persona.apellido|first }}
+    </div>
+    <div>
+      <h1>{{ persona.get_full_name }}</h1>
+      <p>{{ persona.get_area_asignada_display }} · {{ persona.get_turno_display }}</p>
+    </div>
+  </div>
+</div>
+
+<div class="grid-2 mb-6">
+  <!-- Info básica -->
+  <div class="card">
+    <div class="card-header"><span class="card-title">📋 Información del personal</span></div>
+    <div class="card-body">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div>
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-xs);margin-bottom:4px">Nombre completo</div>
+          <div style="font-size:.9rem;color:var(--text)">{{ persona.get_full_name }}</div>
+        </div>
+        <div>
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-xs);margin-bottom:4px">Área asignada</div>
+          <span class="badge badge-green">{{ persona.get_area_asignada_display }}</span>
+        </div>
+        <div>
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-xs);margin-bottom:4px">Turno</div>
+          <span class="badge badge-blue">{{ persona.get_turno_display }}</span>
+        </div>
+        <div>
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-xs);margin-bottom:4px">Teléfono</div>
+          <div style="font-size:.9rem">{{ persona.telefono|default:"—" }}</div>
+        </div>
+        <div>
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-xs);margin-bottom:4px">Correo</div>
+          <div style="font-size:.9rem">{{ persona.email|default:"—" }}</div>
+        </div>
+        <div>
+          <div style="font-size:.7rem;font-weight:700;letter-spacing:.8px;text-transform:uppercase;color:var(--text-xs);margin-bottom:4px">Fecha de ingreso</div>
+          <div style="font-size:.9rem">{{ persona.fecha_ingreso|date:"d M Y"|default:"—" }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Notas -->
+  <div class="card">
+    <div class="card-header"><span class="card-title">📝 Notas generales</span></div>
+    <div class="card-body">
+      {% if persona.notas_generales %}
+      <p style="font-size:.88rem;color:var(--text-s);line-height:1.8">{{ persona.notas_generales }}</p>
+      {% else %}
+      <div class="empty-state" style="padding:20px">
+        <span class="empty-icon" style="font-size:1.6rem">📝</span>
+        <div class="empty-title">Sin notas</div>
+        <p class="empty-desc">No hay observaciones registradas.</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

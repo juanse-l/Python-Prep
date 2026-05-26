@@ -1,0 +1,89 @@
+{% extends "psicoasis/base.html" %}
+{% block title %}Vincular Padre — PsicoAsis{% endblock %}
+{% block content %}
+
+<div style="max-width:680px;">
+  <a href="{% url 'padres_list' %}" style="font-size:.83rem;color:#7a9aaa;text-decoration:none;display:inline-flex;align-items:center;gap:5px;margin-bottom:24px;">
+    ← Volver a padres
+  </a>
+
+  <!-- Cabecera -->
+  <div style="display:flex;align-items:center;gap:14px;margin-bottom:24px;">
+    <div style="width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#4a8fa0,#2d6878);display:flex;align-items:center;justify-content:center;font-size:1.3rem;color:white;font-weight:700;flex-shrink:0;">
+      {{ padre.first_name|first|upper }}{{ padre.last_name|first|upper }}
+    </div>
+    <div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.3rem;font-weight:700;">{{ padre.get_full_name|default:padre.username }}</div>
+      <div style="font-size:.82rem;color:#7a9aaa;">{{ padre.email }} · {% with padre.perfil.rol as r %}{% if r == 'padre' %}Padre/Madre{% else %}Tutor/Acudiente{% endif %}{% endwith %}</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start;">
+
+    <!-- Formulario nuevo vínculo -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">+ Vincular hijo/a</div>
+        <div class="card-sub">Asocia un estudiante a esta cuenta</div>
+      </div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          {% if form.non_field_errors %}
+            <div style="background:#ffeaea;border:1px solid #f5c6c6;border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:.85rem;color:#842029;">
+              {{ form.non_field_errors }}
+            </div>
+          {% endif %}
+          <div class="form-group">
+            <label class="form-label">Tipo de relación</label>
+            {{ form.tipo_relacion }}
+            {% if form.tipo_relacion.errors %}<div style="color:#d94f4f;font-size:.75rem;margin-top:4px;">{{ form.tipo_relacion.errors.0 }}</div>{% endif %}
+          </div>
+          <div class="form-group">
+            <label class="form-label">Estudiante (hijo/a)</label>
+            {{ form.hijo }}
+            {% if form.hijo.errors %}<div style="color:#d94f4f;font-size:.75rem;margin-top:4px;">{{ form.hijo.errors.0 }}</div>{% endif %}
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;padding:10px 14px;background:#ebf7fa;border-radius:10px;">
+            {{ form.es_principal }}
+            <label style="font-size:.85rem;color:#2d6878;cursor:pointer;">Acudiente principal</label>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Vincular ✅</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Vínculos existentes -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Hijos vinculados</div>
+        <div class="card-sub">{{ vinculos|length }} vínculo{{ vinculos|length|pluralize }} activo{{ vinculos|length|pluralize }}</div>
+      </div>
+      <div class="card-body">
+        {% if vinculos %}
+          {% for v in vinculos %}
+          <div style="display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #ebf7fa;">
+            <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#4a8fa0,#2d6878);display:flex;align-items:center;justify-content:center;font-size:.8rem;color:white;font-weight:700;flex-shrink:0;">
+              {{ v.hijo.nombre|first|upper }}{{ v.hijo.apellido|first|upper }}
+            </div>
+            <div style="flex:1;">
+              <div style="font-weight:600;font-size:.9rem;">{{ v.hijo.get_full_name }}</div>
+              <div style="font-size:.75rem;color:#7a9aaa;">{{ v.hijo.grado }} · {{ v.get_tipo_relacion_display }}</div>
+            </div>
+            {% if v.es_principal %}
+              <span style="font-size:.65rem;background:#ebf7fa;color:#2d6878;padding:2px 8px;border-radius:10px;font-weight:700;border:1px solid #cde8f0;">Principal</span>
+            {% endif %}
+          </div>
+          {% endfor %}
+        {% else %}
+          <div style="text-align:center;padding:30px 0;color:#7a9aaa;">
+            <div style="font-size:2rem;margin-bottom:8px;">👨‍👩‍👧</div>
+            <div style="font-size:.85rem;">Aún no hay hijos vinculados</div>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

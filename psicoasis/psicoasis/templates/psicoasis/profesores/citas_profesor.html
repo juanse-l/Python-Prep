@@ -1,0 +1,110 @@
+{% extends "psicoasis/profesores/base_profesor.html" %}
+{% block title %}Mis Citas — Panel Docente{% endblock %}
+{% block topbar_title %}📅 Mis Citas con Orientación{% endblock %}
+
+{% block content %}
+<div style="display:grid;grid-template-columns:1fr 1.3fr;gap:24px;align-items:start;">
+
+  <!-- SOLICITAR NUEVA CITA -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">+ Solicitar cita</div>
+      <div class="card-sub">Para apoyo personal, orientación sobre un estudiante o estrategias de aula</div>
+    </div>
+    <div class="card-body">
+      <form method="post" id="form-cita">
+        {% csrf_token %}
+        <div class="form-group">
+          <label class="form-label">Tipo de cita</label>
+          {{ form.tipo }}
+        </div>
+        <div class="form-group" id="grupo-estudiante" style="display:none;">
+          <label class="form-label">Estudiante relacionado</label>
+          {{ form.estudiante_relacionado }}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Detalle del motivo</label>
+          {{ form.motivo_detalle }}
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="form-group">
+            <label class="form-label">Fecha preferida</label>
+            {{ form.fecha_propuesta }}
+          </div>
+          <div class="form-group">
+            <label class="form-label">Hora preferida</label>
+            {{ form.hora_propuesta }}
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Solicitar cita 📅</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- CITAS -->
+  <div>
+    <!-- Próximas / pendientes -->
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-header"><div class="card-title">Próximas citas</div></div>
+      <div class="card-body">
+        {% if proximas %}
+          {% for c in proximas %}
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--indigo-xxl);">
+            <div>
+              <div style="font-weight:700;font-size:.9rem;">{{ c.get_tipo_display }}</div>
+              {% if c.fecha_confirmada %}
+                <div style="font-size:.82rem;color:var(--indigo);font-weight:600;">{{ c.fecha_confirmada|date:"d/m/Y" }} — {{ c.hora_confirmada|time:"H:i" }}</div>
+              {% else %}
+                <div style="font-size:.8rem;color:var(--text-xs);">Solicitada el {{ c.fecha_creacion|date:"d/m/Y" }} — pendiente de confirmar</div>
+              {% endif %}
+              {% if c.notas_psicologo %}
+                <div style="font-size:.78rem;margin-top:4px;color:var(--text-s);">📝 {{ c.notas_psicologo|truncatechars:80 }}</div>
+              {% endif %}
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;">
+              <span class="badge badge-{{ c.estado }}">{{ c.get_estado_display }}</span>
+              {% if c.estado == 'pendiente' or c.estado == 'confirmada' %}
+                <a href="{% url 'cancelar_cita_profesor' c.pk %}" class="btn btn-danger btn-sm"
+                   onclick="return confirm('¿Cancelar esta cita?')">Cancelar</a>
+              {% endif %}
+            </div>
+          </div>
+          {% endfor %}
+        {% else %}
+          <p style="color:var(--text-xs);font-size:.85rem;">No tienes citas próximas.</p>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Historial -->
+    {% if historial %}
+    <div class="card">
+      <div class="card-header"><div class="card-title">Historial</div></div>
+      <div class="card-body">
+        {% for c in historial %}
+        <div style="display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--indigo-xxl);font-size:.85rem;">
+          <div>
+            <span style="font-weight:600;">{{ c.get_tipo_display }}</span>
+            <span style="color:var(--text-xs);"> — {{ c.fecha_creacion|date:"d/m/Y" }}</span>
+          </div>
+          <span class="badge badge-{{ c.estado }}">{{ c.get_estado_display }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+
+<script>
+const tipoSelect = document.getElementById('id_tipo');
+const grupoEst = document.getElementById('grupo-estudiante');
+function toggleEstudiante() {
+  const val = tipoSelect.value;
+  grupoEst.style.display = (val === 'orientacion_caso' || val === 'estrategias_aula') ? 'block' : 'none';
+}
+tipoSelect.addEventListener('change', toggleEstudiante);
+toggleEstudiante();
+</script>
+{% endblock %}

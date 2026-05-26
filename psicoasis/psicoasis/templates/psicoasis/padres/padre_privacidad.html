@@ -1,0 +1,24 @@
+{% extends "psicoasis/base.html" %}
+{% block title %}Privacidad — PsicoAsis{% endblock %}
+{% block content %}
+<a href="{% url 'padres_list' %}" style="font-size:.83rem;color:#7a9aaa;text-decoration:none;margin-bottom:20px;display:inline-block;">← Volver</a>
+<div class="card" style="max-width:550px;">
+  <div class="card-header">
+    <div class="card-title">Configurar privacidad del vínculo</div>
+    <div class="card-sub">Qué información puede ver este padre sobre su hijo/a</div>
+  </div>
+  <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+      <div class="form-group">
+        <label class="form-label">{{ field.label }}</label>
+        {{ field }}
+        {% if field.help_text %}<div style="font-size:.75rem;color:#7a9aaa;margin-top:4px;">{{ field.help_text }}</div>{% endif %}
+      </div>
+      {% endfor %}
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Guardar configuración</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

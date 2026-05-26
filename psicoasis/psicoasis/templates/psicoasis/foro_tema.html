@@ -1,0 +1,55 @@
+{% extends 'psicoasis/base.html' %}
+{% block title %}{{ tema.titulo }} — Foro PsicoAsis{% endblock %}
+{% block topbar_title %}Foros{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'foros' %}" class="btn btn-outline btn-sm">← Volver al foro</a>
+{% endblock %}
+{% block content %}
+
+<div style="margin-bottom:24px">
+  <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+    <span style="background:var(--sage-xxl);color:var(--sage);border-radius:8px;padding:4px 12px;font-size:.78rem">{{ tema.get_categoria_display }}</span>
+    {% if tema.fijado %}<span style="background:#fff9e6;color:#e8a020;border-radius:8px;padding:4px 12px;font-size:.78rem;font-weight:600">📌 Fijado</span>{% endif %}
+  </div>
+  <h1 style="font-size:1.4rem;margin-bottom:6px">{{ tema.titulo }}</h1>
+  {% if tema.descripcion %}<p style="color:var(--text-s);font-size:.88rem;line-height:1.7">{{ tema.descripcion }}</p>{% endif %}
+  <div style="font-size:.75rem;color:var(--text-xs);margin-top:8px">Creado por {{ tema.autor.first_name|default:tema.autor.username }} · {{ tema.fecha_creacion|date:"d/m/Y" }} · {{ respuestas.count }} respuesta{{ respuestas.count|pluralize }}</div>
+</div>
+
+<!-- Respuestas -->
+{% if respuestas %}
+<div style="display:flex;flex-direction:column;gap:14px;margin-bottom:24px">
+  {% for r in respuestas %}
+  <div class="card" {% if r.autor == request.user %}style="border-left:3px solid var(--sage)"{% endif %}>
+    <div class="card-body" style="padding:16px 20px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+        <div class="av av-32 av-green" style="width:32px;height:32px;font-size:.75rem">{{ r.autor.first_name|first|default:r.autor.username|first }}</div>
+        <div>
+          <div style="font-weight:600;font-size:.84rem">{{ r.autor.first_name|default:r.autor.username }} {% if r.autor == request.user %}<span style="font-size:.7rem;color:var(--sage)">(tú)</span>{% endif %}</div>
+          <div style="font-size:.72rem;color:var(--text-xs)">{{ r.fecha|date:"d/m/Y" }} a las {{ r.fecha|time:"g:i A" }}</div>
+        </div>
+      </div>
+      <p style="font-size:.88rem;color:var(--text-s);line-height:1.8">{{ r.contenido }}</p>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="card mb-4"><div class="empty-state" style="padding:24px">
+  <span class="empty-icon">💬</span>
+  <div class="empty-title">Sé el primero en responder</div>
+</div></div>
+{% endif %}
+
+<!-- Formulario de respuesta -->
+<div class="card">
+  <div class="card-header"><span class="card-title">💬 Agregar respuesta</span></div>
+  <div class="card-body" style="padding:16px">
+    <form method="post">
+      {% csrf_token %}
+      <textarea name="contenido" class="form-control" rows="4" placeholder="Escribe tu respuesta aquí... Recuerda ser respetuoso y empático 🌿" required></textarea>
+      <button type="submit" class="btn btn-primary mt-3">Publicar respuesta</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

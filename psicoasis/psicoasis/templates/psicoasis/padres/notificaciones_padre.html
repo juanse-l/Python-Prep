@@ -1,0 +1,44 @@
+{% comment %}notificaciones_padre.html{% endcomment %}
+{% extends "psicoasis/base_padre.html" %}
+{% block title %}Alertas — PsicoAsis{% endblock %}
+{% block topbar_title %}🔔 Mis Alertas{% endblock %}
+{% block nav_notif %}active{% endblock %}
+
+{% block content %}
+<div class="section-hd">
+  <div class="section-title">Centro de alertas</div>
+  <div class="section-sub">Todas tus notificaciones del sistema</div>
+</div>
+
+{% if notificaciones %}
+  {% for n in notificaciones %}
+  <div class="alert-card alert-{{ n.prioridad }}" style="margin-bottom:10px;border-radius:14px;">
+    <div style="font-size:1.3rem;">
+      {% if n.tipo == 'emocion_critica' %}🚨
+      {% elif n.tipo == 'riesgo_alto' %}⚠️
+      {% elif n.tipo == 'cambio_brusco' %}📊
+      {% elif n.tipo == 'cita_programada' %}📅
+      {% elif n.tipo == 'cita_cancelada' %}❌
+      {% elif n.tipo == 'mensaje_nuevo' %}✉️
+      {% else %}ℹ️{% endif %}
+    </div>
+    <div style="flex:1;">
+      <div style="font-size:.88rem;font-weight:600;color:var(--text);">{{ n.titulo }}</div>
+      <div style="font-size:.78rem;color:var(--text-s);margin-top:4px;line-height:1.5;">{{ n.mensaje }}</div>
+      <div style="display:flex;gap:14px;margin-top:6px;">
+        <span style="font-size:.68rem;color:var(--text-xs);">{{ n.fecha|date:"d/m/Y H:i" }}</span>
+        {% if n.hijo %}<span style="font-size:.68rem;color:var(--text-xs);">👧 {{ n.hijo.get_full_name }}</span>{% endif %}
+        <span style="font-size:.68rem;background:{% if n.prioridad == 'alta' %}#ffd6d6;color:#8a1a1a{% elif n.prioridad == 'media' %}#fff3cc;color:#7a5500{% else %}#eef7f2;color:#3d6b52{% endif %};padding:1px 8px;border-radius:20px;font-weight:700;">
+          {{ n.get_prioridad_display }}
+        </span>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+{% else %}
+  <div style="text-align:center;padding:48px;color:var(--text-xs);">
+    <div style="font-size:2.5rem;margin-bottom:10px;">🌿</div>
+    <div>Sin alertas nuevas. Todo está tranquilo por ahora.</div>
+  </div>
+{% endif %}
+{% endblock %}

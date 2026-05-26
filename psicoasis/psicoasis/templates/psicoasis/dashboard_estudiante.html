@@ -1,0 +1,132 @@
+{% extends 'psicoasis/base_estudiante.html' %}
+{% block title %}Mi Panel — PsicoAsis{% endblock %}
+{% block topbar_title %}🏠 Mi Panel{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1>Hola, {{ user.first_name|default:user.username }} 👋</h1>
+  <p>Bienvenido/a a tu espacio de bienestar emocional en PsicoAsis.</p>
+</div>
+
+{% if not checkin_hoy %}
+<div class="card" style="border-color: #c2e4ed; background: linear-gradient(135deg, #ebf7fa, #f0f8fb);">
+  <div class="card-body" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
+    <div>
+      <div style="font-size:1.5rem;margin-bottom:6px">💚 ¿Cómo estás hoy?</div>
+      <div style="font-size:.85rem;color:var(--text-s)">No has registrado tu estado emocional hoy. ¡Cuéntanos cómo te sientes!</div>
+    </div>
+    <a href="{% url 'checkin_emocional' %}" class="btn btn-primary">Registrar check-in</a>
+  </div>
+</div>
+{% else %}
+<div class="card" style="border-color: #b8e6c8; background: linear-gradient(135deg, #eef8f2, #f5fbf7);">
+  <div class="card-body" style="display:flex;align-items:center;gap:16px">
+    <div style="font-size:2.5rem">{{ checkin_hoy.get_emocion_display|slice:":2" }}</div>
+    <div>
+      <div style="font-weight:700;color:var(--text)">Check-in de hoy registrado ✓</div>
+      <div style="font-size:.82rem;color:var(--text-s)">Te sientes: <strong>{{ checkin_hoy.get_emocion_display }}</strong></div>
+    </div>
+    <a href="{% url 'checkin_emocional' %}" class="btn btn-sm btn-outline" style="margin-left:auto">Editar</a>
+  </div>
+</div>
+{% endif %}
+
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-icon">📅</div>
+    <div class="stat-val">{{ proximas_reuniones|length }}</div>
+    <div class="stat-label">Citas próximas</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">💬</div>
+    <div class="stat-val">{{ mensajes_nuevos }}</div>
+    <div class="stat-label">Mensajes nuevos</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">📊</div>
+    <div class="stat-val">{{ ultimos_checkins|length }}</div>
+    <div class="stat-label">Check-ins este mes</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">🌿</div>
+    <div class="stat-val">{{ recursos|length }}</div>
+    <div class="stat-label">Recursos disponibles</div>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+
+  <!-- Próximas citas -->
+  <div class="card">
+    <div class="card-body">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div class="card-title">📅 Próximas citas</div>
+        <a href="{% url 'mis_citas_estudiante' %}" style="font-size:.75rem;color:var(--teal-d)">Ver todas →</a>
+      </div>
+      {% if proximas_reuniones %}
+        {% for r in proximas_reuniones %}
+        <div style="padding:12px;background:var(--teal-xxl);border-radius:10px;margin-bottom:8px;border-left:3px solid var(--teal)">
+          <div style="font-weight:600;font-size:.85rem">{{ r.fecha|date:"d M Y" }} — {{ r.hora|time:"H:i" }}</div>
+          <div style="font-size:.78rem;color:var(--text-s);margin-top:2px">{{ r.motivo|truncatechars:60 }}</div>
+          <span class="badge badge-teal" style="margin-top:6px">{{ r.get_estado_display }}</span>
+        </div>
+        {% endfor %}
+      {% else %}
+        <div style="text-align:center;padding:20px;color:var(--text-xs);font-size:.85rem">
+          No tienes citas programadas.<br>
+          <a href="{% url 'solicitar_cita_estudiante' %}" style="color:var(--teal-d);font-weight:600">Solicita una cita →</a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Historial emocional -->
+  <div class="card">
+    <div class="card-body">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+        <div class="card-title">📊 Mi semana emocional</div>
+        <a href="{% url 'checkin_emocional' %}" style="font-size:.75rem;color:var(--teal-d)">Ver historial →</a>
+      </div>
+      {% if ultimos_checkins %}
+        <div style="display:flex;flex-direction:column;gap:8px">
+          {% for c in ultimos_checkins|slice:":5" %}
+          <div style="display:flex;align-items:center;gap:10px">
+            <span style="font-size:1.3rem">{{ c.get_emocion_display|slice:":2" }}</span>
+            <div style="flex:1">
+              <div style="font-size:.78rem;font-weight:600">{{ c.get_emocion_display|slice:"3:" }}</div>
+              <div style="font-size:.68rem;color:var(--text-xs)">{{ c.fecha|date:"d M" }}</div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div style="text-align:center;padding:20px;color:var(--text-xs);font-size:.85rem">
+          Aún no tienes registros.<br>¡Empieza hoy tu primer check-in!
+        </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<!-- Recursos rápidos -->
+<div class="card">
+  <div class="card-body">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div class="card-title">🌿 Recursos de bienestar</div>
+      <a href="{% url 'bienestar_estudiante' %}" style="font-size:.75rem;color:var(--teal-d)">Ver todos →</a>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px">
+      {% for r in recursos %}
+      <div style="padding:14px;background:var(--teal-xxl);border-radius:12px;border:1px solid var(--teal-xl)">
+        <div style="font-weight:600;font-size:.85rem;margin-bottom:4px">{{ r.titulo|truncatechars:40 }}</div>
+        <div style="font-size:.75rem;color:var(--text-s)">{{ r.descripcion|truncatechars:80 }}</div>
+        <span class="badge badge-teal" style="margin-top:8px">{{ r.get_categoria_display }}</span>
+      </div>
+      {% empty %}
+      <div style="color:var(--text-xs);font-size:.85rem">No hay recursos disponibles aún.</div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+{% endblock %}

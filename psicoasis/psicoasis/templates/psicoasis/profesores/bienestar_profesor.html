@@ -1,0 +1,152 @@
+{% extends "psicoasis/profesores/base_profesor.html" %}
+{% block title %}Mi Bienestar — Panel Docente{% endblock %}
+{% block topbar_title %}🧘 Mi Bienestar Semanal{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<div style="display:grid;grid-template-columns:1fr 1.3fr;gap:24px;align-items:start;">
+
+  <!-- CHECK-IN -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">🧘 Check-in de esta semana</div>
+      <div class="card-sub">Cuéntanos cómo te has sentido</div>
+    </div>
+    <div class="card-body">
+      {% if ya_hizo_checkin %}
+        <div class="alert alert-success">
+          ✅ Ya registraste tu check-in de esta semana. ¡Gracias por cuidarte!
+        </div>
+        {% with historial|first as ultimo %}
+        {% if ultimo %}
+        <div style="text-align:center;padding:20px 0;">
+          <div style="font-size:3rem;">
+            {% if ultimo.bienestar == 'excelente' %}😄
+            {% elif ultimo.bienestar == 'bien' %}🙂
+            {% elif ultimo.bienestar == 'regular' %}😐
+            {% elif ultimo.bienestar == 'agotado' %}😔
+            {% else %}😢{% endif %}
+          </div>
+          <div style="font-size:1.1rem;font-weight:700;margin-top:8px;">{{ ultimo.get_bienestar_display }}</div>
+          <div style="font-size:.8rem;color:var(--text-xs);">Carga laboral: {{ ultimo.get_carga_laboral_display }}</div>
+        </div>
+        {% endif %}
+        {% endwith %}
+      {% else %}
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-group">
+            <label class="form-label">¿Cómo te sientes esta semana?</label>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+              {% for val, label in form.bienestar.field.choices %}
+              <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;border:1.5px solid var(--indigo-xl);border-radius:10px;cursor:pointer;transition:all .15s;"
+                     id="lbl-b-{{ val }}">
+                <input type="radio" name="bienestar" value="{{ val }}" style="accent-color:var(--indigo);" onchange="highlightBienestar(this)">
+                {{ label }}
+              </label>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Carga laboral percibida</label>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px;">
+              {% for val, label in form.carga_laboral.field.choices %}
+              <label style="display:flex;align-items:center;gap:10px;padding:10px 14px;border:1.5px solid var(--indigo-xl);border-radius:10px;cursor:pointer;transition:all .15s;">
+                <input type="radio" name="carga_laboral" value="{{ val }}" style="accent-color:var(--indigo);">
+                {{ label }}
+              </label>
+              {% endfor %}
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Nota privada para la psicóloga (opcional)</label>
+            {{ form.nota_privada }}
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;padding:12px;background:var(--indigo-xxl);border-radius:10px;">
+            {{ form.solicita_atencion }}
+            <label style="font-size:.85rem;color:var(--text-s);">Quiero que la psicóloga me contacte esta semana</label>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Registrar mi check-in ✅</button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- HISTORIAL -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">📈 Historial de bienestar</div>
+      <div class="card-sub">Últimas {{ historial|length }} semanas</div>
+    </div>
+    <div class="card-body">
+      {% if data_grafica %}
+        <canvas id="grafica-bienestar" height="180" style="margin-bottom:20px;"></canvas>
+        <script>
+          const datos = {{ data_grafica|safe }};
+          const labels = datos.map(d => d.semana);
+          const valores = datos.map(d => d.valor);
+          const emojis = {5:'😄',4:'🙂',3:'😐',2:'😔',1:'😢'};
+          new Chart(document.getElementById('grafica-bienestar'), {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [{
+                label: 'Bienestar',
+                data: valores,
+                borderColor: '#5b6fa8',
+                backgroundColor: 'rgba(91,111,168,.12)',
+                tension: .35,
+                fill: true,
+                pointRadius: 6,
+                pointBackgroundColor: valores.map(v =>
+                  v >= 4 ? '#4aaa6e' : v === 3 ? '#c89a3e' : '#d94f4f'
+                ),
+              }]
+            },
+            options: {
+              scales: {
+                y: { min: 1, max: 5, ticks: {
+                  callback: v => emojis[v] || v,
+                  stepSize: 1,
+                }},
+                x: { ticks: { maxRotation: 45 } }
+              },
+              plugins: { legend: { display: false } },
+            }
+          });
+        </script>
+      {% endif %}
+
+      <!-- Lista semanas -->
+      {% for ae in historial %}
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--indigo-xxl);font-size:.85rem;">
+        <div>
+          <span style="font-weight:600;">{{ ae.semana|date:"d/m/Y" }}</span>
+          <span style="color:var(--text-xs);"> — {{ ae.get_carga_laboral_display }}</span>
+        </div>
+        <span>
+          {% if ae.bienestar == 'excelente' %}😄 Excelente
+          {% elif ae.bienestar == 'bien' %}🙂 Bien
+          {% elif ae.bienestar == 'regular' %}😐 Regular
+          {% elif ae.bienestar == 'agotado' %}😔 Agotado/a
+          {% else %}😢 En crisis{% endif %}
+        </span>
+      </div>
+      {% empty %}
+        <p style="color:var(--text-xs);text-align:center;">Sin registros aún.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+function highlightBienestar(el) {
+  document.querySelectorAll('[id^="lbl-b-"]').forEach(l => l.style.borderColor = 'var(--indigo-xl)');
+  el.closest('label').style.borderColor = 'var(--indigo)';
+  el.closest('label').style.background = 'var(--indigo-xxl)';
+}
+</script>
+{% endblock %}

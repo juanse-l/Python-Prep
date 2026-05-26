@@ -1,0 +1,81 @@
+{% extends 'psicoasis/base_estudiante.html' %}
+{% block title %}Cómo me siento hoy — PsicoAsis{% endblock %}
+{% block topbar_title %}💚 Cómo me siento{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1>¿Cómo te sientes hoy?</h1>
+  <p>Tu bienestar emocional importa. Este registro es privado y solo lo ve la psicóloga.</p>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+
+  <div class="card">
+    <div class="card-body">
+      <div class="card-title" style="margin-bottom:20px">{% if checkin_hoy %}Actualizar check-in de hoy{% else %}Registro de hoy — {{ hoy|date:"d M Y" }}{% endif %}</div>
+
+      <form method="post" id="checkinForm">
+        {% csrf_token %}
+        <div style="margin-bottom:20px">
+          <div class="form-label">¿Cómo describes tu estado hoy?</div>
+          <div class="mood-grid" style="justify-content:center">
+            {% for val, label in emociones %}
+            <label style="cursor:pointer;text-align:center">
+              <input type="radio" name="emocion" value="{{ val }}" style="display:none" {% if checkin_hoy.emocion == val %}checked{% endif %} onchange="selectMood(this)">
+              <div class="mood-btn {% if checkin_hoy.emocion == val %}selected{% endif %}" id="mood-{{ val }}">
+                {{ label|slice:":1" }}
+                <span class="mood-label">{{ label|slice:"2:" }}</span>
+              </div>
+            </label>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Nota privada (opcional)</label>
+          <textarea name="nota_privada" class="form-control" rows="4" placeholder="Puedes escribir cómo te sientes, qué te preocupa, o cualquier cosa que quieras compartir con la psicóloga de forma privada...">{{ checkin_hoy.nota_privada|default:'' }}</textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%">
+          {% if checkin_hoy %}Actualizar mi estado{% else %}Guardar mi estado de hoy{% endif %}
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-body">
+      <div class="card-title" style="margin-bottom:16px">📊 Historial reciente</div>
+      {% if historial %}
+        <div style="display:flex;flex-direction:column;gap:10px">
+          {% for c in historial %}
+          <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;background:var(--teal-xxl);border-radius:10px">
+            <span style="font-size:1.5rem">{{ c.get_emocion_display|slice:":2" }}</span>
+            <div style="flex:1">
+              <div style="font-size:.82rem;font-weight:600">{{ c.get_emocion_display|slice:"3:" }}</div>
+              <div style="font-size:.7rem;color:var(--text-xs)">{{ c.fecha|date:"l d M" }}</div>
+            </div>
+            {% if c.nota_privada %}
+            <span title="Tiene nota privada" style="font-size:.75rem;color:var(--teal-d)">📝</span>
+            {% endif %}
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <div style="text-align:center;padding:30px;color:var(--text-xs)">
+          <div style="font-size:2rem;margin-bottom:8px">📅</div>
+          Aún no tienes registros anteriores.
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+
+<script>
+function selectMood(input) {
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('mood-' + input.value).classList.add('selected');
+}
+</script>
+{% endblock %}

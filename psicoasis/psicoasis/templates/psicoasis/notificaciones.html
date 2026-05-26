@@ -1,0 +1,56 @@
+{% extends 'psicoasis/base.html' %}
+{% block title %}Notificaciones — PsicoAsis{% endblock %}
+{% block topbar_title %}Notificaciones{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'citas_publicas' %}" class="btn btn-outline btn-sm">📋 Ver solicitudes de cita</a>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Notificaciones 🔔</h1>
+  <p>Solicitudes de cita y alertas del sistema</p>
+</div>
+
+{% if notificaciones %}
+<div style="display:flex;flex-direction:column;gap:12px">
+  {% for n in notificaciones %}
+  <div class="card" style="border-left:4px solid {% if n.tipo == 'cita_publica' %}#7a9e7e{% else %}#a0a8b4{% endif %};{% if n.leida %}opacity:.7{% endif %}">
+    <div class="card-body" style="display:flex;gap:16px;align-items:flex-start;padding:18px 20px">
+      <div style="font-size:2rem;flex-shrink:0">{% if n.tipo == 'cita_publica' %}📅{% else %}ℹ️{% endif %}</div>
+      <div style="flex:1">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+          <span style="font-weight:600;font-size:.9rem">{{ n.titulo }}</span>
+          {% if not n.leida %}<span class="badge badge-green" style="font-size:.65rem">Nueva</span>{% endif %}
+        </div>
+        <p style="font-size:.82rem;color:var(--text-s);margin-bottom:8px">{{ n.mensaje }}</p>
+        {% if n.tipo == 'cita_publica' %}
+        <div style="background:var(--sage-xxl);border-radius:10px;padding:12px;font-size:.8rem;display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;margin-bottom:10px">
+          <div><span style="color:var(--text-xs)">Solicitante:</span> <strong>{{ n.nombre_solicitante }}</strong></div>
+          <div><span style="color:var(--text-xs)">Rol:</span> {{ n.rol_solicitante }}</div>
+          {% if n.email_solicitante %}<div><span style="color:var(--text-xs)">Email:</span> {{ n.email_solicitante }}</div>{% endif %}
+          {% if n.telefono_solicitante %}<div><span style="color:var(--text-xs)">Tel:</span> {{ n.telefono_solicitante }}</div>{% endif %}
+          {% if n.fecha_solicitada %}<div><span style="color:var(--text-xs)">Fecha preferida:</span> {{ n.fecha_solicitada|date:"d/m/Y" }}</div>{% endif %}
+          {% if n.hora_solicitada %}<div><span style="color:var(--text-xs)">Hora preferida:</span> {{ n.hora_solicitada|time:"g:i A" }}</div>{% endif %}
+        </div>
+        {% if n.motivo_consulta %}
+        <p style="font-size:.8rem;color:var(--text-s);font-style:italic;margin-bottom:8px">"{{ n.motivo_consulta|truncatewords:20 }}"</p>
+        {% endif %}
+        {% endif %}
+        <div style="font-size:.72rem;color:var(--text-xs)">{{ n.fecha|date:"d/m/Y" }} a las {{ n.fecha|time:"g:i A" }}</div>
+      </div>
+      {% if n.tipo == 'cita_publica' %}
+      <div style="flex-shrink:0">
+        <a href="{% url 'reunion_nueva' %}" class="btn btn-primary btn-sm">+ Agendar cita</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="card"><div class="empty-state">
+  <span class="empty-icon">🔔</span>
+  <div class="empty-title">Sin notificaciones</div>
+  <p class="empty-desc">Aquí aparecerán las solicitudes de cita y alertas del sistema.</p>
+</div></div>
+{% endif %}
+{% endblock %}

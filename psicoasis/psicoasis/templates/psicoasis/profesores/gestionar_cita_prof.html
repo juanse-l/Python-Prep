@@ -1,0 +1,64 @@
+{% extends "psicoasis/base.html" %}
+{% block title %}Gestionar Cita — PsicoAsis{% endblock %}
+{% block content %}
+<a href="{% url 'citas_profesores_psicologo' %}" style="font-size:.83rem;color:#7a9aaa;text-decoration:none;display:inline-flex;align-items:center;gap:5px;margin-bottom:20px;">← Volver</a>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start;">
+  <div class="card">
+    <div class="card-header"><div class="card-title">Detalle de la solicitud</div></div>
+    <div class="card-body">
+      <div style="margin-bottom:12px;">
+        <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.8px;color:#7a9aaa;margin-bottom:4px;">Profesor</div>
+        <div style="font-weight:700;">{{ cita.profesor.get_full_name }}</div>
+      </div>
+      <div style="margin-bottom:12px;">
+        <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.8px;color:#7a9aaa;margin-bottom:4px;">Tipo</div>
+        <div>{{ cita.get_tipo_display }}</div>
+      </div>
+      {% if cita.estudiante_relacionado %}
+      <div style="margin-bottom:12px;">
+        <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.8px;color:#7a9aaa;margin-bottom:4px;">Estudiante relacionado</div>
+        <div>{{ cita.estudiante_relacionado.get_full_name }} — {{ cita.estudiante_relacionado.grado }}</div>
+      </div>
+      {% endif %}
+      <div style="margin-bottom:12px;">
+        <div style="font-size:.72rem;text-transform:uppercase;letter-spacing:.8px;color:#7a9aaa;margin-bottom:4px;">Motivo</div>
+        <div style="font-size:.88rem;background:#f0f4f8;padding:12px;border-radius:10px;line-height:1.6;">{{ cita.motivo_detalle }}</div>
+      </div>
+      {% if cita.fecha_propuesta %}
+      <div style="font-size:.82rem;color:#4a6070;">
+        Fecha propuesta: <strong>{{ cita.fecha_propuesta|date:"d/m/Y" }} — {{ cita.hora_propuesta|time:"H:i" }}</strong>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header"><div class="card-title">Gestionar cita</div></div>
+    <div class="card-body">
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label class="form-label">Estado</label>
+          {{ form.estado }}
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="form-group">
+            <label class="form-label">Fecha confirmada</label>
+            {{ form.fecha_confirmada }}
+          </div>
+          <div class="form-group">
+            <label class="form-label">Hora confirmada</label>
+            {{ form.hora_confirmada }}
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Notas para el profesor</label>
+          {{ form.notas_psicologo }}
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Guardar cambios</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,94 @@
+{% extends 'psicoasis/base.html' %}
+{% block title %}Servicio de Aseo — PsicoAsis{% endblock %}
+{% block topbar_title %}Servicio de Aseo{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'aseo_nuevo' %}" class="btn btn-primary btn-sm">+ Nuevo personal</a>
+{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div class="page-header-row">
+    <div>
+      <h1>Servicio de Aseo 🧹</h1>
+      <p>{{ total }} persona{{ total|pluralize }} registrada{{ total|pluralize }}</p>
+    </div>
+  </div>
+</div>
+
+<!-- FILTROS -->
+<div class="card mb-6">
+  <div class="card-body" style="padding:16px 20px">
+    <form method="get" style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
+      <div style="flex:1;min-width:200px">
+        <label class="form-label">Buscar</label>
+        <input type="text" name="q" class="form-control" placeholder="Nombre o apellido..." value="{{ query }}" style="margin:0">
+      </div>
+      <div style="min-width:160px">
+        <label class="form-label">Área</label>
+        <select name="area" class="form-control" style="margin:0">
+          <option value="">Todas</option>
+          {% for val, lbl in areas %}
+          <option value="{{ val }}" {% if area_filtro == val %}selected{% endif %}>{{ lbl }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <button type="submit" class="btn btn-primary" style="height:44px">Filtrar</button>
+      {% if query or area_filtro %}
+      <a href="{% url 'aseo_list' %}" class="btn btn-outline" style="height:44px">Limpiar</a>
+      {% endif %}
+    </form>
+  </div>
+</div>
+
+<!-- TABLA -->
+<div class="card">
+  {% if personal %}
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Nombre</th>
+          <th>Área asignada</th>
+          <th>Turno</th>
+          <th>Teléfono</th>
+          <th>Fecha ingreso</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in personal %}
+        <tr>
+          <td>
+            <div class="flex items-center gap-2">
+              <div class="av av-36 {% cycle 'av-green' 'av-orange' 'av-blue' %}">{{ p.nombre|first }}{{ p.apellido|first }}</div>
+              <div>
+                <div style="font-weight:600;font-size:.88rem">{{ p.nombre }} {{ p.apellido }}</div>
+                {% if p.email %}<div style="font-size:.72rem;color:var(--text-xs)">{{ p.email }}</div>{% endif %}
+              </div>
+            </div>
+          </td>
+          <td><span class="badge badge-green">{{ p.get_area_asignada_display }}</span></td>
+          <td><span class="badge badge-blue">{{ p.get_turno_display }}</span></td>
+          <td style="font-size:.84rem">{{ p.telefono|default:"—" }}</td>
+          <td style="font-size:.8rem;color:var(--text-xs)">{{ p.fecha_ingreso|date:"d M Y"|default:"—" }}</td>
+          <td>
+            <div class="flex gap-2">
+              <a href="{% url 'aseo_detalle' p.pk %}" class="btn btn-outline btn-sm">Ver</a>
+              <a href="{% url 'aseo_editar' p.pk %}" class="btn btn-outline btn-sm">Editar</a>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <span class="empty-icon">🧹</span>
+    <div class="empty-title">Sin personal registrado</div>
+    <p class="empty-desc">{% if query %}No se encontraron resultados para "{{ query }}".{% else %}Aún no hay personal de aseo registrado.{% endif %}</p>
+    <a href="{% url 'aseo_nuevo' %}" class="btn btn-primary btn-sm">+ Registrar personal</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

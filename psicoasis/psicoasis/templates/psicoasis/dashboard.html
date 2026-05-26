@@ -1,0 +1,257 @@
+{% extends 'psicoasis/base.html' %}
+{% block title %}Panel Principal — PsicoAsis{% endblock %}
+{% block topbar_title %}Panel Principal{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'reunion_nueva' %}" class="btn btn-primary btn-sm">+ Nueva cita</a>
+{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px">
+    <h1>Hola, {{ user.first_name }} 🌿</h1>
+  </div>
+  <p>{{ hoy|date:"l, d \d\e F \d\e Y" }} — Todo va bien por aquí</p>
+</div>
+
+<!-- STATS -->
+<div class="stats-grid mb-6">
+  <div class="stat-card">
+    <div class="stat-icon si-green">👥</div>
+    <div>
+      <div class="stat-num">{{ total_estudiantes }}</div>
+      <div class="stat-label">Estudiantes</div>
+      <div class="stat-sub">Activos</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon si-orange">📊</div>
+    <div>
+      <div class="stat-num">{{ casos_activos }}</div>
+      <div class="stat-label">Casos activos</div>
+      <div class="stat-sub">En seguimiento</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon si-blue">📅</div>
+    <div>
+      <div class="stat-num">{{ reuniones_hoy }}</div>
+      <div class="stat-label">Citas hoy</div>
+      <div class="stat-sub">{{ hoy|date:"d M" }}</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon si-purple">📋</div>
+    <div>
+      <div class="stat-num">{{ total_informes }}</div>
+      <div class="stat-label">Informes</div>
+      <div class="stat-sub">Creados</div>
+    </div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon si-blue">🎓</div>
+    <div>
+      <div class="stat-num">{{ total_docentes }}</div>
+      <div class="stat-label">Docentes</div>
+      <div class="stat-sub">Registrados</div>
+    </div>
+  </div>
+</div>
+
+<!-- GRÁFICAS -->
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px">
+  <div class="card">
+    <div class="card-header"><span class="card-title">📊 Casos por motivo</span></div>
+    <div class="card-body" style="padding:16px">
+      <div style="position:relative;height:220px">
+        <canvas id="chartMotivos" role="img" aria-label="Casos por motivo de consulta"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="card-title">📈 Atenciones por mes</span></div>
+    <div class="card-body" style="padding:16px">
+      <div style="position:relative;height:220px">
+        <canvas id="chartMeses" role="img" aria-label="Reuniones realizadas por mes"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="card-title">🏫 Estudiantes por grado</span></div>
+    <div class="card-body" style="padding:16px">
+      <div style="position:relative;height:220px">
+        <canvas id="chartGrados" role="img" aria-label="Distribución de estudiantes por grado"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><span class="card-title">🗂️ Estado de reuniones</span></div>
+    <div class="card-body" style="padding:16px">
+      <div style="position:relative;height:220px">
+        <canvas id="chartEstados" role="img" aria-label="Reuniones por estado"></canvas>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="grid-main">
+  <!-- Reuniones próximas -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">Próximas reuniones (7 días)</span>
+      <a href="{% url 'reuniones_list' %}" class="btn btn-outline btn-sm">Ver todas →</a>
+    </div>
+    {% if proximas_reuniones %}
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Estudiante</th><th>Fecha</th><th>Hora</th><th>Motivo</th><th>Estado</th><th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in proximas_reuniones %}
+          <tr>
+            <td>
+              <div class="flex items-center gap-2">
+                <div class="av av-36 av-green">{{ r.estudiante.nombre|first }}{{ r.estudiante.apellido|first }}</div>
+                <div>
+                  <div style="font-weight:600;font-size:.84rem">{{ r.estudiante.nombre }} {{ r.estudiante.apellido }}</div>
+                  <div style="font-size:.72rem;color:var(--text-xs)">{{ r.estudiante.grado }}</div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="badge {% if r.fecha == hoy %}badge-green{% else %}badge-gray{% endif %}">
+                {% if r.fecha == hoy %}Hoy{% else %}{{ r.fecha|date:"d M" }}{% endif %}
+              </span>
+            </td>
+            <td style="font-size:.82rem">{{ r.hora|time:"g:i A" }}</td>
+            <td style="font-size:.82rem;max-width:130px">{{ r.motivo|truncatewords:4 }}</td>
+            <td>
+              <span class="badge {% if r.estado == 'confirmada' %}badge-green{% elif r.estado == 'pendiente' %}badge-yellow{% elif r.estado == 'realizada' %}badge-blue{% else %}badge-red{% endif %}">
+                {{ r.get_estado_display }}
+              </span>
+            </td>
+            <td><a href="{% url 'reunion_editar' r.pk %}" class="btn btn-outline btn-sm">Editar</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <div class="empty-state">
+      <span class="empty-icon">📅</span>
+      <div class="empty-title">Sin reuniones esta semana</div>
+      <p class="empty-desc">No hay citas programadas para los próximos 7 días.</p>
+      <a href="{% url 'reunion_nueva' %}" class="btn btn-primary btn-sm">+ Agendar cita</a>
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Columna derecha -->
+  <div style="display:flex;flex-direction:column;gap:18px">
+    <!-- Acciones rápidas -->
+    <div class="card">
+      <div class="card-header"><span class="card-title">Acciones rápidas</span></div>
+      <div class="card-body" style="display:flex;flex-direction:column;gap:10px;padding-top:16px">
+        <a href="{% url 'estudiante_nuevo' %}" class="btn btn-outline w-full" style="justify-content:flex-start;border-radius:12px">👤 Nuevo estudiante</a>
+        <a href="{% url 'caso_nuevo' %}" class="btn btn-outline w-full" style="justify-content:flex-start;border-radius:12px">📊 Abrir caso</a>
+        <a href="{% url 'reunion_nueva' %}" class="btn btn-outline w-full" style="justify-content:flex-start;border-radius:12px">📅 Agendar reunión</a>
+        <a href="{% url 'informe_nuevo' %}" class="btn btn-outline w-full" style="justify-content:flex-start;border-radius:12px">📋 Crear informe</a>
+        <a href="{% url 'asistente_ia' %}" class="btn btn-primary w-full" style="justify-content:flex-start;border-radius:12px">🤖 Asistente IA</a>
+      </div>
+    </div>
+
+    {% if notificaciones_recientes %}
+    <div class="card" style="border-left:4px solid var(--sage)">
+      <div class="card-header">
+        <span class="card-title">🔔 Solicitudes nuevas</span>
+        <a href="{% url 'notificaciones' %}" class="btn btn-outline btn-sm">Ver todas</a>
+      </div>
+      <div style="padding:0 8px">
+        {% for n in notificaciones_recientes %}
+        <div style="padding:12px 8px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start">
+          <span style="font-size:1.2rem">📅</span>
+          <div style="flex:1">
+            <div style="font-size:.8rem;font-weight:600;color:var(--text)">{{ n.nombre_solicitante }}</div>
+            <div style="font-size:.72rem;color:var(--text-xs)">{{ n.fecha|date:"d/m" }} · {{ n.rol_solicitante }}</div>
+          </div>
+          <span style="background:#e74c3c;color:white;border-radius:50%;font-size:.6rem;font-weight:700;min-width:16px;height:16px;display:flex;align-items:center;justify-content:center">!</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    <div class="card" style="background:linear-gradient(135deg,#1e3320,#3a5c3e);border:none">
+      <div class="card-body">
+        <div style="font-size:1.5rem;margin-bottom:10px">💚</div>
+        <p style="color:rgba(255,255,255,.75);font-size:.84rem;line-height:1.85;font-style:italic">
+          "El bienestar emocional es la base sobre la que se construye todo aprendizaje significativo."
+        </p>
+        <p style="color:rgba(255,255,255,.3);font-size:.7rem;margin-top:10px">— Psicología educativa</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script>
+const SAGE = '#5c8a62';
+const SAGE_L = '#8db893';
+const COLORS = ['#5c8a62','#4a78d4','#d4793e','#9b59b6','#27ae60','#e74c3c','#f39c12','#1abc9c'];
+
+new Chart(document.getElementById('chartMotivos'), {
+  type: 'bar',
+  data: {
+    labels: {{ motivos_labels|safe }},
+    datasets: [{ label: 'Casos', data: {{ motivos_data|safe }},
+      backgroundColor: COLORS.slice(0, {{ motivos_data|length }}),
+      borderRadius: 6, borderSkipped: false }]
+  },
+  options: { responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+});
+
+new Chart(document.getElementById('chartMeses'), {
+  type: 'line',
+  data: {
+    labels: {{ meses_labels|safe }},
+    datasets: [{ label: 'Atenciones', data: {{ meses_data|safe }},
+      borderColor: SAGE, backgroundColor: 'rgba(92,138,98,.15)',
+      fill: true, tension: 0.4, pointBackgroundColor: SAGE, pointRadius: 5 }]
+  },
+  options: { responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+});
+
+new Chart(document.getElementById('chartGrados'), {
+  type: 'bar',
+  data: {
+    labels: {{ grados_labels|safe }},
+    datasets: [{ label: 'Estudiantes', data: {{ grados_data|safe }},
+      backgroundColor: 'rgba(92,138,98,.7)', borderColor: SAGE,
+      borderWidth: 1, borderRadius: 4 }]
+  },
+  options: { responsive: true, maintainAspectRatio: false,
+    indexAxis: 'y',
+    plugins: { legend: { display: false } },
+    scales: { x: { beginAtZero: true, ticks: { stepSize: 1 } } } }
+});
+
+new Chart(document.getElementById('chartEstados'), {
+  type: 'doughnut',
+  data: {
+    labels: {{ estados_labels|safe }},
+    datasets: [{ data: {{ estados_data|safe }},
+      backgroundColor: ['#5c8a62','#f39c12','#4a78d4','#e74c3c'],
+      borderWidth: 2, borderColor: '#fff' }]
+  },
+  options: { responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { position: 'bottom', labels: { padding: 14, font: { size: 11 } } } } }
+});
+</script>
+{% endblock %}

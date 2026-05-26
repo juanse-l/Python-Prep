@@ -1,0 +1,243 @@
+{% extends 'psicoasis/base.html' %}
+{% block title %}{{ informe.titulo }} — PsicoAsis{% endblock %}
+{% block topbar_title %}Informe{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'informes_list' %}" class="btn btn-outline btn-sm">← Volver</a>
+  <a href="{% url 'informe_editar' informe.pk %}" class="btn btn-outline btn-sm">✏️ Editar</a>
+  <button onclick="window.print()" class="btn btn-outline btn-sm">🖨️ Imprimir</button>
+{% endblock %}
+
+{% block content %}
+<style>
+/* ── Estilos normales ── */
+.inf-seccion { margin-bottom:24px; }
+.inf-seccion-titulo {
+  font-family:'Playfair Display',serif;
+  font-size:.88rem; font-weight:700; color:var(--text);
+  text-transform:uppercase; letter-spacing:.8px;
+  border-bottom:2px solid var(--sage-xl);
+  padding-bottom:7px; margin-bottom:14px;
+  display:flex; align-items:center; gap:6px;
+}
+.inf-campo { margin-bottom:14px; }
+.inf-campo-label { font-size:.72rem; font-weight:700; color:var(--text-xs); text-transform:uppercase; letter-spacing:.6px; margin-bottom:4px; }
+.inf-campo-valor { font-size:.88rem; color:var(--text-s); line-height:1.8; white-space:pre-line; }
+.inf-grid2 { display:grid; grid-template-columns:1fr 1fr; gap:16px 28px; }
+.riesgo-badge-bajo { background:#e8f8e8;color:#27ae60;border-radius:8px;padding:6px 14px;font-weight:700;font-size:.82rem;display:inline-flex;align-items:center;gap:6px }
+.riesgo-badge-medio { background:#fff9e6;color:#f39c12;border-radius:8px;padding:6px 14px;font-weight:700;font-size:.82rem;display:inline-flex;align-items:center;gap:6px }
+.riesgo-badge-alto { background:#ffe4c4;color:#e67e22;border-radius:8px;padding:6px 14px;font-weight:700;font-size:.82rem;display:inline-flex;align-items:center;gap:6px }
+.riesgo-badge-critico { background:#ffe8e8;color:#c0392b;border-radius:8px;padding:6px 14px;font-weight:700;font-size:.82rem;display:inline-flex;align-items:center;gap:6px }
+
+/* ── ESTILOS DE IMPRESIÓN ── */
+@media print {
+  /* Ocultar toda la UI del panel */
+  .sidebar, .topbar, .page-header, .btn, nav { display:none !important; }
+  .main-content { margin:0 !important; padding:0 !important; }
+  body { background:white !important; font-size:11pt; }
+
+  /* Encabezado impreso */
+  .print-header { display:flex !important; }
+
+  .card {
+    box-shadow:none !important;
+    border:1px solid #ddd !important;
+    break-inside:avoid;
+    margin-bottom:14px !important;
+  }
+  .inf-seccion-titulo { color:#000 !important; border-bottom:1.5px solid #aaa !important; }
+  .inf-campo-label { color:#555 !important; }
+  .inf-campo-valor { color:#222 !important; font-size:10pt; }
+  .print-firma { display:flex !important; }
+}
+</style>
+
+<!-- Encabezado para impresión (oculto en pantalla) -->
+<div class="print-header" style="display:none;justify-content:space-between;align-items:flex-start;margin-bottom:24px;padding-bottom:16px;border-bottom:2px solid #2d3a2e">
+  <div>
+    <div style="font-size:18pt;font-weight:700;color:#2d3a2e;font-family:Georgia,serif">PsicoAsis</div>
+    <div style="font-size:9pt;color:#5a6b5b">Psicología Escolar — Bienestar Emocional Educativo</div>
+  </div>
+  <div style="text-align:right;font-size:9pt;color:#5a6b5b">
+    <div>Generado el {{ informe.fecha_creacion|date:"d/m/Y" }}</div>
+    {% if informe.confidencial %}<div style="font-weight:700;color:#c0392b;margin-top:4px">🔒 DOCUMENTO CONFIDENCIAL</div>{% endif %}
+  </div>
+</div>
+
+<!-- Título y metadatos -->
+<div style="margin-bottom:24px">
+  <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px">
+    <span class="badge badge-blue">{{ informe.get_tipo_display }}</span>
+    {% if informe.estudiante %}<span class="badge badge-green">{{ informe.estudiante.get_full_name }} — {{ informe.estudiante.grado }}</span>{% endif %}
+    {% if informe.nivel_riesgo %}
+      <span class="riesgo-badge-{{ informe.nivel_riesgo }}">
+        {% if informe.nivel_riesgo == 'bajo' %}🟢{% elif informe.nivel_riesgo == 'medio' %}🟡{% elif informe.nivel_riesgo == 'alto' %}🟠{% else %}🔴{% endif %}
+        Riesgo {{ informe.get_nivel_riesgo_display }}
+      </span>
+    {% endif %}
+    {% if informe.confidencial %}<span style="background:#ffe8e8;color:#c0392b;border-radius:8px;padding:4px 10px;font-size:.72rem;font-weight:700">🔒 Confidencial</span>{% endif %}
+  </div>
+  <h1 style="font-size:1.4rem;margin-bottom:6px">{{ informe.titulo }}</h1>
+  <div style="font-size:.8rem;color:var(--text-xs)">
+    {% if informe.fecha_sesion %}Sesión: {{ informe.fecha_sesion|date:"d/m/Y" }} · {% endif %}
+    Creado: {{ informe.fecha_creacion|date:"d/m/Y" }} · 
+    Por: {{ informe.psicologo.first_name|default:informe.psicologo.username }}
+  </div>
+</div>
+
+<div class="card">
+<div class="card-body" style="padding:28px">
+
+{% if informe.motivo_consulta or informe.antecedentes or informe.situacion_familiar %}
+<div class="inf-seccion">
+  <div class="inf-seccion-titulo">🔍 Motivo de consulta y contexto</div>
+  <div class="inf-grid2">
+    {% if informe.motivo_consulta %}
+    <div class="inf-campo" style="grid-column:1/-1">
+      <div class="inf-campo-label">Motivo de consulta</div>
+      <div class="inf-campo-valor">{{ informe.motivo_consulta }}</div>
+    </div>
+    {% endif %}
+    {% if informe.antecedentes %}
+    <div class="inf-campo">
+      <div class="inf-campo-label">Antecedentes relevantes</div>
+      <div class="inf-campo-valor">{{ informe.antecedentes }}</div>
+    </div>
+    {% endif %}
+    {% if informe.situacion_familiar %}
+    <div class="inf-campo">
+      <div class="inf-campo-label">Situación familiar</div>
+      <div class="inf-campo-valor">{{ informe.situacion_familiar }}</div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+{% if informe.descripcion_conducta or informe.estado_emocional or informe.relaciones_sociales or informe.rendimiento_academico %}
+<div class="inf-seccion">
+  <div class="inf-seccion-titulo">👁️ Observaciones durante la sesión</div>
+  <div class="inf-grid2">
+    {% if informe.descripcion_conducta %}
+    <div class="inf-campo">
+      <div class="inf-campo-label">Conducta observada</div>
+      <div class="inf-campo-valor">{{ informe.descripcion_conducta }}</div>
+    </div>
+    {% endif %}
+    {% if informe.estado_emocional %}
+    <div class="inf-campo">
+      <div class="inf-campo-label">Estado emocional</div>
+      <div class="inf-campo-valor">{{ informe.estado_emocional }}</div>
+    </div>
+    {% endif %}
+    {% if informe.relaciones_sociales %}
+    <div class="inf-campo">
+      <div class="inf-campo-label">Relaciones sociales y pares</div>
+      <div class="inf-campo-valor">{{ informe.relaciones_sociales }}</div>
+    </div>
+    {% endif %}
+    {% if informe.rendimiento_academico %}
+    <div class="inf-campo">
+      <div class="inf-campo-label">Rendimiento académico</div>
+      <div class="inf-campo-valor">{{ informe.rendimiento_academico }}</div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+<div class="inf-seccion">
+  <div class="inf-seccion-titulo">🧠 Análisis e impresión psicológica</div>
+  <div class="inf-campo">
+    <div class="inf-campo-valor">{{ informe.contenido }}</div>
+  </div>
+  {% if informe.fortalezas or informe.factores_riesgo %}
+  <div class="inf-grid2" style="margin-top:12px">
+    {% if informe.fortalezas %}
+    <div class="inf-campo" style="background:#eef6ef;border-radius:10px;padding:14px">
+      <div class="inf-campo-label" style="color:#27ae60">✅ Fortalezas y recursos personales</div>
+      <div class="inf-campo-valor">{{ informe.fortalezas }}</div>
+    </div>
+    {% endif %}
+    {% if informe.factores_riesgo %}
+    <div class="inf-campo" style="background:#fff5e6;border-radius:10px;padding:14px">
+      <div class="inf-campo-label" style="color:#e67e22">⚠️ Factores de riesgo</div>
+      <div class="inf-campo-valor">{{ informe.factores_riesgo }}</div>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+</div>
+
+{% if informe.recomendaciones or informe.plan_intervencion or informe.acuerdos or informe.proxima_sesion %}
+<div class="inf-seccion">
+  <div class="inf-seccion-titulo">🗺️ Plan de intervención y recomendaciones</div>
+  <div class="inf-grid2">
+    {% if informe.recomendaciones %}
+    <div class="inf-campo">
+      <div class="inf-campo-label">Recomendaciones</div>
+      <div class="inf-campo-valor">{{ informe.recomendaciones }}</div>
+    </div>
+    {% endif %}
+    {% if informe.plan_intervencion %}
+    <div class="inf-campo">
+      <div class="inf-campo-label">Plan de intervención</div>
+      <div class="inf-campo-valor">{{ informe.plan_intervencion }}</div>
+    </div>
+    {% endif %}
+    {% if informe.acuerdos %}
+    <div class="inf-campo">
+      <div class="inf-campo-label">Acuerdos y compromisos</div>
+      <div class="inf-campo-valor">{{ informe.acuerdos }}</div>
+    </div>
+    {% endif %}
+    {% if informe.proxima_sesion %}
+    <div class="inf-campo">
+      <div class="inf-campo-label">Próxima sesión / seguimiento</div>
+      <div class="inf-campo-valor">{{ informe.proxima_sesion }}</div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+{% if informe.requiere_remision %}
+<div class="inf-seccion">
+  <div class="inf-seccion-titulo">🏥 Remisión</div>
+  <div style="background:#ffe8e8;border-radius:10px;padding:16px;display:flex;gap:12px;align-items:center">
+    <span style="font-size:1.5rem">⚠️</span>
+    <div>
+      <div style="font-weight:700;color:#c0392b;font-size:.88rem">Este caso requiere remisión a entidad externa</div>
+      {% if informe.entidad_remision %}<div style="color:#e67e22;font-size:.84rem;margin-top:4px">Entidad: {{ informe.entidad_remision }}</div>{% endif %}
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Firma para impresión -->
+<div class="print-firma" style="display:none;margin-top:48px;justify-content:space-between;align-items:flex-end">
+  <div style="text-align:center;min-width:220px">
+    <div style="border-top:1.5px solid #2d3a2e;padding-top:8px;font-size:9pt">
+      <div style="font-weight:700">{{ informe.psicologo.get_full_name|default:informe.psicologo.username }}</div>
+      <div style="color:#5a6b5b">Psicóloga Escolar</div>
+    </div>
+  </div>
+  {% if informe.estudiante %}
+  <div style="text-align:center;min-width:220px">
+    <div style="border-top:1.5px solid #2d3a2e;padding-top:8px;font-size:9pt">
+      <div style="font-weight:700">{{ informe.estudiante.get_full_name }}</div>
+      <div style="color:#5a6b5b">Estudiante — {{ informe.estudiante.grado }}</div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+</div>
+</div>
+
+<div style="display:flex;gap:10px;margin-top:20px;margin-bottom:40px" class="no-print">
+  <button onclick="window.print()" class="btn btn-primary">🖨️ Imprimir / Guardar PDF</button>
+  <a href="{% url 'informes_list' %}" class="btn btn-outline">← Volver a informes</a>
+  <a href="{% url 'informe_eliminar' informe.pk %}" class="btn" style="background:var(--red);color:white">🗑️ Eliminar</a>
+</div>
+
+{% endblock %}

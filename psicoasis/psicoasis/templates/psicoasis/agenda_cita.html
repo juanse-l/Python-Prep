@@ -1,0 +1,42 @@
+{% extends 'psicoasis/base.html' %}
+{% block title %}Agendar Cita — PsicoAsis{% endblock %}
+{% block topbar_title %}Agendar Cita{% endblock %}
+{% block content %}
+<div class="page-header"><h1>Agendar Cita 📅</h1></div>
+<div style="max-width:600px">
+<div class="card">
+  <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-group">
+        <label class="form-label">Estudiante</label>
+        <select name="estudiante" class="form-control" required>
+          <option value="">Seleccionar</option>
+          {% for e in estudiantes %}
+          <option value="{{ e.pk }}">{{ e.apellido }}, {{ e.nombre }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label class="form-label">Fecha</label>
+          <input type="date" name="fecha" class="form-control" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Hora</label>
+          <input type="time" name="hora" class="form-control" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Motivo</label>
+        <input type="text" name="motivo" class="form-control" required placeholder="Motivo de la cita">
+      </div>
+      <div class="flex gap-2">
+        <button type="submit" class="btn btn-primary">Agendar cita</button>
+        <a href="{% url 'calendario' %}" class="btn btn-outline">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+</div>
+{% endblock %}

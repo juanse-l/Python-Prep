@@ -1,0 +1,48 @@
+{% extends 'psicoasis/base_estudiante.html' %}
+{% block title %}Recursos de Bienestar — PsicoAsis{% endblock %}
+{% block topbar_title %}🌿 Recursos de Bienestar{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <h1>Centro de Bienestar</h1>
+  <p>Herramientas, guías y recursos para tu salud emocional.</p>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:18px;margin-bottom:28px">
+  {% for r in recursos %}
+  <div class="card" style="margin-bottom:0">
+    <div class="card-body">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:10px">
+        <div class="card-title" style="font-size:.9rem">{{ r.titulo }}</div>
+        <span class="badge badge-teal" style="white-space:nowrap">{{ r.get_tipo_media_display }}</span>
+      </div>
+      <p style="font-size:.8rem;color:var(--text-s);line-height:1.6;margin-bottom:12px">{{ r.descripcion|truncatechars:120 }}</p>
+      <span class="badge" style="background:var(--lav-xxl);color:var(--lavender);border:1px solid var(--lav-l)">{{ r.get_categoria_display }}</span>
+      {% if r.url_media %}
+      <a href="{{ r.url_media }}" target="_blank" class="btn btn-sm btn-outline" style="margin-top:10px;display:inline-flex">Ver recurso →</a>
+      {% endif %}
+    </div>
+  </div>
+  {% empty %}
+  <div style="grid-column:1/-1;text-align:center;padding:40px;color:var(--text-xs)">
+    La psicóloga aún no ha publicado recursos. ¡Pronto habrá contenido para ti!
+  </div>
+  {% endfor %}
+</div>
+
+{% if foros %}
+<div class="card">
+  <div class="card-body">
+    <div class="card-title" style="margin-bottom:16px">🗣️ Foros activos</div>
+    {% for f in foros %}
+    <a href="{% url 'foro_tema' f.pk %}" style="display:block;padding:12px;background:var(--teal-xxl);border-radius:10px;margin-bottom:8px;text-decoration:none;color:var(--text);border:1px solid var(--teal-xl)">
+      <div style="font-weight:600;font-size:.85rem">{{ f.titulo }}</div>
+      <div style="font-size:.75rem;color:var(--text-xs);margin-top:3px">{{ f.total_respuestas }} respuestas · {{ f.get_categoria_display }}</div>
+    </a>
+    {% endfor %}
+    <a href="{% url 'foros' %}" style="font-size:.8rem;color:var(--teal-d);font-weight:600">Ver todos los foros →</a>
+  </div>
+</div>
+{% endif %}
+
+{% endblock %}

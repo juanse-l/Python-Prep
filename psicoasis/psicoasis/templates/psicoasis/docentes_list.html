@@ -1,0 +1,67 @@
+{% extends 'psicoasis/base.html' %}
+{% block title %}Docentes — PsicoAsis{% endblock %}
+{% block topbar_title %}Docentes{% endblock %}
+{% block topbar_actions %}
+  <a href="{% url 'docente_nuevo' %}" class="btn btn-primary btn-sm">+ Nuevo docente</a>
+{% endblock %}
+{% block content %}
+<div class="page-header">
+  <h1>Docentes 🎓</h1>
+  <p>{{ total }} docente{{ total|pluralize }} registrado{{ total|pluralize }}</p>
+</div>
+
+<!-- Filtros -->
+<div class="card mb-4" style="padding:16px 20px">
+  <form method="get" style="display:flex;gap:12px;align-items:flex-end;flex-wrap:wrap">
+    <div style="flex:1;min-width:200px">
+      <label style="font-size:.72rem;font-weight:600;color:var(--text-s);letter-spacing:.6px;text-transform:uppercase;display:block;margin-bottom:6px">Buscar</label>
+      <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Nombre del docente...">
+    </div>
+    <div style="min-width:160px">
+      <label style="font-size:.72rem;font-weight:600;color:var(--text-s);letter-spacing:.6px;text-transform:uppercase;display:block;margin-bottom:6px">Área</label>
+      <select name="area" class="form-control">
+        <option value="">Todas las áreas</option>
+        {% for val, label in areas %}
+        <option value="{{ val }}" {% if area_filtro == val %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <button type="submit" class="btn btn-primary btn-sm" style="height:38px">Filtrar</button>
+    {% if query or area_filtro %}<a href="{% url 'docentes_list' %}" class="btn btn-outline btn-sm" style="height:38px;line-height:22px">Limpiar</a>{% endif %}
+  </form>
+</div>
+
+{% if docentes %}
+<div class="grid-3">
+  {% for d in docentes %}
+  <a href="{% url 'docente_detalle' d.pk %}" style="text-decoration:none">
+    <div class="card" style="transition:transform .2s,box-shadow .2s;cursor:pointer" onmouseenter="this.style.transform='translateY(-3px)';this.style.boxShadow='0 12px 32px rgba(45,58,46,.12)'" onmouseleave="this.style.transform='';this.style.boxShadow=''">
+      <div class="card-body">
+        <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+          <div class="av av-44 av-green" style="background:linear-gradient(135deg,#5a8560,#7a9e7e);font-size:1rem">{{ d.nombre|first }}{{ d.apellido|first }}</div>
+          <div>
+            <div style="font-weight:600;font-size:.9rem;color:var(--text)">{{ d.nombre }} {{ d.apellido }}</div>
+            <div style="font-size:.75rem;color:var(--text-xs)">{{ d.get_area_display }}</div>
+          </div>
+        </div>
+        {% if d.grados_a_cargo %}
+        <div style="font-size:.75rem;color:var(--text-s);margin-bottom:8px">📚 Grados: {{ d.grados_a_cargo }}</div>
+        {% endif %}
+        {% if d.email %}
+        <div style="font-size:.75rem;color:var(--text-xs)">✉️ {{ d.email }}</div>
+        {% endif %}
+        <div style="margin-top:10px;font-size:.72rem;color:var(--text-xs)">{{ d.seguimientos.count }} seguimiento{{ d.seguimientos.count|pluralize }}</div>
+      </div>
+    </div>
+  </a>
+  {% endfor %}
+</div>
+{% else %}
+<div class="card"><div class="empty-state">
+  <span class="empty-icon">🎓</span>
+  <div class="empty-title">Sin docentes registrados</div>
+  <p class="empty-desc">Agrega el primer docente para comenzar su seguimiento psicológico.</p>
+  <a href="{% url 'docente_nuevo' %}" class="btn btn-primary btn-sm">+ Registrar docente</a>
+</div></div>
+{% endif %}
+{% endblock %}

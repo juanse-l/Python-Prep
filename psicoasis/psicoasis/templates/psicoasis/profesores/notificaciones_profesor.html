@@ -1,0 +1,40 @@
+{% extends "psicoasis/profesores/base_profesor.html" %}
+{% block title %}Notificaciones — Panel Docente{% endblock %}
+{% block topbar_title %}🔔 Notificaciones{% endblock %}
+{% block content %}
+<div class="card" style="max-width:750px;">
+  <div class="card-header">
+    <div class="card-title">Todas las notificaciones</div>
+    <div class="card-sub">{{ notificaciones|length }} notificación{{ notificaciones|length|pluralize:"es" }} en total</div>
+  </div>
+  <div class="card-body">
+    {% if notificaciones %}
+      {% for n in notificaciones %}
+      <div style="display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--indigo-xxl);{% if not n.leida %}background:var(--indigo-xxl);margin:0 -22px;padding-left:22px;padding-right:22px;{% endif %}">
+        <div style="font-size:1.4rem;min-width:28px;text-align:center;">
+          {% if n.tipo == 'alerta_respondida' %}✅
+          {% elif n.tipo == 'cita_confirmada' %}📅
+          {% elif n.tipo == 'cita_cancelada' %}❌
+          {% elif n.tipo == 'mensaje_nuevo' %}💬
+          {% elif n.tipo == 'recurso_compartido' %}📎
+          {% elif n.tipo == 'caso_derivado' %}🗂️
+          {% else %}🔔{% endif %}
+        </div>
+        <div style="flex:1;">
+          <div style="font-weight:{% if not n.leida %}700{% else %}600{% endif %};font-size:.9rem;">{{ n.titulo }}</div>
+          <div style="font-size:.82rem;color:var(--text-s);margin-top:3px;">{{ n.mensaje }}</div>
+          <div style="font-size:.72rem;color:var(--text-xs);margin-top:5px;">{{ n.fecha|date:"d/m/Y H:i" }}</div>
+        </div>
+        <div>
+          <span class="badge badge-{% if n.prioridad == 'alta' %}urgente{% elif n.prioridad == 'media' %}moderada{% else %}informativa{% endif %}">
+            {{ n.get_prioridad_display }}
+          </span>
+        </div>
+      </div>
+      {% endfor %}
+    {% else %}
+      <p style="text-align:center;color:var(--text-xs);font-size:.88rem;padding:30px 0;">No tienes notificaciones.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

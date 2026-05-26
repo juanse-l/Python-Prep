@@ -1,0 +1,86 @@
+{% extends "psicoasis/profesores/base_profesor.html" %}
+{% block title %}Mis Alertas — Panel Docente{% endblock %}
+{% block topbar_title %}🚨 Alertas sobre Estudiantes{% endblock %}
+
+{% block content %}
+<div style="display:grid;grid-template-columns:1fr 1.4fr;gap:24px;align-items:start;">
+
+  <!-- FORMULARIO NUEVA ALERTA -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">+ Nueva alerta</div>
+      <div class="card-sub">Informa a orientación sobre una situación observada</div>
+    </div>
+    <div class="card-body">
+      <div class="alert alert-info" style="margin-bottom:20px;font-size:.82rem;">
+        🔒 Tus alertas son confidenciales. La psicóloga será la única que las verá, no el estudiante.
+      </div>
+      <form method="post">
+        {% csrf_token %}
+        <div class="form-group">
+          <label class="form-label">Estudiante</label>
+          {{ form.estudiante }}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Categoría</label>
+          {{ form.categoria }}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nivel de urgencia</label>
+          {{ form.urgencia }}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Descripción de la situación</label>
+          {{ form.descripcion }}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Conductas específicas observadas <span style="font-weight:400;text-transform:none;letter-spacing:0;">(opcional)</span></label>
+          {{ form.conductas_observadas }}
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:18px;">
+          {{ form.es_confidencial }}
+          <label style="font-size:.85rem;color:var(--text-s);">Enviar de forma confidencial</label>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Enviar alerta 🚨</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- HISTORIAL DE ALERTAS -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">Historial de alertas enviadas</div>
+      <div class="card-sub">{{ alertas|length }} alerta{{ alertas|length|pluralize }} en total</div>
+    </div>
+    <div class="card-body">
+      {% if alertas %}
+        {% for a in alertas %}
+        <div style="padding:14px 0;border-bottom:1px solid var(--indigo-xxl);">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+            <div style="flex:1;">
+              <div style="font-weight:700;font-size:.9rem;">{{ a.estudiante.get_full_name }}
+                <span style="color:var(--text-xs);font-weight:400;"> — {{ a.estudiante.grado }}</span>
+              </div>
+              <div style="font-size:.8rem;color:var(--text-s);margin:3px 0;">{{ a.get_categoria_display }}</div>
+              <div style="font-size:.78rem;color:var(--text-xs);">{{ a.fecha_creacion|date:"d/m/Y H:i" }}</div>
+              {% if a.respuesta_psicologo %}
+              <div style="margin-top:8px;padding:8px 12px;background:var(--indigo-xxl);border-radius:8px;border-left:3px solid var(--indigo);font-size:.8rem;">
+                <strong>Respuesta de orientación:</strong><br>{{ a.respuesta_psicologo|truncatechars:120 }}
+              </div>
+              {% endif %}
+            </div>
+            <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;">
+              <span class="badge badge-{{ a.urgencia }}">{{ a.get_urgencia_display }}</span>
+              <span class="badge badge-{{ a.estado }}">{{ a.get_estado_display }}</span>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p style="color:var(--text-xs);font-size:.85rem;text-align:center;padding:30px 0;">No has enviado ninguna alerta todavía.</p>
+      {% endif %}
+    </div>
+  </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'psicoasis/base.html' %}
+{% block title %}Nuevo Caso — PsicoAsis{% endblock %}
+{% block topbar_title %}Nuevo Caso{% endblock %}
+{% block content %}
+
+<div class="page-header"><h1>Nuevo Caso 📊</h1><p>Registra un nuevo caso de seguimiento</p></div>
+<div style="max-width:700px">
+<div class="card">
+  <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+      <div class="form-grid">
+        <div class="form-group full">
+          <label class="form-label">Estudiante *</label>
+          <select name="estudiante" class="form-control" required>
+            <option value="">Seleccionar estudiante</option>
+            {% for e in estudiantes %}
+            <option value="{{ e.pk }}" {% if estudiante_pre and estudiante_pre.pk == e.pk %}selected{% elif form.estudiante.value|stringformat:"s" == e.pk|stringformat:"s" %}selected{% endif %}>{{ e.apellido }}, {{ e.nombre }} — {{ e.grado }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Motivo *</label>
+          <select name="motivo" class="form-control" required>
+            <option value="">Seleccionar motivo</option>
+            <option value="ansiedad_academica">Ansiedad Académica</option>
+            <option value="problemas_familiares">Problemas Familiares</option>
+            <option value="conflicto_compañeros">Conflicto con Compañeros</option>
+            <option value="baja_autoestima">Baja Autoestima</option>
+            <option value="dificultades_aprendizaje">Dificultades de Aprendizaje</option>
+            <option value="conducta">Problemas de Conducta</option>
+            <option value="organizacion_escolar">Organización Escolar</option>
+            <option value="dificultades_familiares">Dificultades Familiares</option>
+            <option value="otro">Otro</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tipo de atención</label>
+          <select name="tipo_atencion" class="form-control">
+            <option value="regular">Regular</option>
+            <option value="urgente">Urgente</option>
+            <option value="prioritario">Prioritario</option>
+            <option value="seguimiento">Seguimiento</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Descripción *</label>
+          <textarea name="descripcion" class="form-control" rows="4" required placeholder="Describe el caso detalladamente...">{{ form.descripcion.value|default:'' }}</textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Estado</label>
+          <select name="estado" class="form-control">
+            <option value="activo">Activo</option>
+            <option value="cerrado">Cerrado</option>
+            <option value="suspendido">Suspendido</option>
+          </select>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <button type="submit" class="btn btn-primary">Registrar caso</button>
+        <a href="{% url 'estudiantes_list' %}" class="btn btn-outline">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+</div>
+{% endblock %}

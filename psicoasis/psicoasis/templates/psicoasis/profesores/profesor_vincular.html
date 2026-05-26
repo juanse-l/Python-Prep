@@ -1,0 +1,41 @@
+{% extends "psicoasis/base.html" %}
+{% block title %}Vincular Profesor — PsicoAsis{% endblock %}
+{% block content %}
+<a href="{% url 'profesores_list' %}" style="font-size:.83rem;color:#7a9aaa;text-decoration:none;margin-bottom:20px;display:inline-block;">← Volver</a>
+<div class="card" style="max-width:600px;">
+  <div class="card-header">
+    <div class="card-title">Vincular cuenta con registro Docente</div>
+    <div class="card-sub">Cuenta: <strong>{{ prof_user.get_full_name|default:prof_user.username }}</strong></div>
+  </div>
+  <div class="card-body">
+    {% if docentes_disponibles %}
+    <p style="font-size:.85rem;color:#4a5068;margin-bottom:18px;">Selecciona el registro de docente que corresponde a esta cuenta de usuario:</p>
+    <form method="post">
+      {% csrf_token %}
+      <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px;">
+        {% for d in docentes_disponibles %}
+        <label style="display:flex;align-items:center;gap:12px;padding:12px 16px;border:1.5px solid #cdd5ee;border-radius:10px;cursor:pointer;transition:all .15s;"
+               onmouseenter="this.style.borderColor='#5b6fa8';this.style.background='#eef0fa';"
+               onmouseleave="this.style.borderColor='#cdd5ee';this.style.background='white';">
+          <input type="radio" name="docente_id" value="{{ d.pk }}" style="accent-color:#5b6fa8;width:18px;height:18px;">
+          <div>
+            <div style="font-weight:600;font-size:.9rem;">{{ d.get_full_name }}</div>
+            <div style="font-size:.78rem;color:#7a9aaa;">{{ d.get_area_display }} — Grados: {{ d.grados_a_cargo|default:"No especificados" }}</div>
+          </div>
+        </label>
+        {% endfor %}
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button type="submit" class="btn btn-primary">Vincular ✅</button>
+        <a href="{% url 'profesores_list' %}" class="btn btn-secondary">Omitir por ahora</a>
+      </div>
+    </form>
+    {% else %}
+    <div class="alert alert-warning">
+      No hay registros de Docente disponibles para vincular. <a href="{% url 'docente_nuevo' %}">Crear un docente primero</a>.
+    </div>
+    <a href="{% url 'profesores_list' %}" class="btn btn-secondary">Volver</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

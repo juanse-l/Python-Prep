@@ -1,0 +1,49 @@
+{% extends "psicoasis/base.html" %}
+{% block title %}Crear Recurso — PsicoAsis{% endblock %}
+{% block content %}
+<a href="{% url 'profesores_list' %}" style="font-size:.83rem;color:#7a9aaa;text-decoration:none;margin-bottom:20px;display:inline-block;">← Volver</a>
+<div class="card" style="max-width:700px;">
+  <div class="card-header">
+    <div class="card-title">📎 Crear recurso para docentes</div>
+    <div class="card-sub">Guías, estrategias y protocolos compartidos con el equipo docente</div>
+  </div>
+  <div class="card-body">
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+        <div class="form-group" style="grid-column:span 2;">
+          <label class="form-label">Título</label>{{ form.titulo }}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Categoría</label>{{ form.categoria }}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tipo</label>{{ form.tipo }}
+        </div>
+        <div class="form-group" style="grid-column:span 2;">
+          <label class="form-label">Descripción breve</label>{{ form.descripcion }}
+        </div>
+        <div class="form-group" style="grid-column:span 2;">
+          <label class="form-label">Contenido (texto, si aplica)</label>{{ form.contenido }}
+        </div>
+        <div class="form-group">
+          <label class="form-label">URL externo</label>{{ form.url_externo }}
+        </div>
+        <div class="form-group">
+          <label class="form-label">Archivo adjunto</label>{{ form.archivo }}
+        </div>
+        <div class="form-group" style="grid-column:span 2;">
+          <div style="display:flex;align-items:center;gap:10px;padding:14px;background:#f0f4fa;border-radius:10px;">
+            {{ form.para_todos }}
+            <label style="font-size:.88rem;color:#4a5068;">Publicar para <strong>todos</strong> los profesores</label>
+          </div>
+        </div>
+        <div class="form-group" style="grid-column:span 2;" id="grupo-especificos">
+          <label class="form-label">O elige profesores específicos</label>{{ form.profesores_especificos }}
+        </div>
+      </div>
+      <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;margin-top:8px;">Publicar recurso 📎</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

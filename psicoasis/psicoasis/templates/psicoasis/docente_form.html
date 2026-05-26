@@ -1,0 +1,54 @@
+{% extends 'psicoasis/base.html' %}
+{% block title %}{{ titulo }} — PsicoAsis{% endblock %}
+{% block topbar_title %}{{ titulo }}{% endblock %}
+{% block content %}
+<div class="page-header"><h1>{{ titulo }} 🎓</h1></div>
+<div class="card" style="max-width:680px">
+  <div class="card-body" style="padding:28px">
+    <form method="post">
+      {% csrf_token %}
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+        <div class="form-group">
+          <label class="form-label">Nombre *</label>
+          <input type="text" name="nombre" class="form-control" value="{{ form.nombre.value|default:'' }}" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Apellido *</label>
+          <input type="text" name="apellido" class="form-control" value="{{ form.apellido.value|default:'' }}" required>
+        </div>
+      </div>
+      <div class="form-group mt-3">
+        <label class="form-label">Área de enseñanza</label>
+        <select name="area" class="form-control">
+          {% for val, label in form.fields.area.choices %}
+          <option value="{{ val }}" {% if form.area.value == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px">
+        <div class="form-group">
+          <label class="form-label">Correo electrónico</label>
+          <input type="email" name="email" class="form-control" value="{{ form.email.value|default:'' }}">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Teléfono</label>
+          <input type="text" name="telefono" class="form-control" value="{{ form.telefono.value|default:'' }}">
+        </div>
+      </div>
+      <div class="form-group mt-3">
+        <label class="form-label">Grados a cargo</label>
+        <input type="text" name="grados_a_cargo" class="form-control" value="{{ form.grados_a_cargo.value|default:'' }}" placeholder="Ej: 6A, 7B, 8A">
+      </div>
+      <div class="form-group mt-3">
+        <label class="form-label">Notas generales</label>
+        <textarea name="notas_generales" class="form-control" rows="3">{{ form.notas_generales.value|default:'' }}</textarea>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:24px">
+        <button type="submit" class="btn btn-primary">{{ accion }}</button>
+        {% if docente %}<a href="{% url 'docente_detalle' docente.pk %}" class="btn btn-outline">Cancelar</a>
+        {% else %}<a href="{% url 'docentes_list' %}" class="btn btn-outline">Cancelar</a>{% endif %}
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

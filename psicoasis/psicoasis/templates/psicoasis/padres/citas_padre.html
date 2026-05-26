@@ -1,0 +1,127 @@
+{# ══════════════════════════════════════════════════════════════════════ #}
+{# ARCHIVO: citas_padre.html                                            #}
+{# ══════════════════════════════════════════════════════════════════════ #}
+{# Guarda este bloque como templates/psicoasis/citas_padre.html         #}
+
+{% extends "psicoasis/base_padre.html" %}
+{% block title %}Mis Citas — PsicoAsis{% endblock %}
+{% block topbar_title %}📅 Mis Citas{% endblock %}
+{% block nav_citas %}active{% endblock %}
+
+{% block content %}
+<div class="section-hd">
+  <div class="section-title">Mis Citas Psicológicas</div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1.4fr;gap:20px;">
+
+  <!-- FORMULARIO NUEVA CITA -->
+  <div>
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">+ Solicitar nueva cita</div>
+        <div class="card-sub">La psicóloga confirmará el horario</div>
+      </div>
+      <div class="card-body">
+        <form method="post">
+          {% csrf_token %}
+          <div class="form-group">
+            <label class="form-label">Tipo de cita</label>
+            {{ form.tipo_cita }}
+          </div>
+          <div class="form-group" id="div_hijo" style="display:none;">
+            <label class="form-label">¿Para qué hijo/a?</label>
+            {{ form.hijo }}
+            <small style="color:var(--text-xs);font-size:.72rem;">Requerido para citas familiares</small>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Motivo de consulta</label>
+            {{ form.motivo }}
+          </div>
+          <div class="form-group">
+            <label class="form-label">Descripción (opcional)</label>
+            {{ form.descripcion_motivo }}
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+            <div class="form-group">
+              <label class="form-label">Fecha preferida</label>
+              {{ form.fecha }}
+            </div>
+            <div class="form-group">
+              <label class="form-label">Hora preferida</label>
+              {{ form.hora }}
+            </div>
+          </div>
+          {% if form.errors %}
+            <div class="alert-card alert-alta" style="margin-bottom:14px;">❌ {{ form.errors }}</div>
+          {% endif %}
+          <button type="submit" class="btn btn-primary" style="width:100%;">📅 Solicitar cita</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- LISTA DE CITAS -->
+  <div>
+    {% if proximas_citas %}
+    <div class="card">
+      <div class="card-header"><div class="card-title">📌 Próximas citas</div></div>
+      <div class="card-body">
+        {% for cita in proximas_citas %}
+        <div class="item-row">
+          <div style="background:var(--sage-xxl);border-radius:10px;padding:8px 12px;text-align:center;min-width:50px;">
+            <div style="font-size:.65rem;color:var(--text-xs);text-transform:uppercase;">{{ cita.fecha|date:"M" }}</div>
+            <div style="font-size:1.3rem;font-weight:700;color:var(--sage-d);line-height:1;">{{ cita.fecha|date:"d" }}</div>
+          </div>
+          <div class="item-info">
+            <div class="item-name">{{ cita.get_tipo_cita_display }}</div>
+            <div class="item-meta">{{ cita.hora|time:"H:i" }} · {{ cita.get_motivo_display }}</div>
+            {% if cita.hijo %}<div class="item-meta" style="margin-top:2px;">👧 {{ cita.hijo.get_full_name }}</div>{% endif %}
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
+            <span class="badge badge-{{ cita.estado }}">{{ cita.get_estado_display }}</span>
+            {% if cita.estado == 'pendiente' %}
+            <form method="post" action="{% url 'cancelar_cita_padre' cita.id %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('¿Cancelar esta cita?')">Cancelar</button>
+            </form>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+    {% if historial_citas %}
+    <div class="card">
+      <div class="card-header"><div class="card-title">🗂️ Historial de citas</div></div>
+      <div class="card-body">
+        {% for cita in historial_citas %}
+        <div class="item-row" style="opacity:.75;">
+          <div style="min-width:70px;font-size:.78rem;color:var(--text-xs);">{{ cita.fecha|date:"d/m/Y" }}</div>
+          <div class="item-info">
+            <div class="item-name" style="font-size:.85rem;">{{ cita.get_tipo_cita_display }}</div>
+            <div class="item-meta">{{ cita.get_motivo_display }}</div>
+          </div>
+          <span class="badge badge-{{ cita.estado }}">{{ cita.get_estado_display }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+const tipoCita = document.querySelector('[name="tipo_cita"]');
+const divHijo = document.getElementById('div_hijo');
+function toggleHijo(){
+  divHijo.style.display = tipoCita.value === 'familiar' ? 'block' : 'none';
+}
+tipoCita && tipoCita.addEventListener('change', toggleHijo);
+toggleHijo();
+</script>
+{% endblock %}

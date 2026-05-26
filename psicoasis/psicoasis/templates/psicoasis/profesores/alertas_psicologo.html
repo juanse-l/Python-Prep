@@ -1,0 +1,52 @@
+{% extends "psicoasis/base.html" %}
+{% block title %}Alertas Docentes — PsicoAsis{% endblock %}
+{% block content %}
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px;">
+  <h1 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;">🚨 Alertas de Docentes</h1>
+  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+    <form method="get" style="display:flex;gap:8px;">
+      <select name="urgencia" class="form-control" style="width:auto;font-size:.83rem;" onchange="this.form.submit()">
+        <option value="">Toda urgencia</option>
+        {% for val, label in urgencias %}<option value="{{ val }}" {% if urgencia_filter == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+      <select name="estado" class="form-control" style="width:auto;font-size:.83rem;" onchange="this.form.submit()">
+        <option value="">Todo estado</option>
+        {% for val, label in estados %}<option value="{{ val }}" {% if estado_filter == val %}selected{% endif %}>{{ label }}</option>{% endfor %}
+      </select>
+    </form>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body" style="padding:0;">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Fecha</th><th>Docente</th><th>Estudiante</th><th>Categoría</th><th>Urgencia</th><th>Estado</th><th></th></tr>
+        </thead>
+        <tbody>
+          {% for a in alertas %}
+          <tr>
+            <td style="font-size:.8rem;color:#7a9aaa;">{{ a.fecha_creacion|date:"d/m/Y H:i" }}</td>
+            <td>
+              {% if a.es_confidencial %}
+                <span style="color:#7a9aaa;font-size:.82rem;">Confidencial</span>
+              {% else %}
+                {{ a.profesor.get_full_name|default:a.profesor.username }}
+              {% endif %}
+            </td>
+            <td><strong>{{ a.estudiante.get_full_name }}</strong> <span style="color:#7a9aaa;font-size:.78rem;">{{ a.estudiante.grado }}</span></td>
+            <td style="font-size:.82rem;">{{ a.get_categoria_display }}</td>
+            <td><span class="badge badge-{{ a.urgencia }}">{{ a.get_urgencia_display }}</span></td>
+            <td><span class="badge badge-{{ a.estado }}">{{ a.get_estado_display }}</span></td>
+            <td><a href="{% url 'responder_alerta' a.pk %}" class="btn btn-primary btn-sm">Responder</a></td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="7" style="text-align:center;color:#7a9aaa;padding:30px;">No hay alertas con los filtros seleccionados.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

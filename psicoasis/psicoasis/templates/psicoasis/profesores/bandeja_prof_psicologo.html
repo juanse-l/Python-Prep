@@ -1,0 +1,72 @@
+{% extends "psicoasis/base.html" %}
+{% block title %}Mensajes Profesores — PsicoAsis{% endblock %}
+{% block content %}
+<h1 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;margin-bottom:20px;">💬 Mensajes con Profesores</h1>
+
+<div style="display:grid;grid-template-columns:260px 1fr;gap:20px;min-height:500px;">
+
+  <!-- Lista de conversaciones -->
+  <div class="card" style="margin-bottom:0;">
+    <div class="card-body" style="padding:12px;">
+      {% if conversaciones %}
+        {% for conv in conversaciones %}
+        <a href="?prof={{ conv.profesor.id }}" style="display:block;padding:12px;border-radius:10px;text-decoration:none;color:var(--text);margin-bottom:4px;{% if prof_id == conv.profesor.id|stringformat:'s' %}background:var(--indigo,#eef0fa);{% else %}background:transparent;{% endif %}transition:background .15s;" onmouseenter="this.style.background='#eef0fa'" onmouseleave="this.style.background='{% if prof_id == conv.profesor.id|stringformat:"s" %}#eef0fa{% else %}transparent{% endif %}'">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div style="font-weight:600;font-size:.88rem;">{{ conv.profesor.get_full_name|default:conv.profesor.username }}</div>
+            {% if conv.no_leidos > 0 %}
+              <span style="background:#d94f4f;color:white;font-size:.65rem;font-weight:700;padding:2px 7px;border-radius:10px;">{{ conv.no_leidos }}</span>
+            {% endif %}
+          </div>
+          <div style="font-size:.75rem;color:#7a9aaa;margin-top:3px;">{{ conv.ultimo.contenido|truncatechars:40 }}</div>
+          <div style="font-size:.7rem;color:#aab8cc;margin-top:2px;">{{ conv.ultimo.fecha|date:"d/m H:i" }}</div>
+        </a>
+        {% endfor %}
+      {% else %}
+        <p style="font-size:.82rem;color:#7a9aaa;text-align:center;padding:20px 0;">Sin conversaciones aún.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Conversación activa -->
+  <div class="card" style="margin-bottom:0;">
+    {% if conv_activa is not None %}
+    <div class="card-body">
+      <div style="font-weight:700;margin-bottom:14px;">
+        {% for conv in conversaciones %}{% if conv.profesor.id|stringformat:'s' == prof_id %}{{ conv.profesor.get_full_name }}{% endif %}{% endfor %}
+      </div>
+      <div style="display:flex;flex-direction:column;padding:16px;min-height:300px;max-height:420px;overflow-y:auto;background:#f0f4fa;border-radius:14px;border:1.5px solid #cdd5ee;margin-bottom:16px;" id="chat-psicologo">
+        {% for msg in conv_activa %}
+        <div style="display:flex;flex-direction:column;{% if msg.remitente == request.user %}align-items:flex-end;{% else %}align-items:flex-start;{% endif %}margin-bottom:10px;">
+          <div style="font-size:.68rem;color:#7a9aaa;margin-bottom:3px;">{{ msg.fecha|date:"d/m H:i" }}</div>
+          <div style="max-width:75%;padding:10px 16px;border-radius:16px;font-size:.88rem;line-height:1.5;{% if msg.remitente == request.user %}background:linear-gradient(135deg,#5b6fa8,#3a4d85);color:white;border-bottom-right-radius:4px;{% else %}background:white;border:1.5px solid #cdd5ee;border-bottom-left-radius:4px;{% endif %}">
+            {{ msg.contenido }}
+          </div>
+        </div>
+        {% empty %}
+          <p style="text-align:center;color:#7a9aaa;font-size:.85rem;margin:auto;">Sin mensajes aún.</p>
+        {% endfor %}
+      </div>
+      <form method="post">
+        {% csrf_token %}
+        <div style="display:flex;gap:10px;align-items:flex-end;">
+          <div style="flex:1;">{{ form.contenido }}</div>
+          <button type="submit" class="btn btn-primary" style="height:44px;">Enviar</button>
+        </div>
+      </form>
+    </div>
+    {% else %}
+    <div class="card-body" style="display:flex;align-items:center;justify-content:center;min-height:300px;">
+      <div style="text-align:center;color:#7a9aaa;">
+        <div style="font-size:2.5rem;margin-bottom:10px;">💬</div>
+        <div>Selecciona un profesor para ver la conversación</div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  const chat = document.getElementById('chat-psicologo');
+  if (chat) chat.scrollTop = chat.scrollHeight;
+</script>
+{% endblock %}

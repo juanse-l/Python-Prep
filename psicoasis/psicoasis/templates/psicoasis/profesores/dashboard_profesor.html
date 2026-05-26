@@ -1,0 +1,129 @@
+{% extends "psicoasis/profesores/base_profesor.html" %}
+{% block title %}Inicio — Panel Docente{% endblock %}
+{% block topbar_title %}👩‍🏫 Mi Panel Docente{% endblock %}
+
+{% block content %}
+<div style="margin-bottom:24px;">
+  <h1 style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--text);">
+    Bienvenido/a, {{ request.user.first_name|default:request.user.username }} 👋
+  </h1>
+  <p style="color:var(--text-xs);font-size:.88rem;margin-top:4px;">
+    {% if grados %}Grados a cargo: <strong>{{ grados|join:", " }}</strong>{% endif %}
+  </p>
+</div>
+
+<!-- STAT GRID -->
+<div class="stat-grid">
+  <div class="stat-card">
+    <div class="stat-icon">🔔</div>
+    <div class="stat-val">{{ contadores.notif_no_leidas }}</div>
+    <div class="stat-label">Notificaciones sin leer</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">🚨</div>
+    <div class="stat-val">{{ contadores.alertas_pendientes }}</div>
+    <div class="stat-label">Alertas pendientes</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">📅</div>
+    <div class="stat-val">{{ contadores.citas_proximas }}</div>
+    <div class="stat-label">Citas confirmadas</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">💬</div>
+    <div class="stat-val">{{ contadores.mensajes_no_leidos }}</div>
+    <div class="stat-label">Mensajes sin leer</div>
+  </div>
+</div>
+
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+
+  <!-- Alertas recientes -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title">🚨 Mis alertas recientes</div>
+      <div class="card-sub">Estudiantes que has reportado a orientación</div>
+    </div>
+    <div class="card-body">
+      {% if alertas_recientes %}
+        {% for a in alertas_recientes %}
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--indigo-xxl);">
+          <div>
+            <div style="font-size:.88rem;font-weight:600;">{{ a.estudiante.get_full_name }} <span style="color:var(--text-xs);font-weight:400;">— {{ a.estudiante.grado }}</span></div>
+            <div style="font-size:.75rem;color:var(--text-xs);">{{ a.get_categoria_display }} · {{ a.fecha_creacion|date:"d/m/Y" }}</div>
+          </div>
+          <span class="badge badge-{{ a.urgencia }}">{{ a.get_urgencia_display }}</span>
+        </div>
+        {% endfor %}
+        <a href="{% url 'mis_alertas_profesor' %}" class="btn btn-secondary btn-sm" style="margin-top:14px;">Ver todas</a>
+      {% else %}
+        <p style="color:var(--text-xs);font-size:.85rem;">No has enviado alertas aún.</p>
+        <a href="{% url 'mis_alertas_profesor' %}" class="btn btn-primary btn-sm" style="margin-top:10px;">+ Enviar alerta</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Próxima cita + bienestar -->
+  <div>
+    {% if proxima_cita %}
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-header"><div class="card-title">📅 Próxima cita</div></div>
+      <div class="card-body">
+        <div style="font-size:1rem;font-weight:700;color:var(--indigo);">{{ proxima_cita.fecha_confirmada|date:"l d/m/Y" }}</div>
+        <div style="font-size:.85rem;color:var(--text-s);">{{ proxima_cita.hora_confirmada|time:"H:i" }} — {{ proxima_cita.get_tipo_display }}</div>
+        {% if proxima_cita.notas_psicologo %}
+          <div style="margin-top:8px;font-size:.8rem;background:var(--indigo-xxl);padding:8px 12px;border-radius:8px;">{{ proxima_cita.notas_psicologo }}</div>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- Mi bienestar esta semana -->
+    <div class="card">
+      <div class="card-header"><div class="card-title">🧘 Mi bienestar esta semana</div></div>
+      <div class="card-body">
+        {% if ultima_autoevaluacion %}
+          <div style="font-size:2rem;text-align:center;margin-bottom:8px;">
+            {% if ultima_autoevaluacion.bienestar == 'excelente' %}😄
+            {% elif ultima_autoevaluacion.bienestar == 'bien' %}🙂
+            {% elif ultima_autoevaluacion.bienestar == 'regular' %}😐
+            {% elif ultima_autoevaluacion.bienestar == 'agotado' %}😔
+            {% else %}😢{% endif %}
+          </div>
+          <div style="text-align:center;font-size:.88rem;font-weight:600;">{{ ultima_autoevaluacion.get_bienestar_display }}</div>
+          <div style="text-align:center;font-size:.75rem;color:var(--text-xs);">Semana del {{ ultima_autoevaluacion.semana|date:"d/m" }}</div>
+          <a href="{% url 'bienestar_profesor' %}" class="btn btn-secondary btn-sm" style="margin-top:12px;width:100%;justify-content:center;">Ver historial</a>
+        {% else %}
+          <p style="color:var(--text-xs);font-size:.85rem;text-align:center;">Aún no has hecho tu check-in de esta semana.</p>
+          <a href="{% url 'bienestar_profesor' %}" class="btn btn-primary btn-sm" style="margin-top:10px;width:100%;justify-content:center;">Hacer check-in 🧘</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Recursos recientes -->
+{% if recursos %}
+<div class="card" style="margin-top:8px;">
+  <div class="card-header">
+    <div class="card-title">📚 Recursos recientes de orientación</div>
+    <div class="card-sub">Materiales compartidos por la psicóloga para docentes</div>
+  </div>
+  <div class="card-body">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;">
+      {% for r in recursos %}
+      <div style="padding:14px;border:1.5px solid var(--indigo-xl);border-radius:12px;background:var(--indigo-xxl);">
+        <div style="font-size:1.1rem;margin-bottom:6px;">
+          {% if r.tipo == 'guia' %}📄{% elif r.tipo == 'estrategia' %}🛠️{% elif r.tipo == 'protocolo' %}📋{% elif r.tipo == 'video' %}🎥{% else %}🖼️{% endif %}
+        </div>
+        <div style="font-size:.85rem;font-weight:700;margin-bottom:4px;">{{ r.titulo|truncatechars:50 }}</div>
+        <div style="font-size:.75rem;color:var(--text-xs);">{{ r.get_categoria_display }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    <a href="{% url 'recursos_profesor' %}" class="btn btn-secondary btn-sm" style="margin-top:14px;">Ver todos los recursos</a>
+  </div>
+</div>
+{% endif %}
+{% endblock %}
