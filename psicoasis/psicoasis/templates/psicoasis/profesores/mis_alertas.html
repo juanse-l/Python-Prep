@@ -1,6 +1,6 @@
 {% extends "psicoasis/profesores/base_profesor.html" %}
 {% block title %}Mis Alertas — Panel Docente{% endblock %}
-{% block topbar_title %}🚨 Alertas sobre Estudiantes{% endblock %}
+{% block topbar_title %}<i class="bi bi-exclamation-octagon-fill"></i> Alertas sobre Estudiantes{% endblock %}
 
 {% block content %}
 <div style="display:grid;grid-template-columns:1fr 1.4fr;gap:24px;align-items:start;">
@@ -13,7 +13,7 @@
     </div>
     <div class="card-body">
       <div class="alert alert-info" style="margin-bottom:20px;font-size:.82rem;">
-        🔒 Tus alertas son confidenciales. La psicóloga será la única que las verá, no el estudiante.
+        <i class="bi bi-lock-fill"></i> Tus alertas son confidenciales. La psicóloga será la única que las verá, no el estudiante.
       </div>
       <form method="post">
         {% csrf_token %}
@@ -41,7 +41,7 @@
           {{ form.es_confidencial }}
           <label style="font-size:.85rem;color:var(--text-s);">Enviar de forma confidencial</label>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Enviar alerta 🚨</button>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Enviar alerta <i class="bi bi-exclamation-octagon-fill"></i></button>
       </form>
     </div>
   </div>

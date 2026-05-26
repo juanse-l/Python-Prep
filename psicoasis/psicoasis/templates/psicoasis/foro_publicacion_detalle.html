@@ -1,6 +1,6 @@
 {% extends 'psicoasis/base_estudiante.html' %}
 {% block title %}{{ pub.titulo }} — PsicoAsis{% endblock %}
-{% block topbar_title %}💌 Foro Emocional{% endblock %}
+{% block topbar_title %}<i class="bi bi-envelope-heart"></i> Foro Emocional{% endblock %}
 {% block content %}
 
 <a href="{% url 'foro_emocional_estudiante' %}" class="btn btn-sm btn-outline" style="margin-bottom:20px">← Volver al foro</a>
@@ -14,11 +14,11 @@
         {{ pub.get_tipo_display }}
       </span>
       <span class="badge badge-teal">{{ pub.get_categoria_display }}</span>
-      {% if pub.fijado %}<span style="background:#fff8e8;color:#b8860b;border:1px solid #f5d88a;font-size:.7rem;padding:3px 10px;border-radius:20px;font-weight:700">📌 Destacado</span>{% endif %}
+      {% if pub.fijado %}<span style="background:#fff8e8;color:#b8860b;border:1px solid #f5d88a;font-size:.7rem;padding:3px 10px;border-radius:20px;font-weight:700"><i class="bi bi-pin-fill"></i> Destacado</span>{% endif %}
     </div>
     <h1 style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--text);margin-bottom:8px">{{ pub.titulo }}</h1>
     <div style="font-size:.78rem;color:var(--text-xs);margin-bottom:20px">
-      💚 Publicado por tu psicóloga · {{ pub.fecha_creacion|date:"d \d\e F \d\e Y" }}
+      <i class="bi bi-heart-fill" style="color:#4f8a5a"></i> Publicado por tu psicóloga · {{ pub.fecha_creacion|date:"d \d\e F \d\e Y" }}
     </div>
   </div>
 
@@ -34,7 +34,7 @@
 
   <div style="padding:16px 28px;border-top:1px solid var(--teal-xl);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
     <a href="{% url 'foro_emocional_estudiante' %}" class="btn btn-sm btn-outline">← Volver al foro</a>
-    <a href="{% url 'chat_ia_estudiante' %}" class="btn btn-sm btn-primary">🤖 Hablar con PsicoIA</a>
+    <a href="{% url 'chat_ia_estudiante' %}" class="btn btn-sm btn-primary"><i class="bi bi-robot"></i> Hablar con PsicoIA</a>
   </div>
 </div>
 

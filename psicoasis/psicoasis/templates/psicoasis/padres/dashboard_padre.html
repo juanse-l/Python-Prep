@@ -7,7 +7,7 @@
 <!-- ENCABEZADO -->
 <div class="section-hd" style="margin-bottom:24px;">
   <div>
-    <div class="section-title">¡Hola, {{ request.user.first_name }}! 👋</div>
+    <div class="section-title">¡Hola, {{ request.user.first_name }}! <i class="bi bi-hand-wave"></i></div>
     <div class="section-sub">{{ hoy|date:"l, j \d\e F \d\e Y" }}</div>
   </div>
 </div>
@@ -15,22 +15,22 @@
 <!-- CONTADORES -->
 <div class="stat-grid">
   <div class="stat-card {% if contadores.notificaciones %}alert{% endif %}">
-    <div class="stat-icon">🔔</div>
+    <div class="stat-icon"><i class="bi bi-bell"></i></div>
     <div class="stat-val">{{ contadores.notificaciones }}</div>
     <div class="stat-label">Alertas nuevas</div>
   </div>
   <div class="stat-card">
-    <div class="stat-icon">📅</div>
+    <div class="stat-icon"><i class="bi bi-calendar3"></i></div>
     <div class="stat-val">{{ contadores.citas_pendientes }}</div>
     <div class="stat-label">Citas próximas</div>
   </div>
   <div class="stat-card {% if contadores.mensajes %}alert{% endif %}">
-    <div class="stat-icon">✉️</div>
+    <div class="stat-icon"><i class="bi bi-envelope"></i></div>
     <div class="stat-val">{{ contadores.mensajes }}</div>
     <div class="stat-label">Mensajes nuevos</div>
   </div>
   <div class="stat-card">
-    <div class="stat-icon">💡</div>
+    <div class="stat-icon"><i class="bi bi-lightbulb"></i></div>
     <div class="stat-val">{{ contadores.recomendaciones }}</div>
     <div class="stat-label">Recomendaciones</div>
   </div>
@@ -40,7 +40,7 @@
 {% if resumenes %}
 <div class="card">
   <div class="card-header">
-    <div class="card-title">💚 Estado emocional — mis hijos</div>
+    <div class="card-title"><i class="bi bi-heart-fill" style="color:#4f8a5a"></i> Estado emocional — mis hijos</div>
     <div class="card-sub">Resumen del día de hoy</div>
   </div>
   <div class="card-body">
@@ -55,14 +55,14 @@
               <span class="emo emo-{{ item.resumen.estado_hoy.emocion }}">{{ item.resumen.estado_hoy.label }}</span>
               {% if item.resumen.tendencia %}
                 &nbsp;
-                {% if item.resumen.tendencia == 'mejorando' %}<span style="color:#1a6e3a;font-size:.75rem;">📈 Mejorando</span>
-                {% elif item.resumen.tendencia == 'empeorando' %}<span style="color:#8a1a1a;font-size:.75rem;">📉 Tendencia a la baja</span>
-                {% else %}<span style="color:var(--text-xs);font-size:.75rem;">➡️ Estable</span>{% endif %}
+                {% if item.resumen.tendencia == 'mejorando' %}<span style="color:#1a6e3a;font-size:.75rem;"><i class="bi bi-graph-up"></i> Mejorando</span>
+                {% elif item.resumen.tendencia == 'empeorando' %}<span style="color:#8a1a1a;font-size:.75rem;"><i class="bi bi-graph-down"></i> Tendencia a la baja</span>
+                {% else %}<span style="color:var(--text-xs);font-size:.75rem;"><i class="bi bi-arrow-right"></i>️ Estable</span>{% endif %}
               {% endif %}
             {% else %}
               <span style="color:var(--text-xs);font-size:.8rem;">Sin registro hoy</span>
             {% endif %}
-            {% if item.resumen.alertas %}<span style="margin-left:10px;background:#ffd6d6;color:#8a1a1a;padding:3px 8px;border-radius:20px;font-size:.72rem;font-weight:700;">⚠️ {{ item.resumen.alertas }} alerta{{ item.resumen.alertas|pluralize }} activa{{ item.resumen.alertas|pluralize }}</span>{% endif %}
+            {% if item.resumen.alertas %}<span style="margin-left:10px;background:#ffd6d6;color:#8a1a1a;padding:3px 8px;border-radius:20px;font-size:.72rem;font-weight:700;"><i class="bi bi-exclamation-triangle"></i> {{ item.resumen.alertas }} alerta{{ item.resumen.alertas|pluralize }} activa{{ item.resumen.alertas|pluralize }}</span>{% endif %}
           {% else %}
             <span style="color:var(--text-xs);font-size:.8rem;">Acceso restringido</span>
           {% endif %}
@@ -71,7 +71,7 @@
       <div style="display:flex;gap:8px;">
         {% if item.resumen.tiene_acceso %}
         <a href="{% url 'seguimiento_emocional_hijo' item.hijo.id %}" class="btn btn-outline btn-sm">Ver detalle</a>
-        <a href="{% url 'reporte_emocional_padre' item.hijo.id %}" class="btn btn-outline btn-sm">📊 Reporte</a>
+        <a href="{% url 'reporte_emocional_padre' item.hijo.id %}" class="btn btn-outline btn-sm"><i class="bi bi-bar-chart"></i> Reporte</a>
         {% endif %}
       </div>
     </div>
@@ -85,7 +85,7 @@
   <!-- ALERTAS RECIENTES -->
   <div class="card">
     <div class="card-header">
-      <div class="card-title">🚨 Alertas importantes</div>
+      <div class="card-title"><i class="bi bi-exclamation-octagon-fill"></i> Alertas importantes</div>
     </div>
     <div class="card-body">
       {% if notificaciones %}
@@ -100,7 +100,7 @@
         {% endfor %}
         <a href="{% url 'notificaciones_padre' %}" class="btn btn-outline btn-sm" style="margin-top:6px;">Ver todas</a>
       {% else %}
-        <p style="font-size:.85rem;color:var(--text-xs);">🌿 Sin alertas nuevas por el momento.</p>
+        <p style="font-size:.85rem;color:var(--text-xs);"><i class="bi bi-flower2"></i> Sin alertas nuevas por el momento.</p>
       {% endif %}
     </div>
   </div>
@@ -108,7 +108,7 @@
   <!-- PRÓXIMAS CITAS -->
   <div class="card">
     <div class="card-header">
-      <div class="card-title">📅 Próximas citas</div>
+      <div class="card-title"><i class="bi bi-calendar3"></i> Próximas citas</div>
     </div>
     <div class="card-body">
       {% if proximas_citas %}
@@ -138,7 +138,7 @@
 {% if recomendaciones %}
 <div class="card" style="margin-top:20px;">
   <div class="card-header">
-    <div class="card-title">💡 Recomendaciones para ti</div>
+    <div class="card-title"><i class="bi bi-lightbulb"></i> Recomendaciones para ti</div>
     <div class="card-sub">Recursos personalizados según el estado emocional de tu hijo/a</div>
   </div>
   <div class="card-body">

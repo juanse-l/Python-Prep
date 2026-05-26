@@ -4,6 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Informes — {{ estudiante.get_full_name }} — PsicoAsis</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -282,12 +283,12 @@
 <!-- Barra de controles (solo pantalla) -->
 <div class="screen-controls">
   <div>
-    <div class="sc-title">📄 Informes de {{ estudiante.get_full_name }}</div>
+    <div class="sc-title"><i class="bi bi-file-earmark"></i> Informes de {{ estudiante.get_full_name }}</div>
     <div class="sc-subtitle">{{ informes.count }} informe{{ informes.count|pluralize:"s" }} · Para imprimir o guardar como PDF</div>
   </div>
   <div class="sc-btns">
     <a href="{% url 'estudiante_detalle' estudiante.pk %}" class="sc-btn sc-btn-back">← Volver al estudiante</a>
-    <button class="sc-btn sc-btn-print" onclick="window.print()">🖨️ Imprimir / Guardar PDF</button>
+    <button class="sc-btn sc-btn-print" onclick="window.print()"><i class="bi bi-printer"></i> Imprimir / Guardar PDF</button>
   </div>
 </div>
 
@@ -335,7 +336,7 @@
         {% if inf.fecha_sesion %}Sesión: {{ inf.fecha_sesion|date:"d/m/Y" }}<br>{% endif %}
         Creado: {{ inf.fecha_creacion|date:"d/m/Y" }}<br>
         Por: {{ inf.psicologo.get_full_name|default:inf.psicologo.username }}
-        {% if inf.confidencial %}<br><strong>🔒 CONFIDENCIAL</strong>{% endif %}
+        {% if inf.confidencial %}<br><strong><i class="bi bi-lock-fill"></i> CONFIDENCIAL</strong>{% endif %}
       </div>
     </div>
 
@@ -344,17 +345,17 @@
       <div class="inf-badges">
         <span class="badge badge-blue">{{ inf.get_tipo_display }}</span>
         {% if inf.nivel_riesgo %}
-          {% if inf.nivel_riesgo == 'bajo' %}<span class="badge badge-green">🟢 Riesgo Bajo</span>
-          {% elif inf.nivel_riesgo == 'medio' %}<span class="badge badge-yellow">🟡 Riesgo Medio</span>
-          {% elif inf.nivel_riesgo == 'alto' %}<span class="badge badge-orange">🟠 Riesgo Alto</span>
-          {% else %}<span class="badge badge-red">🔴 Riesgo Crítico</span>{% endif %}
+          {% if inf.nivel_riesgo == 'bajo' %}<span class="badge badge-green"><span style="color:#198754">●</span> Riesgo Bajo</span>
+          {% elif inf.nivel_riesgo == 'medio' %}<span class="badge badge-yellow"><span style="color:#ffc107">●</span> Riesgo Medio</span>
+          {% elif inf.nivel_riesgo == 'alto' %}<span class="badge badge-orange"><span style="color:#fd7e14">●</span> Riesgo Alto</span>
+          {% else %}<span class="badge badge-red"><span style="color:#dc3545">●</span> Riesgo Crítico</span>{% endif %}
         {% endif %}
-        {% if inf.requiere_remision %}<span class="badge badge-red">⚠️ Requiere Remisión</span>{% endif %}
+        {% if inf.requiere_remision %}<span class="badge badge-red"><i class="bi bi-exclamation-triangle"></i> Requiere Remisión</span>{% endif %}
       </div>
 
       {% if inf.motivo_consulta or inf.antecedentes or inf.situacion_familiar %}
       <div class="inf-seccion">
-        <div class="inf-seccion-titulo">🔍 Motivo de consulta y contexto</div>
+        <div class="inf-seccion-titulo"><i class="bi bi-search"></i> Motivo de consulta y contexto</div>
         <div class="inf-grid2">
           {% if inf.motivo_consulta %}
           <div style="grid-column:1/-1">
@@ -380,7 +381,7 @@
 
       {% if inf.descripcion_conducta or inf.estado_emocional or inf.relaciones_sociales or inf.rendimiento_academico %}
       <div class="inf-seccion">
-        <div class="inf-seccion-titulo">👁️ Observaciones de la sesión</div>
+        <div class="inf-seccion-titulo"><i class="bi bi-eye"></i> Observaciones de la sesión</div>
         <div class="inf-grid2">
           {% if inf.descripcion_conducta %}
           <div>
@@ -411,19 +412,19 @@
       {% endif %}
 
       <div class="inf-seccion">
-        <div class="inf-seccion-titulo">🧠 Análisis e impresión psicológica</div>
+        <div class="inf-seccion-titulo"><i class="bi bi-cpu"></i> Análisis e impresión psicológica</div>
         <div class="inf-campo-valor">{{ inf.contenido }}</div>
         {% if inf.fortalezas or inf.factores_riesgo %}
         <div class="inf-grid2" style="margin-top:10px">
           {% if inf.fortalezas %}
           <div class="fortaleza-box">
-            <div class="inf-campo-label" style="color:#27ae60">✅ Fortalezas</div>
+            <div class="inf-campo-label" style="color:#27ae60"><i class="bi bi-check-circle-fill"></i> Fortalezas</div>
             <div class="inf-campo-valor">{{ inf.fortalezas }}</div>
           </div>
           {% endif %}
           {% if inf.factores_riesgo %}
           <div class="riesgo-box">
-            <div class="inf-campo-label" style="color:#e67e22">⚠️ Factores de riesgo</div>
+            <div class="inf-campo-label" style="color:#e67e22"><i class="bi bi-exclamation-triangle"></i> Factores de riesgo</div>
             <div class="inf-campo-valor">{{ inf.factores_riesgo }}</div>
           </div>
           {% endif %}
@@ -433,7 +434,7 @@
 
       {% if inf.recomendaciones or inf.plan_intervencion or inf.acuerdos or inf.proxima_sesion %}
       <div class="inf-seccion">
-        <div class="inf-seccion-titulo">🗺️ Plan de intervención y recomendaciones</div>
+        <div class="inf-seccion-titulo"><i class="bi bi-map"></i> Plan de intervención y recomendaciones</div>
         <div class="inf-grid2">
           {% if inf.recomendaciones %}
           <div>
@@ -465,7 +466,7 @@
 
       {% if inf.requiere_remision and inf.entidad_remision %}
       <div class="inf-seccion">
-        <div class="inf-seccion-titulo">🏥 Remisión</div>
+        <div class="inf-seccion-titulo"><i class="bi bi-hospital"></i> Remisión</div>
         <div class="inf-campo-valor">Entidad: {{ inf.entidad_remision }}</div>
       </div>
       {% endif %}
@@ -490,7 +491,7 @@
   </div><!-- /informe-block -->
   {% empty %}
   <div style="text-align:center;padding:60px;color:#7a8e7b">
-    <div style="font-size:3rem;margin-bottom:12px">📄</div>
+    <div style="font-size:3rem;margin-bottom:12px"><i class="bi bi-file-earmark"></i></div>
     <div>Este estudiante no tiene informes registrados aún.</div>
   </div>
   {% endfor %}

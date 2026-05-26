@@ -2,7 +2,7 @@
 {% block title %}Foros — PsicoAsis{% endblock %}
 {% block topbar_title %}Foros y Espacios{% endblock %}
 {% block content %}
-<div class="page-header"><h1>Foros y Espacios de Reflexión 🌸</h1><p>Espacios para compartir, aprender y acompañarse mutuamente</p></div>
+<div class="page-header"><h1>Foros y Espacios de Reflexión <i class="bi bi-flower1"></i></h1><p>Espacios para compartir, aprender y acompañarse mutuamente</p></div>
 
 <div class="grid-main">
   <div>
@@ -21,17 +21,17 @@
         <div class="card" style="cursor:pointer;transition:all .2s" onmouseenter="this.style.transform='translateY(-2px)';this.style.boxShadow='0 8px 24px rgba(45,58,46,.1)'" onmouseleave="this.style.transform='';this.style.boxShadow=''">
           <div class="card-body" style="display:flex;gap:16px;align-items:flex-start;padding:18px 20px">
             <div style="background:var(--sage-xxl);border-radius:12px;width:48px;height:48px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:1.4rem">
-              {% if t.categoria == 'bienestar' %}🌿{% elif t.categoria == 'estudiantes' %}🧑‍🎓{% elif t.categoria == 'docentes' %}🎓{% elif t.categoria == 'familias' %}👨‍👩‍👧{% elif t.categoria == 'academico' %}📚{% else %}💬{% endif %}
+              {% if t.categoria == 'bienestar' %}<i class="bi bi-flower2"></i>{% elif t.categoria == 'estudiantes' %}<i class="bi bi-person"></i>‍<i class="bi bi-mortarboard"></i>{% elif t.categoria == 'docentes' %}<i class="bi bi-mortarboard"></i>{% elif t.categoria == 'familias' %}<i class="bi bi-house-heart"></i>{% elif t.categoria == 'academico' %}<i class="bi bi-book"></i>{% else %}<i class="bi bi-chat-dots"></i>{% endif %}
             </div>
             <div style="flex:1">
               <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-                {% if t.fijado %}<span style="font-size:.7rem;background:#fff9e6;color:#e8a020;border-radius:6px;padding:2px 8px;font-weight:600">📌 Fijado</span>{% endif %}
+                {% if t.fijado %}<span style="font-size:.7rem;background:#fff9e6;color:#e8a020;border-radius:6px;padding:2px 8px;font-weight:600"><i class="bi bi-pin-fill"></i> Fijado</span>{% endif %}
                 <span style="font-size:.72rem;background:var(--sage-xxl);color:var(--sage);border-radius:6px;padding:2px 8px">{{ t.get_categoria_display }}</span>
               </div>
               <div style="font-weight:600;font-size:.92rem;color:var(--text);margin-bottom:4px">{{ t.titulo }}</div>
               {% if t.descripcion %}<p style="font-size:.8rem;color:var(--text-s);line-height:1.6">{{ t.descripcion|truncatewords:15 }}</p>{% endif %}
               <div style="font-size:.72rem;color:var(--text-xs);margin-top:8px">
-                💬 {{ t.total_respuestas }} respuesta{{ t.total_respuestas|pluralize }} · 
+                <i class="bi bi-chat-dots"></i> {{ t.total_respuestas }} respuesta{{ t.total_respuestas|pluralize }} · 
                 por {{ t.autor.first_name|default:t.autor.username }} · 
                 {{ t.fecha_creacion|date:"d/m/Y" }}
               </div>
@@ -45,7 +45,7 @@
     {% else %}
     <div class="card">
       <div class="empty-state">
-        <span class="empty-icon">🌸</span>
+        <span class="empty-icon"><i class="bi bi-flower1"></i></span>
         <div class="empty-title">Sé el primero en crear un tema</div>
         <p class="empty-desc">Los foros son espacios seguros para reflexionar y compartir experiencias sobre bienestar emocional.</p>
       </div>
@@ -57,7 +57,7 @@
   <div style="display:flex;flex-direction:column;gap:16px">
     <!-- Nuevo tema -->
     <div class="card">
-      <div class="card-header"><span class="card-title">✍️ Crear nuevo tema</span></div>
+      <div class="card-header"><span class="card-title"><i class="bi bi-pencil"></i>️ Crear nuevo tema</span></div>
       <div class="card-body" style="padding:16px">
         <form method="post" action="{% url 'foro_nuevo_tema' %}">
           {% csrf_token %}
@@ -77,7 +77,7 @@
             <label class="form-label">Descripción (opcional)</label>
             <textarea name="descripcion" class="form-control" rows="3" placeholder="Describe brevemente el tema..."></textarea>
           </div>
-          <button type="submit" class="btn btn-primary w-full mt-3" style="justify-content:center">Crear tema 🌿</button>
+          <button type="submit" class="btn btn-primary w-full mt-3" style="justify-content:center">Crear tema <i class="bi bi-flower2"></i></button>
         </form>
       </div>
     </div>
@@ -85,7 +85,7 @@
     <!-- Normas del foro -->
     <div class="card" style="background:linear-gradient(135deg,#1e3320,#3a5c3e);border:none">
       <div class="card-body">
-        <div style="font-size:1.4rem;margin-bottom:10px">🌱</div>
+        <div style="font-size:1.4rem;margin-bottom:10px"><i class="bi bi-flower2"></i></div>
         <h4 style="color:white;font-family:'Playfair Display',serif;font-size:.95rem;margin-bottom:12px">Normas del Foro</h4>
         <ul style="color:rgba(255,255,255,.75);font-size:.78rem;line-height:2;padding-left:16px">
           <li>Respeta a todos los participantes</li>

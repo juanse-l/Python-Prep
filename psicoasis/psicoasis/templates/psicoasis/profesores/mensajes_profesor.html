@@ -3,7 +3,7 @@ ARCHIVO: mensajes_profesor.html
 {% endcomment %}
 {% extends "psicoasis/profesores/base_profesor.html" %}
 {% block title %}Mensajes — Panel Docente{% endblock %}
-{% block topbar_title %}💬 Mensajes con Orientación{% endblock %}
+{% block topbar_title %}<i class="bi bi-chat-dots"></i> Mensajes con Orientación{% endblock %}
 {% block content %}
 <div class="card" style="max-width:700px;margin:0 auto;">
   <div class="card-header">
@@ -21,7 +21,7 @@ ARCHIVO: mensajes_profesor.html
           {{ msg.contenido }}
           {% if msg.archivo_adjunto %}
             <div style="margin-top:6px;font-size:.75rem;">
-              📎 <a href="{{ msg.archivo_adjunto.url }}" style="color:inherit;" target="_blank">Archivo adjunto</a>
+              <i class="bi bi-paperclip"></i> <a href="{{ msg.archivo_adjunto.url }}" style="color:inherit;" target="_blank">Archivo adjunto</a>
             </div>
           {% endif %}
         </div>

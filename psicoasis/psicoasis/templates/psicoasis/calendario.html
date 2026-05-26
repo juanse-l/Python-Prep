@@ -36,7 +36,7 @@
 
 <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
   <div>
-    <h1>Calendario 📅</h1>
+    <h1>Calendario <i class="bi bi-calendar3"></i></h1>
     <p>{{ nombre_mes }} {{ year }}</p>
   </div>
   <div style="display:flex;gap:8px">
@@ -112,7 +112,7 @@
       </div>
       {% else %}
       <div class="empty-state" style="padding:24px">
-        <span class="empty-icon">📅</span>
+        <span class="empty-icon"><i class="bi bi-calendar3"></i></span>
         <div class="empty-title">Sin citas en {{ nombre_mes }}</div>
       </div>
       {% endif %}
@@ -123,7 +123,7 @@
   <div style="display:flex;flex-direction:column;gap:16px">
     <!-- Agendar cita rápida -->
     <div class="card">
-      <div class="card-header"><span class="card-title">📌 Agendar cita</span></div>
+      <div class="card-header"><span class="card-title"><i class="bi bi-pin-fill"></i> Agendar cita</span></div>
       <div class="card-body" style="padding:16px">
         <form method="post" action="{% url 'reunion_nueva' %}">
           {% csrf_token %}
@@ -150,7 +150,7 @@
             <label class="form-label">Motivo</label>
             <input type="text" name="motivo" class="form-control" placeholder="Motivo de la cita" required>
           </div>
-          <button type="submit" class="btn btn-primary w-full mt-3" style="justify-content:center">Agendar cita 📅</button>
+          <button type="submit" class="btn btn-primary w-full mt-3" style="justify-content:center">Agendar cita <i class="bi bi-calendar3"></i></button>
         </form>
       </div>
     </div>
@@ -213,7 +213,7 @@ function abrirDia(dia, fecha) {
   
   if (citas.length === 0) {
     cont.innerHTML = `<div style="text-align:center;padding:20px;color:var(--text-xs)">
-      <div style="font-size:2rem;margin-bottom:8px">📅</div>
+      <div style="font-size:2rem;margin-bottom:8px"><i class="bi bi-calendar3"></i></div>
       <div>Sin citas programadas para este día.</div>
     </div>`;
   } else {

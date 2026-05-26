@@ -1,6 +1,6 @@
 {% extends "psicoasis/profesores/base_profesor.html" %}
 {% block title %}Mis Citas — Panel Docente{% endblock %}
-{% block topbar_title %}📅 Mis Citas con Orientación{% endblock %}
+{% block topbar_title %}<i class="bi bi-calendar3"></i> Mis Citas con Orientación{% endblock %}
 
 {% block content %}
 <div style="display:grid;grid-template-columns:1fr 1.3fr;gap:24px;align-items:start;">
@@ -36,7 +36,7 @@
             {{ form.hora_propuesta }}
           </div>
         </div>
-        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Solicitar cita 📅</button>
+        <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Solicitar cita <i class="bi bi-calendar3"></i></button>
       </form>
     </div>
   </div>
@@ -58,7 +58,7 @@
                 <div style="font-size:.8rem;color:var(--text-xs);">Solicitada el {{ c.fecha_creacion|date:"d/m/Y" }} — pendiente de confirmar</div>
               {% endif %}
               {% if c.notas_psicologo %}
-                <div style="font-size:.78rem;margin-top:4px;color:var(--text-s);">📝 {{ c.notas_psicologo|truncatechars:80 }}</div>
+                <div style="font-size:.78rem;margin-top:4px;color:var(--text-s);"><i class="bi bi-pencil"></i> {{ c.notas_psicologo|truncatechars:80 }}</div>
               {% endif %}
             </div>
             <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end;">

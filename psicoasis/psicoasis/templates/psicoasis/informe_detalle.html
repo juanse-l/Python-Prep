@@ -3,8 +3,8 @@
 {% block topbar_title %}Informe{% endblock %}
 {% block topbar_actions %}
   <a href="{% url 'informes_list' %}" class="btn btn-outline btn-sm">← Volver</a>
-  <a href="{% url 'informe_editar' informe.pk %}" class="btn btn-outline btn-sm">✏️ Editar</a>
-  <button onclick="window.print()" class="btn btn-outline btn-sm">🖨️ Imprimir</button>
+  <a href="{% url 'informe_editar' informe.pk %}" class="btn btn-outline btn-sm"><i class="bi bi-pencil"></i> Editar</a>
+  <button onclick="window.print()" class="btn btn-outline btn-sm"><i class="bi bi-printer"></i> Imprimir</button>
 {% endblock %}
 
 {% block content %}
@@ -59,7 +59,7 @@
   </div>
   <div style="text-align:right;font-size:9pt;color:#5a6b5b">
     <div>Generado el {{ informe.fecha_creacion|date:"d/m/Y" }}</div>
-    {% if informe.confidencial %}<div style="font-weight:700;color:#c0392b;margin-top:4px">🔒 DOCUMENTO CONFIDENCIAL</div>{% endif %}
+    {% if informe.confidencial %}<div style="font-weight:700;color:#c0392b;margin-top:4px"><i class="bi bi-lock-fill"></i> DOCUMENTO CONFIDENCIAL</div>{% endif %}
   </div>
 </div>
 
@@ -70,11 +70,11 @@
     {% if informe.estudiante %}<span class="badge badge-green">{{ informe.estudiante.get_full_name }} — {{ informe.estudiante.grado }}</span>{% endif %}
     {% if informe.nivel_riesgo %}
       <span class="riesgo-badge-{{ informe.nivel_riesgo }}">
-        {% if informe.nivel_riesgo == 'bajo' %}🟢{% elif informe.nivel_riesgo == 'medio' %}🟡{% elif informe.nivel_riesgo == 'alto' %}🟠{% else %}🔴{% endif %}
+        {% if informe.nivel_riesgo == 'bajo' %}<span style="color:#198754">●</span>{% elif informe.nivel_riesgo == 'medio' %}<span style="color:#ffc107">●</span>{% elif informe.nivel_riesgo == 'alto' %}<span style="color:#fd7e14">●</span>{% else %}<span style="color:#dc3545">●</span>{% endif %}
         Riesgo {{ informe.get_nivel_riesgo_display }}
       </span>
     {% endif %}
-    {% if informe.confidencial %}<span style="background:#ffe8e8;color:#c0392b;border-radius:8px;padding:4px 10px;font-size:.72rem;font-weight:700">🔒 Confidencial</span>{% endif %}
+    {% if informe.confidencial %}<span style="background:#ffe8e8;color:#c0392b;border-radius:8px;padding:4px 10px;font-size:.72rem;font-weight:700"><i class="bi bi-lock-fill"></i> Confidencial</span>{% endif %}
   </div>
   <h1 style="font-size:1.4rem;margin-bottom:6px">{{ informe.titulo }}</h1>
   <div style="font-size:.8rem;color:var(--text-xs)">
@@ -89,7 +89,7 @@
 
 {% if informe.motivo_consulta or informe.antecedentes or informe.situacion_familiar %}
 <div class="inf-seccion">
-  <div class="inf-seccion-titulo">🔍 Motivo de consulta y contexto</div>
+  <div class="inf-seccion-titulo"><i class="bi bi-search"></i> Motivo de consulta y contexto</div>
   <div class="inf-grid2">
     {% if informe.motivo_consulta %}
     <div class="inf-campo" style="grid-column:1/-1">
@@ -115,7 +115,7 @@
 
 {% if informe.descripcion_conducta or informe.estado_emocional or informe.relaciones_sociales or informe.rendimiento_academico %}
 <div class="inf-seccion">
-  <div class="inf-seccion-titulo">👁️ Observaciones durante la sesión</div>
+  <div class="inf-seccion-titulo"><i class="bi bi-eye"></i> Observaciones durante la sesión</div>
   <div class="inf-grid2">
     {% if informe.descripcion_conducta %}
     <div class="inf-campo">
@@ -146,7 +146,7 @@
 {% endif %}
 
 <div class="inf-seccion">
-  <div class="inf-seccion-titulo">🧠 Análisis e impresión psicológica</div>
+  <div class="inf-seccion-titulo"><i class="bi bi-cpu"></i> Análisis e impresión psicológica</div>
   <div class="inf-campo">
     <div class="inf-campo-valor">{{ informe.contenido }}</div>
   </div>
@@ -154,13 +154,13 @@
   <div class="inf-grid2" style="margin-top:12px">
     {% if informe.fortalezas %}
     <div class="inf-campo" style="background:#eef6ef;border-radius:10px;padding:14px">
-      <div class="inf-campo-label" style="color:#27ae60">✅ Fortalezas y recursos personales</div>
+      <div class="inf-campo-label" style="color:#27ae60"><i class="bi bi-check-circle-fill"></i> Fortalezas y recursos personales</div>
       <div class="inf-campo-valor">{{ informe.fortalezas }}</div>
     </div>
     {% endif %}
     {% if informe.factores_riesgo %}
     <div class="inf-campo" style="background:#fff5e6;border-radius:10px;padding:14px">
-      <div class="inf-campo-label" style="color:#e67e22">⚠️ Factores de riesgo</div>
+      <div class="inf-campo-label" style="color:#e67e22"><i class="bi bi-exclamation-triangle"></i> Factores de riesgo</div>
       <div class="inf-campo-valor">{{ informe.factores_riesgo }}</div>
     </div>
     {% endif %}
@@ -170,7 +170,7 @@
 
 {% if informe.recomendaciones or informe.plan_intervencion or informe.acuerdos or informe.proxima_sesion %}
 <div class="inf-seccion">
-  <div class="inf-seccion-titulo">🗺️ Plan de intervención y recomendaciones</div>
+  <div class="inf-seccion-titulo"><i class="bi bi-map"></i> Plan de intervención y recomendaciones</div>
   <div class="inf-grid2">
     {% if informe.recomendaciones %}
     <div class="inf-campo">
@@ -202,9 +202,9 @@
 
 {% if informe.requiere_remision %}
 <div class="inf-seccion">
-  <div class="inf-seccion-titulo">🏥 Remisión</div>
+  <div class="inf-seccion-titulo"><i class="bi bi-hospital"></i> Remisión</div>
   <div style="background:#ffe8e8;border-radius:10px;padding:16px;display:flex;gap:12px;align-items:center">
-    <span style="font-size:1.5rem">⚠️</span>
+    <span style="font-size:1.5rem"><i class="bi bi-exclamation-triangle"></i></span>
     <div>
       <div style="font-weight:700;color:#c0392b;font-size:.88rem">Este caso requiere remisión a entidad externa</div>
       {% if informe.entidad_remision %}<div style="color:#e67e22;font-size:.84rem;margin-top:4px">Entidad: {{ informe.entidad_remision }}</div>{% endif %}
@@ -235,9 +235,9 @@
 </div>
 
 <div style="display:flex;gap:10px;margin-top:20px;margin-bottom:40px" class="no-print">
-  <button onclick="window.print()" class="btn btn-primary">🖨️ Imprimir / Guardar PDF</button>
+  <button onclick="window.print()" class="btn btn-primary"><i class="bi bi-printer"></i> Imprimir / Guardar PDF</button>
   <a href="{% url 'informes_list' %}" class="btn btn-outline">← Volver a informes</a>
-  <a href="{% url 'informe_eliminar' informe.pk %}" class="btn" style="background:var(--red);color:white">🗑️ Eliminar</a>
+  <a href="{% url 'informe_eliminar' informe.pk %}" class="btn" style="background:var(--red);color:white"><i class="bi bi-trash"></i> Eliminar</a>
 </div>
 
 {% endblock %}

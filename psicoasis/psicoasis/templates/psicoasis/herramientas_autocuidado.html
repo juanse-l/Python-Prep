@@ -2,14 +2,14 @@
 {% block title %}Herramientas de Autocuidado — PsicoAsis{% endblock %}
 {% block topbar_title %}Herramientas de Autocuidado{% endblock %}
 {% block content %}
-<div class="page-header"><h1>Herramientas de Autocuidado 🫧</h1><p>Técnicas y recursos prácticos para el bienestar emocional</p></div>
+<div class="page-header"><h1>Herramientas de Autocuidado <i class="bi bi-droplet"></i></h1><p>Técnicas y recursos prácticos para el bienestar emocional</p></div>
 
 {% if recursos %}
 <div class="grid-3">
   {% for r in recursos %}
   <div class="card">
     <div class="card-body">
-      <div style="font-size:2rem;margin-bottom:12px">🌿</div>
+      <div style="font-size:2rem;margin-bottom:12px"><i class="bi bi-flower2"></i></div>
       <h3 style="font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:8px">{{ r.titulo }}</h3>
       <p style="font-size:.84rem;color:var(--text-s);line-height:1.7">{{ r.descripcion }}</p>
       {% if r.contenido %}<p style="font-size:.82rem;color:var(--text-s);margin-top:12px;line-height:1.7">{{ r.contenido }}</p>{% endif %}
@@ -23,15 +23,15 @@
 
   <div class="card">
     <div class="card-body">
-      <div style="font-size:2.2rem;margin-bottom:12px">🫁</div>
+      <div style="font-size:2.2rem;margin-bottom:12px"><i class="bi bi-wind"></i></div>
       <h3 style="font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:10px;color:var(--text)">Respiración 4-7-8</h3>
       <p style="font-size:.84rem;color:var(--text-s);line-height:1.8;margin-bottom:12px">Técnica de respiración que activa el sistema nervioso parasimpático, reduciendo el estrés y la ansiedad en minutos.</p>
       <div style="background:var(--sage-xxl);border-radius:12px;padding:14px;font-size:.8rem;color:var(--text-s)">
         <div style="font-weight:600;margin-bottom:8px;color:var(--text)">Cómo practicarla:</div>
         <div style="display:flex;flex-direction:column;gap:6px">
-          <div>🔵 <strong>4 seg</strong> — Inhala por la nariz</div>
-          <div>🟡 <strong>7 seg</strong> — Retén el aire</div>
-          <div>🟢 <strong>8 seg</strong> — Exhala por la boca</div>
+          <div><span style="color:#0d6efd">●</span> <strong>4 seg</strong> — Inhala por la nariz</div>
+          <div><span style="color:#ffc107">●</span> <strong>7 seg</strong> — Retén el aire</div>
+          <div><span style="color:#198754">●</span> <strong>8 seg</strong> — Exhala por la boca</div>
         </div>
         <div style="margin-top:10px;font-style:italic;color:var(--text-xs)">Repite 4 veces, 2 veces al día</div>
       </div>
@@ -40,17 +40,17 @@
 
   <div class="card">
     <div class="card-body">
-      <div style="font-size:2.2rem;margin-bottom:12px">🧠</div>
+      <div style="font-size:2.2rem;margin-bottom:12px"><i class="bi bi-cpu"></i></div>
       <h3 style="font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:10px;color:var(--text)">Técnica 5-4-3-2-1</h3>
       <p style="font-size:.84rem;color:var(--text-s);line-height:1.8;margin-bottom:12px">Ejercicio de grounding (anclaje) que interrumpe el ciclo de pensamientos ansiosos conectándote con el presente.</p>
       <div style="background:#fdf0e8;border-radius:12px;padding:14px;font-size:.8rem;color:var(--text-s)">
         <div style="font-weight:600;margin-bottom:8px;color:var(--text)">Los 5 sentidos:</div>
         <div style="display:flex;flex-direction:column;gap:5px">
-          <div>👁️ <strong>5 cosas</strong> que puedes ver</div>
-          <div>🖐️ <strong>4 cosas</strong> que puedes tocar</div>
-          <div>👂 <strong>3 cosas</strong> que puedes oír</div>
-          <div>👃 <strong>2 cosas</strong> que puedes oler</div>
-          <div>👅 <strong>1 cosa</strong> que puedes saborear</div>
+          <div><i class="bi bi-eye"></i> <strong>5 cosas</strong> que puedes ver</div>
+          <div><i class="bi bi-hand-index"></i>️ <strong>4 cosas</strong> que puedes tocar</div>
+          <div><i class="bi bi-ear"></i> <strong>3 cosas</strong> que puedes oír</div>
+          <div><i class="bi bi-nose"></i> <strong>2 cosas</strong> que puedes oler</div>
+          <div><i class="bi bi-chat"></i> <strong>1 cosa</strong> que puedes saborear</div>
         </div>
       </div>
     </div>
@@ -58,7 +58,7 @@
 
   <div class="card">
     <div class="card-body">
-      <div style="font-size:2.2rem;margin-bottom:12px">📓</div>
+      <div style="font-size:2.2rem;margin-bottom:12px"><i class="bi bi-journal"></i></div>
       <h3 style="font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:10px;color:var(--text)">Diario Emocional</h3>
       <p style="font-size:.84rem;color:var(--text-s);line-height:1.8;margin-bottom:12px">Escribir regularmente ayuda a procesar emociones, identificar patrones y reducir el rumia mental.</p>
       <div style="background:#eef0fe;border-radius:12px;padding:14px;font-size:.8rem;color:var(--text-s)">
@@ -75,15 +75,15 @@
 
   <div class="card">
     <div class="card-body">
-      <div style="font-size:2.2rem;margin-bottom:12px">🚶</div>
+      <div style="font-size:2.2rem;margin-bottom:12px"><i class="bi bi-person-walking"></i></div>
       <h3 style="font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:10px;color:var(--text)">Movimiento Consciente</h3>
       <p style="font-size:.84rem;color:var(--text-s);line-height:1.8;margin-bottom:12px">El movimiento físico libera endorfinas y reduce el cortisol. No tiene que ser intenso para ser efectivo.</p>
       <div style="background:#fef0f0;border-radius:12px;padding:14px;font-size:.8rem;color:var(--text-s)">
         <div style="display:flex;flex-direction:column;gap:6px">
-          <div>🌅 Caminata matutina de 10 minutos</div>
-          <div>💃 Bailar una canción favorita</div>
-          <div>🧘 Estiramientos suaves al despertar</div>
-          <div>🏃 Subir escaleras en vez del ascensor</div>
+          <div><i class="bi bi-sunrise"></i> Caminata matutina de 10 minutos</div>
+          <div><i class="bi bi-person"></i> Bailar una canción favorita</div>
+          <div><i class="bi bi-peace"></i> Estiramientos suaves al despertar</div>
+          <div><i class="bi bi-person-walking"></i> Subir escaleras en vez del ascensor</div>
         </div>
       </div>
     </div>
@@ -91,15 +91,15 @@
 
   <div class="card">
     <div class="card-body">
-      <div style="font-size:2.2rem;margin-bottom:12px">🌙</div>
+      <div style="font-size:2.2rem;margin-bottom:12px"><i class="bi bi-moon-stars"></i></div>
       <h3 style="font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:10px;color:var(--text)">Higiene del Sueño</h3>
       <p style="font-size:.84rem;color:var(--text-s);line-height:1.8;margin-bottom:12px">Un sueño reparador es la base del bienestar emocional y el rendimiento académico. Pequeños hábitos marcan la diferencia.</p>
       <div style="background:var(--sage-xxl);border-radius:12px;padding:14px;font-size:.8rem;color:var(--text-s)">
         <div style="display:flex;flex-direction:column;gap:5px">
-          <div>📵 Sin pantallas 1 hora antes de dormir</div>
+          <div><i class="bi bi-phone-slash"></i> Sin pantallas 1 hora antes de dormir</div>
           <div>⏰ Horario constante de sueño/vigilia</div>
-          <div>🌡️ Ambiente fresco y oscuro</div>
-          <div>📚 Lectura tranquila antes de dormir</div>
+          <div><i class="bi bi-thermometer"></i>️ Ambiente fresco y oscuro</div>
+          <div><i class="bi bi-book"></i> Lectura tranquila antes de dormir</div>
         </div>
       </div>
     </div>
@@ -107,15 +107,15 @@
 
   <div class="card">
     <div class="card-body">
-      <div style="font-size:2.2rem;margin-bottom:12px">🤝</div>
+      <div style="font-size:2.2rem;margin-bottom:12px"><i class="bi bi-handshake"></i></div>
       <h3 style="font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:10px;color:var(--text)">Conexión Social</h3>
       <p style="font-size:.84rem;color:var(--text-s);line-height:1.8;margin-bottom:12px">El ser humano es social por naturaleza. Cultivar relaciones auténticas protege la salud mental y emocional.</p>
       <div style="background:#fdf0e8;border-radius:12px;padding:14px;font-size:.8rem;color:var(--text-s)">
         <div style="display:flex;flex-direction:column;gap:5px">
-          <div>💬 Hablar con un amigo o familiar</div>
-          <div>🙏 Expresar gratitud a alguien</div>
-          <div>🌟 Ayudar a alguien sin esperar nada</div>
-          <div>👥 Participar en actividades grupales</div>
+          <div><i class="bi bi-chat-dots"></i> Hablar con un amigo o familiar</div>
+          <div><i class="bi bi-hands"></i> Expresar gratitud a alguien</div>
+          <div><i class="bi bi-star-fill"></i> Ayudar a alguien sin esperar nada</div>
+          <div><i class="bi bi-people"></i> Participar en actividades grupales</div>
         </div>
       </div>
     </div>
@@ -127,11 +127,11 @@
 <div class="card" style="background:linear-gradient(135deg,#1e3320,#3a5c3e);border:none">
   <div class="card-body" style="padding:36px;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center">
     <div>
-      <div style="font-size:1.8rem;margin-bottom:12px">🧘</div>
+      <div style="font-size:1.8rem;margin-bottom:12px"><i class="bi bi-peace"></i></div>
       <h3 style="font-family:'Playfair Display',serif;font-size:1.2rem;color:white;margin-bottom:10px">Relajación Muscular Progresiva</h3>
       <p style="color:rgba(255,255,255,.75);font-size:.84rem;line-height:1.8">Técnica de Jacobson: Tensa y relaja grupos musculares de forma progresiva desde los pies hasta la cabeza. Ideal para el estrés acumulado al final del día escolar. Duración: 15-20 minutos.</p>
     </div>
-    <div style="text-align:center;color:rgba(255,255,255,.4);font-size:.75rem">🕐 15-20 min</div>
+    <div style="text-align:center;color:rgba(255,255,255,.4);font-size:.75rem"><i class="bi bi-clock"></i> 15-20 min</div>
   </div>
 </div>
 {% endif %}

@@ -9,7 +9,7 @@
 <div class="page-header">
   <div class="page-header-row">
     <div>
-      <h1>Reuniones 💬</h1>
+      <h1>Reuniones <i class="bi bi-chat-dots"></i></h1>
       <p>{{ total }} reunión{{ total|pluralize:"es" }} en total</p>
     </div>
     <form method="get" style="display:flex;gap:10px">
@@ -55,7 +55,7 @@
   </div>
   {% else %}
   <div class="empty-state">
-    <span class="empty-icon">💬</span>
+    <span class="empty-icon"><i class="bi bi-chat-dots"></i></span>
     <div class="empty-title">Sin reuniones</div>
     <p class="empty-desc">Aún no hay reuniones registradas.</p>
     <a href="{% url 'reunion_nueva' %}" class="btn btn-primary btn-sm">+ Nueva reunión</a>

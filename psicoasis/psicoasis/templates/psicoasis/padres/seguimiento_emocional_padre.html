@@ -1,6 +1,6 @@
 {% extends "psicoasis/base_padre.html" %}
 {% block title %}Seguimiento Emocional — {{ hijo.get_full_name }}{% endblock %}
-{% block topbar_title %}💚 Seguimiento Emocional{% endblock %}
+{% block topbar_title %}<i class="bi bi-heart-fill" style="color:#4f8a5a"></i> Seguimiento Emocional{% endblock %}
 
 {% block extra_style %}
 .chart-wrap { position: relative; height: 220px; }
@@ -13,14 +13,14 @@
     <div class="section-sub">Grado {{ hijo.grado }} · {{ vinculo.get_tipo_relacion_display }}</div>
   </div>
   <div style="display:flex;gap:8px;">
-    <a href="{% url 'reporte_emocional_padre' hijo.id %}" class="btn btn-primary btn-sm">📊 Ver reporte completo</a>
+    <a href="{% url 'reporte_emocional_padre' hijo.id %}" class="btn btn-primary btn-sm"><i class="bi bi-bar-chart"></i> Ver reporte completo</a>
     <a href="{% url 'dashboard_padre' %}" class="btn btn-outline btn-sm">← Volver</a>
   </div>
 </div>
 
 {% if not tiene_usuario %}
 <div class="alert-card alert-media">
-  ⚠️ Este estudiante aún no tiene cuenta activa en el sistema. Una vez que active su cuenta, podrás ver sus registros emocionales aquí.
+  <i class="bi bi-exclamation-triangle"></i> Este estudiante aún no tiene cuenta activa en el sistema. Una vez que active su cuenta, podrás ver sus registros emocionales aquí.
 </div>
 {% endif %}
 
@@ -28,7 +28,7 @@
 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;">
   <div class="stat-card">
     <div class="stat-icon">
-      {% if ultimas_evaluaciones %}{{ ultimas_evaluaciones.0.get_emocion_display|slice:":2" }}{% else %}🌿{% endif %}
+      {% if ultimas_evaluaciones %}{{ ultimas_evaluaciones.0.get_emocion_display|slice:":2" }}{% else %}<i class="bi bi-flower2"></i>{% endif %}
     </div>
     <div class="stat-val" style="font-size:1.1rem;">
       {% if ultimas_evaluaciones %}{{ ultimas_evaluaciones.0.get_emocion_display|slice:"2:" }}{% else %}Sin datos{% endif %}
@@ -36,12 +36,12 @@
     <div class="stat-label">Último registro</div>
   </div>
   <div class="stat-card">
-    <div class="stat-icon">📋</div>
+    <div class="stat-icon"><i class="bi bi-clipboard"></i></div>
     <div class="stat-val">{{ evaluaciones.count }}</div>
     <div class="stat-label">Registros (últimos 30 días)</div>
   </div>
   <div class="stat-card {% if alertas %}alert{% endif %}">
-    <div class="stat-icon">🚨</div>
+    <div class="stat-icon"><i class="bi bi-exclamation-octagon-fill"></i></div>
     <div class="stat-val">{{ alertas.count }}</div>
     <div class="stat-label">Alertas recientes</div>
   </div>
@@ -51,7 +51,7 @@
 <!-- GRÁFICO TENDENCIA -->
 <div class="card">
   <div class="card-header">
-    <div class="card-title">📈 Tendencia emocional — últimos 30 días</div>
+    <div class="card-title"><i class="bi bi-graph-up"></i> Tendencia emocional — últimos 30 días</div>
     <div class="card-sub">
       {% if nivel == 'basico' %}Vista limitada — configura el nivel de privacidad para más detalle{% endif %}
     </div>
@@ -71,7 +71,7 @@
 {% if nivel in 'intermedio completo' %}
 <div class="card">
   <div class="card-header">
-    <div class="card-title">📅 Historial reciente</div>
+    <div class="card-title"><i class="bi bi-calendar3"></i> Historial reciente</div>
   </div>
   <div class="card-body">
     {% if ultimas_evaluaciones %}
@@ -95,7 +95,7 @@
 {% if alertas %}
 <div class="card">
   <div class="card-header">
-    <div class="card-title">⚠️ Alertas recientes</div>
+    <div class="card-title"><i class="bi bi-exclamation-triangle"></i> Alertas recientes</div>
     <div class="card-sub">Situaciones que la psicóloga consideró importante notificarte</div>
   </div>
   <div class="card-body">
@@ -114,7 +114,7 @@
 
 <!-- PRIVACIDAD INFO -->
 <div style="background:var(--sage-xxl);border-radius:14px;padding:16px 20px;border:1px solid var(--sage-xl);display:flex;align-items:center;gap:12px;">
-  <span style="font-size:1.3rem;">🔒</span>
+  <span style="font-size:1.3rem;"><i class="bi bi-lock-fill"></i></span>
   <div>
     <div style="font-size:.82rem;font-weight:600;color:var(--text);">Nivel de acceso: <strong>{{ privacidad.get_nivel_detalle_display|default:"Intermedio" }}</strong></div>
     <div style="font-size:.73rem;color:var(--text-s);margin-top:2px;">La psicóloga configura qué información puedes ver para proteger la privacidad de tu hijo/a.</div>
@@ -161,7 +161,7 @@ new Chart(ctx, {
     plugins: { legend: { display: false }, tooltip: {
       callbacks: {
         label: ctx => {
-          const labels = ['','😢 Muy mal','😔 Mal','😐 Regular','🙂 Bien','😄 Muy bien',''];
+          const labels = ['','<i class="bi bi-emoji-tear"></i> Muy mal','<i class="bi bi-emoji-frown"></i> Mal','<i class="bi bi-emoji-neutral"></i> Regular','<i class="bi bi-emoji-smile"></i> Bien','<i class="bi bi-emoji-laughing"></i> Muy bien',''];
           return labels[ctx.parsed.y] || ctx.parsed.y;
         }
       }

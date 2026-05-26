@@ -8,7 +8,7 @@
 
 <div class="page-header">
   <div style="display:flex;align-items:center;gap:12px;margin-bottom:4px">
-    <h1>Hola, {{ user.first_name }} 🌿</h1>
+    <h1>Hola, {{ user.first_name }} <i class="bi bi-flower2"></i></h1>
   </div>
   <p>{{ hoy|date:"l, d \d\e F \d\e Y" }} — Todo va bien por aquí</p>
 </div>
@@ -16,7 +16,7 @@
 <!-- STATS -->
 <div class="stats-grid mb-6">
   <div class="stat-card">
-    <div class="stat-icon si-green">👥</div>
+    <div class="stat-icon si-green"><i class="bi bi-people"></i></div>
     <div>
       <div class="stat-num">{{ total_estudiantes }}</div>
       <div class="stat-label">Estudiantes</div>
@@ -24,7 +24,7 @@
     </div>
   </div>
   <div class="stat-card">
-    <div class="stat-icon si-orange">📊</div>
+    <div class="stat-icon si-orange"><i class="bi bi-bar-chart"></i></div>
     <div>
       <div class="stat-num">{{ casos_activos }}</div>
       <div class="stat-label">Casos activos</div>
@@ -32,7 +32,7 @@
     </div>
   </div>
   <div class="stat-card">
-    <div class="stat-icon si-blue">📅</div>
+    <div class="stat-icon si-blue"><i class="bi bi-calendar3"></i></div>
     <div>
       <div class="stat-num">{{ reuniones_hoy }}</div>
       <div class="stat-label">Citas hoy</div>
@@ -40,7 +40,7 @@
     </div>
   </div>
   <div class="stat-card">
-    <div class="stat-icon si-purple">📋</div>
+    <div class="stat-icon si-purple"><i class="bi bi-clipboard"></i></div>
     <div>
       <div class="stat-num">{{ total_informes }}</div>
       <div class="stat-label">Informes</div>
@@ -48,7 +48,7 @@
     </div>
   </div>
   <div class="stat-card">
-    <div class="stat-icon si-blue">🎓</div>
+    <div class="stat-icon si-blue"><i class="bi bi-mortarboard"></i></div>
     <div>
       <div class="stat-num">{{ total_docentes }}</div>
       <div class="stat-label">Docentes</div>
@@ -60,7 +60,7 @@
 <!-- GRÁFICAS -->
 <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px">
   <div class="card">
-    <div class="card-header"><span class="card-title">📊 Casos por motivo</span></div>
+    <div class="card-header"><span class="card-title"><i class="bi bi-bar-chart"></i> Casos por motivo</span></div>
     <div class="card-body" style="padding:16px">
       <div style="position:relative;height:220px">
         <canvas id="chartMotivos" role="img" aria-label="Casos por motivo de consulta"></canvas>
@@ -68,7 +68,7 @@
     </div>
   </div>
   <div class="card">
-    <div class="card-header"><span class="card-title">📈 Atenciones por mes</span></div>
+    <div class="card-header"><span class="card-title"><i class="bi bi-graph-up"></i> Atenciones por mes</span></div>
     <div class="card-body" style="padding:16px">
       <div style="position:relative;height:220px">
         <canvas id="chartMeses" role="img" aria-label="Reuniones realizadas por mes"></canvas>
@@ -76,7 +76,7 @@
     </div>
   </div>
   <div class="card">
-    <div class="card-header"><span class="card-title">🏫 Estudiantes por grado</span></div>
+    <div class="card-header"><span class="card-title"><i class="bi bi-building"></i> Estudiantes por grado</span></div>
     <div class="card-body" style="padding:16px">
       <div style="position:relative;height:220px">
         <canvas id="chartGrados" role="img" aria-label="Distribución de estudiantes por grado"></canvas>
@@ -84,7 +84,7 @@
     </div>
   </div>
   <div class="card">
-    <div class="card-header"><span class="card-title">🗂️ Estado de reuniones</span></div>
+    <div class="card-header"><span class="card-title"><i class="bi bi-folder2"></i> Estado de reuniones</span></div>
     <div class="card-body" style="padding:16px">
       <div style="position:relative;height:220px">
         <canvas id="chartEstados" role="img" aria-label="Reuniones por estado"></canvas>
@@ -141,7 +141,7 @@
     </div>
     {% else %}
     <div class="empty-state">
-      <span class="empty-icon">📅</span>
+      <span class="empty-icon"><i class="bi bi-calendar3"></i></span>
       <div class="empty-title">Sin reuniones esta semana</div>
       <p class="empty-desc">No hay citas programadas para los próximos 7 días.</p>
       <a href="{% url 'reunion_nueva' %}" class="btn btn-primary btn-sm">+ Agendar cita</a>
@@ -155,24 +155,24 @@
     <div class="card">
       <div class="card-header"><span class="card-title">Acciones rápidas</span></div>
       <div class="card-body" style="display:flex;flex-direction:column;gap:10px;padding-top:16px">
-        <a href="{% url 'estudiante_nuevo' %}" class="btn btn-outline w-full" style="justify-content:flex-start;border-radius:12px">👤 Nuevo estudiante</a>
-        <a href="{% url 'caso_nuevo' %}" class="btn btn-outline w-full" style="justify-content:flex-start;border-radius:12px">📊 Abrir caso</a>
-        <a href="{% url 'reunion_nueva' %}" class="btn btn-outline w-full" style="justify-content:flex-start;border-radius:12px">📅 Agendar reunión</a>
-        <a href="{% url 'informe_nuevo' %}" class="btn btn-outline w-full" style="justify-content:flex-start;border-radius:12px">📋 Crear informe</a>
-        <a href="{% url 'asistente_ia' %}" class="btn btn-primary w-full" style="justify-content:flex-start;border-radius:12px">🤖 Asistente IA</a>
+        <a href="{% url 'estudiante_nuevo' %}" class="btn btn-outline w-full" style="justify-content:flex-start;border-radius:12px"><i class="bi bi-person"></i> Nuevo estudiante</a>
+        <a href="{% url 'caso_nuevo' %}" class="btn btn-outline w-full" style="justify-content:flex-start;border-radius:12px"><i class="bi bi-bar-chart"></i> Abrir caso</a>
+        <a href="{% url 'reunion_nueva' %}" class="btn btn-outline w-full" style="justify-content:flex-start;border-radius:12px"><i class="bi bi-calendar3"></i> Agendar reunión</a>
+        <a href="{% url 'informe_nuevo' %}" class="btn btn-outline w-full" style="justify-content:flex-start;border-radius:12px"><i class="bi bi-clipboard"></i> Crear informe</a>
+        <a href="{% url 'asistente_ia' %}" class="btn btn-primary w-full" style="justify-content:flex-start;border-radius:12px"><i class="bi bi-robot"></i> Asistente IA</a>
       </div>
     </div>
 
     {% if notificaciones_recientes %}
     <div class="card" style="border-left:4px solid var(--sage)">
       <div class="card-header">
-        <span class="card-title">🔔 Solicitudes nuevas</span>
+        <span class="card-title"><i class="bi bi-bell"></i> Solicitudes nuevas</span>
         <a href="{% url 'notificaciones' %}" class="btn btn-outline btn-sm">Ver todas</a>
       </div>
       <div style="padding:0 8px">
         {% for n in notificaciones_recientes %}
         <div style="padding:12px 8px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start">
-          <span style="font-size:1.2rem">📅</span>
+          <span style="font-size:1.2rem"><i class="bi bi-calendar3"></i></span>
           <div style="flex:1">
             <div style="font-size:.8rem;font-weight:600;color:var(--text)">{{ n.nombre_solicitante }}</div>
             <div style="font-size:.72rem;color:var(--text-xs)">{{ n.fecha|date:"d/m" }} · {{ n.rol_solicitante }}</div>
@@ -186,7 +186,7 @@
 
     <div class="card" style="background:linear-gradient(135deg,#1e3320,#3a5c3e);border:none">
       <div class="card-body">
-        <div style="font-size:1.5rem;margin-bottom:10px">💚</div>
+        <div style="font-size:1.5rem;margin-bottom:10px"><i class="bi bi-heart-fill" style="color:#4f8a5a"></i></div>
         <p style="color:rgba(255,255,255,.75);font-size:.84rem;line-height:1.85;font-style:italic">
           "El bienestar emocional es la base sobre la que se construye todo aprendizaje significativo."
         </p>

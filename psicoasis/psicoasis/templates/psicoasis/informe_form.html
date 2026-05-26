@@ -26,7 +26,7 @@
 .riesgo-opt input:checked + .riesgo-label { border-color:currentColor; }
 </style>
 
-<div class="page-header"><h1>{% if form.instance.pk %}Editar Informe{% else %}Nuevo Informe Psicológico{% endif %} 📋</h1></div>
+<div class="page-header"><h1>{% if form.instance.pk %}Editar Informe{% else %}Nuevo Informe Psicológico{% endif %} <i class="bi bi-clipboard"></i></h1></div>
 
 <form method="post">
 {% csrf_token %}
@@ -34,7 +34,7 @@
 <!-- ── ENCABEZADO ── -->
 <div class="card seccion-informe">
   <div class="card-body" style="padding:24px">
-    <div class="seccion-titulo">📌 Datos generales</div>
+    <div class="seccion-titulo"><i class="bi bi-pin-fill"></i> Datos generales</div>
     <div class="inf-grid">
       <div class="form-group" style="grid-column:1/-1">
         <label class="form-label">Título del informe *</label>
@@ -63,7 +63,7 @@
       </div>
       <div class="form-group" style="display:flex;align-items:center;gap:10px;padding-top:24px">
         <input type="checkbox" name="confidencial" id="confidencial" {% if form.confidencial.value != False %}checked{% endif %} style="width:16px;height:16px;accent-color:var(--sage)">
-        <label for="confidencial" class="form-label" style="margin-bottom:0;cursor:pointer">🔒 Documento confidencial</label>
+        <label for="confidencial" class="form-label" style="margin-bottom:0;cursor:pointer"><i class="bi bi-lock-fill"></i> Documento confidencial</label>
       </div>
     </div>
   </div>
@@ -72,7 +72,7 @@
 <!-- ── MOTIVO Y CONTEXTO ── -->
 <div class="card seccion-informe">
   <div class="card-body" style="padding:24px">
-    <div class="seccion-titulo">🔍 Motivo de consulta y contexto</div>
+    <div class="seccion-titulo"><i class="bi bi-search"></i> Motivo de consulta y contexto</div>
     <div class="form-group" style="margin-bottom:16px">
       <label class="form-label">Motivo de consulta</label>
       <textarea name="motivo_consulta" class="form-control" rows="3" placeholder="¿Por qué se realizó esta sesión? ¿Quién la solicitó? Describe brevemente la situación que motiva el proceso...">{{ form.motivo_consulta.value|default:'' }}</textarea>
@@ -94,7 +94,7 @@
 <!-- ── OBSERVACIONES ── -->
 <div class="card seccion-informe">
   <div class="card-body" style="padding:24px">
-    <div class="seccion-titulo">👁️ Observaciones durante la sesión</div>
+    <div class="seccion-titulo"><i class="bi bi-eye"></i> Observaciones durante la sesión</div>
     <div class="inf-grid">
       <div class="form-group">
         <label class="form-label">Conducta observada</label>
@@ -119,7 +119,7 @@
 <!-- ── ANÁLISIS ── -->
 <div class="card seccion-informe">
   <div class="card-body" style="padding:24px">
-    <div class="seccion-titulo">🧠 Análisis e impresión psicológica</div>
+    <div class="seccion-titulo"><i class="bi bi-cpu"></i> Análisis e impresión psicológica</div>
     <div class="form-group" style="margin-bottom:16px">
       <label class="form-label">Análisis e impresión psicológica *</label>
       <textarea name="contenido" class="form-control" rows="6" required placeholder="Análisis integrado de la situación. Hipótesis de trabajo, interpretación clínica, impresión diagnóstica si aplica...">{{ form.contenido.value|default:'' }}</textarea>
@@ -145,19 +145,19 @@
         </label>
         <label class="riesgo-opt">
           <input type="radio" name="nivel_riesgo" value="bajo" {% if form.nivel_riesgo.value == 'bajo' %}checked{% endif %}>
-          <span class="riesgo-label" style="background:#e8f8e8;color:#27ae60">🟢 Bajo</span>
+          <span class="riesgo-label" style="background:#e8f8e8;color:#27ae60"><span style="color:#198754">●</span> Bajo</span>
         </label>
         <label class="riesgo-opt">
           <input type="radio" name="nivel_riesgo" value="medio" {% if form.nivel_riesgo.value == 'medio' %}checked{% endif %}>
-          <span class="riesgo-label" style="background:#fff9e6;color:#f39c12">🟡 Medio</span>
+          <span class="riesgo-label" style="background:#fff9e6;color:#f39c12"><span style="color:#ffc107">●</span> Medio</span>
         </label>
         <label class="riesgo-opt">
           <input type="radio" name="nivel_riesgo" value="alto" {% if form.nivel_riesgo.value == 'alto' %}checked{% endif %}>
-          <span class="riesgo-label" style="background:#ffe4c4;color:#e67e22">🟠 Alto</span>
+          <span class="riesgo-label" style="background:#ffe4c4;color:#e67e22"><span style="color:#fd7e14">●</span> Alto</span>
         </label>
         <label class="riesgo-opt">
           <input type="radio" name="nivel_riesgo" value="critico" {% if form.nivel_riesgo.value == 'critico' %}checked{% endif %}>
-          <span class="riesgo-label" style="background:#ffe8e8;color:#c0392b">🔴 Crítico</span>
+          <span class="riesgo-label" style="background:#ffe8e8;color:#c0392b"><span style="color:#dc3545">●</span> Crítico</span>
         </label>
       </div>
     </div>
@@ -167,7 +167,7 @@
 <!-- ── PLAN ── -->
 <div class="card seccion-informe">
   <div class="card-body" style="padding:24px">
-    <div class="seccion-titulo">🗺️ Plan de intervención y recomendaciones</div>
+    <div class="seccion-titulo"><i class="bi bi-map"></i> Plan de intervención y recomendaciones</div>
     <div class="inf-grid">
       <div class="form-group">
         <label class="form-label">Recomendaciones</label>
@@ -192,10 +192,10 @@
 <!-- ── REMISIÓN ── -->
 <div class="card seccion-informe">
   <div class="card-body" style="padding:24px">
-    <div class="seccion-titulo">🏥 Remisión</div>
+    <div class="seccion-titulo"><i class="bi bi-hospital"></i> Remisión</div>
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
       <input type="checkbox" name="requiere_remision" id="requiere_remision" {% if form.requiere_remision.value %}checked{% endif %} style="width:16px;height:16px;accent-color:#e74c3c" onchange="document.getElementById('entidad_wrap').style.display=this.checked?'block':'none'">
-      <label for="requiere_remision" class="form-label" style="margin-bottom:0;cursor:pointer;color:#e74c3c;font-weight:600">⚠️ Este caso requiere remisión a entidad externa</label>
+      <label for="requiere_remision" class="form-label" style="margin-bottom:0;cursor:pointer;color:#e74c3c;font-weight:600"><i class="bi bi-exclamation-triangle"></i> Este caso requiere remisión a entidad externa</label>
     </div>
     <div id="entidad_wrap" style="display:{% if form.requiere_remision.value %}block{% else %}none{% endif %}">
       <div class="form-group">
@@ -208,7 +208,7 @@
 
 <!-- ── ACCIONES ── -->
 <div style="display:flex;gap:12px;margin-bottom:40px">
-  <button type="submit" class="btn btn-primary" style="padding:12px 28px">💾 Guardar informe</button>
+  <button type="submit" class="btn btn-primary" style="padding:12px 28px"><i class="bi bi-floppy"></i> Guardar informe</button>
   <a href="{% url 'informes_list' %}" class="btn btn-outline">Cancelar</a>
 </div>
 

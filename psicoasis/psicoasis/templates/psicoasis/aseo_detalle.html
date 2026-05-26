@@ -22,7 +22,7 @@
 <div class="grid-2 mb-6">
   <!-- Info básica -->
   <div class="card">
-    <div class="card-header"><span class="card-title">📋 Información del personal</span></div>
+    <div class="card-header"><span class="card-title"><i class="bi bi-clipboard"></i> Información del personal</span></div>
     <div class="card-body">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
         <div>
@@ -55,13 +55,13 @@
 
   <!-- Notas -->
   <div class="card">
-    <div class="card-header"><span class="card-title">📝 Notas generales</span></div>
+    <div class="card-header"><span class="card-title"><i class="bi bi-pencil"></i> Notas generales</span></div>
     <div class="card-body">
       {% if persona.notas_generales %}
       <p style="font-size:.88rem;color:var(--text-s);line-height:1.8">{{ persona.notas_generales }}</p>
       {% else %}
       <div class="empty-state" style="padding:20px">
-        <span class="empty-icon" style="font-size:1.6rem">📝</span>
+        <span class="empty-icon" style="font-size:1.6rem"><i class="bi bi-pencil"></i></span>
         <div class="empty-title">Sin notas</div>
         <p class="empty-desc">No hay observaciones registradas.</p>
       </div>

@@ -1,10 +1,10 @@
 {% extends 'psicoasis/base_estudiante.html' %}
 {% block title %}Mi Panel — PsicoAsis{% endblock %}
-{% block topbar_title %}🏠 Mi Panel{% endblock %}
+{% block topbar_title %}<i class="bi bi-house-door"></i> Mi Panel{% endblock %}
 {% block content %}
 
 <div class="page-header">
-  <h1>Hola, {{ user.first_name|default:user.username }} 👋</h1>
+  <h1>Hola, {{ user.first_name|default:user.username }} <i class="bi bi-hand-wave"></i></h1>
   <p>Bienvenido/a a tu espacio de bienestar emocional en PsicoAsis.</p>
 </div>
 
@@ -12,7 +12,7 @@
 <div class="card" style="border-color: #c2e4ed; background: linear-gradient(135deg, #ebf7fa, #f0f8fb);">
   <div class="card-body" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px">
     <div>
-      <div style="font-size:1.5rem;margin-bottom:6px">💚 ¿Cómo estás hoy?</div>
+      <div style="font-size:1.5rem;margin-bottom:6px"><i class="bi bi-heart-fill" style="color:#4f8a5a"></i> ¿Cómo estás hoy?</div>
       <div style="font-size:.85rem;color:var(--text-s)">No has registrado tu estado emocional hoy. ¡Cuéntanos cómo te sientes!</div>
     </div>
     <a href="{% url 'checkin_emocional' %}" class="btn btn-primary">Registrar check-in</a>
@@ -23,7 +23,7 @@
   <div class="card-body" style="display:flex;align-items:center;gap:16px">
     <div style="font-size:2.5rem">{{ checkin_hoy.get_emocion_display|slice:":2" }}</div>
     <div>
-      <div style="font-weight:700;color:var(--text)">Check-in de hoy registrado ✓</div>
+      <div style="font-weight:700;color:var(--text)">Check-in de hoy registrado <i class="bi bi-check2"></i></div>
       <div style="font-size:.82rem;color:var(--text-s)">Te sientes: <strong>{{ checkin_hoy.get_emocion_display }}</strong></div>
     </div>
     <a href="{% url 'checkin_emocional' %}" class="btn btn-sm btn-outline" style="margin-left:auto">Editar</a>
@@ -33,22 +33,22 @@
 
 <div class="stat-grid">
   <div class="stat-card">
-    <div class="stat-icon">📅</div>
+    <div class="stat-icon"><i class="bi bi-calendar3"></i></div>
     <div class="stat-val">{{ proximas_reuniones|length }}</div>
     <div class="stat-label">Citas próximas</div>
   </div>
   <div class="stat-card">
-    <div class="stat-icon">💬</div>
+    <div class="stat-icon"><i class="bi bi-chat-dots"></i></div>
     <div class="stat-val">{{ mensajes_nuevos }}</div>
     <div class="stat-label">Mensajes nuevos</div>
   </div>
   <div class="stat-card">
-    <div class="stat-icon">📊</div>
+    <div class="stat-icon"><i class="bi bi-bar-chart"></i></div>
     <div class="stat-val">{{ ultimos_checkins|length }}</div>
     <div class="stat-label">Check-ins este mes</div>
   </div>
   <div class="stat-card">
-    <div class="stat-icon">🌿</div>
+    <div class="stat-icon"><i class="bi bi-flower2"></i></div>
     <div class="stat-val">{{ recursos|length }}</div>
     <div class="stat-label">Recursos disponibles</div>
   </div>
@@ -60,7 +60,7 @@
   <div class="card">
     <div class="card-body">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <div class="card-title">📅 Próximas citas</div>
+        <div class="card-title"><i class="bi bi-calendar3"></i> Próximas citas</div>
         <a href="{% url 'mis_citas_estudiante' %}" style="font-size:.75rem;color:var(--teal-d)">Ver todas →</a>
       </div>
       {% if proximas_reuniones %}
@@ -84,7 +84,7 @@
   <div class="card">
     <div class="card-body">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <div class="card-title">📊 Mi semana emocional</div>
+        <div class="card-title"><i class="bi bi-bar-chart"></i> Mi semana emocional</div>
         <a href="{% url 'checkin_emocional' %}" style="font-size:.75rem;color:var(--teal-d)">Ver historial →</a>
       </div>
       {% if ultimos_checkins %}
@@ -112,7 +112,7 @@
 <div class="card">
   <div class="card-body">
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <div class="card-title">🌿 Recursos de bienestar</div>
+      <div class="card-title"><i class="bi bi-flower2"></i> Recursos de bienestar</div>
       <a href="{% url 'bienestar_estudiante' %}" style="font-size:.75rem;color:var(--teal-d)">Ver todos →</a>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px">

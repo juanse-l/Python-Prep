@@ -1,6 +1,6 @@
 {% extends 'psicoasis/base_estudiante.html' %}
 {% block title %}Mis Citas — PsicoAsis{% endblock %}
-{% block topbar_title %}📅 Mis Citas{% endblock %}
+{% block topbar_title %}<i class="bi bi-calendar3"></i> Mis Citas{% endblock %}
 {% block content %}
 
 <div class="page-header">
@@ -9,19 +9,19 @@
 </div>
 
 <div style="display:flex;gap:12px;margin-bottom:24px;flex-wrap:wrap">
-  <a href="{% url 'solicitar_cita_estudiante' %}" class="btn btn-primary">➕ Solicitar nueva cita</a>
+  <a href="{% url 'solicitar_cita_estudiante' %}" class="btn btn-primary"><i class="bi bi-plus-lg"></i> Solicitar nueva cita</a>
 </div>
 
 {% if not estudiante %}
 <div class="alert alert-warning">
-  ⚠️ Tu cuenta aún no está vinculada a un registro de estudiante. Pide a la psicóloga que vincule tu perfil para ver tus citas.
+  <i class="bi bi-exclamation-triangle"></i> Tu cuenta aún no está vinculada a un registro de estudiante. Pide a la psicóloga que vincule tu perfil para ver tus citas.
 </div>
 {% endif %}
 
 <!-- Próximas -->
 <div class="card">
   <div class="card-body">
-    <div class="card-title" style="margin-bottom:16px">🔜 Próximas citas</div>
+    <div class="card-title" style="margin-bottom:16px"><i class="bi bi-arrow-right"></i> Próximas citas</div>
     {% if proximas %}
       {% for r in proximas %}
       <div style="display:flex;align-items:center;gap:16px;padding:14px 16px;background:var(--teal-xxl);border-radius:12px;margin-bottom:10px;border-left:4px solid var(--teal)">
@@ -40,7 +40,7 @@
       {% endfor %}
     {% else %}
       <div style="text-align:center;padding:28px;color:var(--text-xs)">
-        <div style="font-size:2.5rem;margin-bottom:10px">📅</div>
+        <div style="font-size:2.5rem;margin-bottom:10px"><i class="bi bi-calendar3"></i></div>
         No tienes citas programadas próximamente.<br>
         <a href="{% url 'solicitar_cita_estudiante' %}" style="color:var(--teal-d);font-weight:600">Solicitar una cita →</a>
       </div>
@@ -52,7 +52,7 @@
 {% if pasadas %}
 <div class="card">
   <div class="card-body">
-    <div class="card-title" style="margin-bottom:16px">🗂️ Citas anteriores</div>
+    <div class="card-title" style="margin-bottom:16px"><i class="bi bi-folder2"></i> Citas anteriores</div>
     {% for r in pasadas %}
     <div style="display:flex;align-items:center;gap:16px;padding:12px 14px;border-radius:10px;margin-bottom:8px;border:1px solid var(--teal-xl)">
       <div style="text-align:center;min-width:46px">

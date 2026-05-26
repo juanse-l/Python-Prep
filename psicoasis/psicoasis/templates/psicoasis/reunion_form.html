@@ -3,7 +3,7 @@
 {% block topbar_title %}{{ titulo }}{% endblock %}
 {% block content %}
 
-<div class="page-header"><h1>{{ titulo }} 📅</h1></div>
+<div class="page-header"><h1>{{ titulo }} <i class="bi bi-calendar3"></i></h1></div>
 <div style="max-width:700px">
 <div class="card">
   <div class="card-body">
@@ -47,7 +47,7 @@
 
           <!-- Mini-calendario de aplazamiento -->
           <div id="aplazado-panel" style="display:none;margin-top:12px;background:var(--sage-xxl,#f4f9f4);border:1.5px solid #c8e0cb;border-radius:12px;padding:16px">
-            <p style="font-size:.78rem;font-weight:700;color:var(--text-s);margin-bottom:10px">📅 ¿Para cuándo se aplaza?</p>
+            <p style="font-size:.78rem;font-weight:700;color:var(--text-s);margin-bottom:10px"><i class="bi bi-calendar3"></i> ¿Para cuándo se aplaza?</p>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
               <div>
                 <label style="font-size:.75rem;color:var(--text-xs);display:block;margin-bottom:4px">Nueva fecha *</label>
@@ -60,7 +60,7 @@
             </div>
             <!-- Resumen visual -->
             <div id="aplazado-resumen" style="margin-top:10px;display:none;background:#fff;border-radius:8px;padding:10px 12px;font-size:.8rem;color:var(--text-s);border:1px solid #d4e8d6">
-              🕐 Cita aplazada para el <strong id="resumen-fecha"></strong> a las <strong id="resumen-hora"></strong>
+              <i class="bi bi-clock"></i> Cita aplazada para el <strong id="resumen-fecha"></strong> a las <strong id="resumen-hora"></strong>
             </div>
           </div>
         </div>

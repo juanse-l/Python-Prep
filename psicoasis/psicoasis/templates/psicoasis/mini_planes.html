@@ -2,57 +2,57 @@
 {% block title %}Mini Planes de Autocuidado — PsicoAsis{% endblock %}
 {% block topbar_title %}Mini Planes de Autocuidado{% endblock %}
 {% block content %}
-<div class="page-header"><h1>Mini Planes de Autocuidado 🗓️</h1><p>Rutinas personalizadas para el bienestar diario</p></div>
+<div class="page-header"><h1>Mini Planes de Autocuidado <i class="bi bi-calendar3"></i>️</h1><p>Rutinas personalizadas para el bienestar diario</p></div>
 {% if recursos %}
 <div class="grid-3">{% for r in recursos %}<div class="card"><div class="card-body"><h3>{{ r.titulo }}</h3><p style="font-size:.84rem;color:var(--text-s)">{{ r.descripcion }}</p></div></div>{% endfor %}</div>
 {% else %}
 <div class="grid-2 mb-4">
 
   <div class="card">
-    <div class="card-header" style="background:linear-gradient(135deg,var(--sage-xxl),var(--sage-xl))"><span class="card-title">🌅 Plan Matutino (10 min)</span></div>
+    <div class="card-header" style="background:linear-gradient(135deg,var(--sage-xxl),var(--sage-xl))"><span class="card-title"><i class="bi bi-sunrise"></i> Plan Matutino (10 min)</span></div>
     <div class="card-body" style="padding-top:16px">
       <p style="font-size:.84rem;color:var(--text-s);margin-bottom:14px">Comienza el día con intención. Esta rutina de 10 minutos mejora el estado de ánimo y la concentración para el día escolar.</p>
       <div style="display:flex;flex-direction:column;gap:10px">
         <div style="display:flex;gap:12px;align-items:flex-start">
           <div style="background:var(--sage);color:white;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0">1</div>
-          <div><div style="font-weight:600;font-size:.84rem">🙏 Gratitud (2 min)</div><div style="font-size:.78rem;color:var(--text-xs);margin-top:2px">Nombra mentalmente 3 cosas por las que estás agradecido hoy</div></div>
+          <div><div style="font-weight:600;font-size:.84rem"><i class="bi bi-hands"></i> Gratitud (2 min)</div><div style="font-size:.78rem;color:var(--text-xs);margin-top:2px">Nombra mentalmente 3 cosas por las que estás agradecido hoy</div></div>
         </div>
         <div style="display:flex;gap:12px;align-items:flex-start">
           <div style="background:var(--sage);color:white;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0">2</div>
-          <div><div style="font-weight:600;font-size:.84rem">🫁 Respiración (3 min)</div><div style="font-size:.78rem;color:var(--text-xs);margin-top:2px">Técnica 4-7-8: inhala 4, retén 7, exhala 8 segundos</div></div>
+          <div><div style="font-weight:600;font-size:.84rem"><i class="bi bi-wind"></i> Respiración (3 min)</div><div style="font-size:.78rem;color:var(--text-xs);margin-top:2px">Técnica 4-7-8: inhala 4, retén 7, exhala 8 segundos</div></div>
         </div>
         <div style="display:flex;gap:12px;align-items:flex-start">
           <div style="background:var(--sage);color:white;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0">3</div>
-          <div><div style="font-weight:600;font-size:.84rem">🌟 Intención del día (2 min)</div><div style="font-size:.78rem;color:var(--text-xs);margin-top:2px">¿Cuál es tu meta principal de hoy? ¿Cómo quieres sentirte?</div></div>
+          <div><div style="font-weight:600;font-size:.84rem"><i class="bi bi-star-fill"></i> Intención del día (2 min)</div><div style="font-size:.78rem;color:var(--text-xs);margin-top:2px">¿Cuál es tu meta principal de hoy? ¿Cómo quieres sentirte?</div></div>
         </div>
         <div style="display:flex;gap:12px;align-items:flex-start">
           <div style="background:var(--sage);color:white;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0">4</div>
-          <div><div style="font-weight:600;font-size:.84rem">🚶 Movimiento suave (3 min)</div><div style="font-size:.78rem;color:var(--text-xs);margin-top:2px">Estiramientos o una caminata corta para despertar el cuerpo</div></div>
+          <div><div style="font-weight:600;font-size:.84rem"><i class="bi bi-person-walking"></i> Movimiento suave (3 min)</div><div style="font-size:.78rem;color:var(--text-xs);margin-top:2px">Estiramientos o una caminata corta para despertar el cuerpo</div></div>
         </div>
       </div>
     </div>
   </div>
 
   <div class="card">
-    <div class="card-header" style="background:linear-gradient(135deg,#fdf0e8,#f5d4b8)"><span class="card-title">🌙 Plan Nocturno (15 min)</span></div>
+    <div class="card-header" style="background:linear-gradient(135deg,#fdf0e8,#f5d4b8)"><span class="card-title"><i class="bi bi-moon-stars"></i> Plan Nocturno (15 min)</span></div>
     <div class="card-body" style="padding-top:16px">
       <p style="font-size:.84rem;color:var(--text-s);margin-bottom:14px">Cierra el día con calma. Esta rutina mejora la calidad del sueño y reduce el estrés acumulado durante la jornada escolar.</p>
       <div style="display:flex;flex-direction:column;gap:10px">
         <div style="display:flex;gap:12px;align-items:flex-start">
           <div style="background:#e8a020;color:white;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0">1</div>
-          <div><div style="font-weight:600;font-size:.84rem">📵 Desconexión digital (antes)</div><div style="font-size:.78rem;color:var(--text-xs);margin-top:2px">Apaga las pantallas 30 min antes de esta rutina</div></div>
+          <div><div style="font-weight:600;font-size:.84rem"><i class="bi bi-phone-slash"></i> Desconexión digital (antes)</div><div style="font-size:.78rem;color:var(--text-xs);margin-top:2px">Apaga las pantallas 30 min antes de esta rutina</div></div>
         </div>
         <div style="display:flex;gap:12px;align-items:flex-start">
           <div style="background:#e8a020;color:white;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0">2</div>
-          <div><div style="font-weight:600;font-size:.84rem">📓 Revisión del día (5 min)</div><div style="font-size:.78rem;color:var(--text-xs);margin-top:2px">Escribe lo mejor del día y algo que aprendiste</div></div>
+          <div><div style="font-weight:600;font-size:.84rem"><i class="bi bi-journal"></i> Revisión del día (5 min)</div><div style="font-size:.78rem;color:var(--text-xs);margin-top:2px">Escribe lo mejor del día y algo que aprendiste</div></div>
         </div>
         <div style="display:flex;gap:12px;align-items:flex-start">
           <div style="background:#e8a020;color:white;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0">3</div>
-          <div><div style="font-weight:600;font-size:.84rem">🧘 Relajación progresiva (7 min)</div><div style="font-size:.78rem;color:var(--text-xs);margin-top:2px">Tensa y suelta cada grupo muscular desde pies a cabeza</div></div>
+          <div><div style="font-weight:600;font-size:.84rem"><i class="bi bi-peace"></i> Relajación progresiva (7 min)</div><div style="font-size:.78rem;color:var(--text-xs);margin-top:2px">Tensa y suelta cada grupo muscular desde pies a cabeza</div></div>
         </div>
         <div style="display:flex;gap:12px;align-items:flex-start">
           <div style="background:#e8a020;color:white;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0">4</div>
-          <div><div style="font-weight:600;font-size:.84rem">💭 Visualización positiva (3 min)</div><div style="font-size:.78rem;color:var(--text-xs);margin-top:2px">Imagina un lugar seguro y tranquilo donde te sientes en paz</div></div>
+          <div><div style="font-weight:600;font-size:.84rem"><i class="bi bi-chat-quote"></i> Visualización positiva (3 min)</div><div style="font-size:.78rem;color:var(--text-xs);margin-top:2px">Imagina un lugar seguro y tranquilo donde te sientes en paz</div></div>
         </div>
       </div>
     </div>
@@ -62,17 +62,17 @@
 
 <!-- Plan semanal -->
 <div class="card mb-4">
-  <div class="card-header"><span class="card-title">📆 Plan Semanal de Bienestar</span></div>
+  <div class="card-header"><span class="card-title"><i class="bi bi-calendar3"></i> Plan Semanal de Bienestar</span></div>
   <div class="card-body">
     <p style="font-size:.84rem;color:var(--text-s);margin-bottom:16px">Pequeñas acciones diarias que acumulan un gran impacto en el bienestar emocional a lo largo de la semana.</p>
     <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:8px">
-      <div style="background:var(--sage-xxl);border-radius:12px;padding:12px;text-align:center"><div style="font-size:.72rem;font-weight:700;color:var(--sage);text-transform:uppercase">Lun</div><div style="font-size:1.2rem;margin:8px 0">🎯</div><div style="font-size:.7rem;color:var(--text-s)">Establece metas de la semana</div></div>
-      <div style="background:#fdf0e8;border-radius:12px;padding:12px;text-align:center"><div style="font-size:.72rem;font-weight:700;color:#e8a020;text-transform:uppercase">Mar</div><div style="font-size:1.2rem;margin:8px 0">🤝</div><div style="font-size:.7rem;color:var(--text-s)">Conecta con alguien significativo</div></div>
-      <div style="background:#eef0fe;border-radius:12px;padding:12px;text-align:center"><div style="font-size:.72rem;font-weight:700;color:#6c5ce7;text-transform:uppercase">Mié</div><div style="font-size:1.2rem;margin:8px 0">🌿</div><div style="font-size:.7rem;color:var(--text-s)">Tiempo en la naturaleza</div></div>
-      <div style="background:#fff0e8;border-radius:12px;padding:12px;text-align:center"><div style="font-size:.72rem;font-weight:700;color:#e17055;text-transform:uppercase">Jue</div><div style="font-size:1.2rem;margin:8px 0">📚</div><div style="font-size:.7rem;color:var(--text-s)">Lee algo que te inspire</div></div>
-      <div style="background:#e8f8e8;border-radius:12px;padding:12px;text-align:center"><div style="font-size:.72rem;font-weight:700;color:#27ae60;text-transform:uppercase">Vie</div><div style="font-size:1.2rem;margin:8px 0">🎉</div><div style="font-size:.7rem;color:var(--text-s)">Celebra tus logros de la semana</div></div>
-      <div style="background:#fff9e6;border-radius:12px;padding:12px;text-align:center"><div style="font-size:.72rem;font-weight:700;color:#f39c12;text-transform:uppercase">Sáb</div><div style="font-size:1.2rem;margin:8px 0">🎨</div><div style="font-size:.7rem;color:var(--text-s)">Actividad creativa y lúdica</div></div>
-      <div style="background:#f8e8f8;border-radius:12px;padding:12px;text-align:center"><div style="font-size:.72rem;font-weight:700;color:#8e44ad;text-transform:uppercase">Dom</div><div style="font-size:1.2rem;margin:8px 0">😴</div><div style="font-size:.7rem;color:var(--text-s)">Descanso y recarga de energía</div></div>
+      <div style="background:var(--sage-xxl);border-radius:12px;padding:12px;text-align:center"><div style="font-size:.72rem;font-weight:700;color:var(--sage);text-transform:uppercase">Lun</div><div style="font-size:1.2rem;margin:8px 0"><i class="bi bi-bullseye"></i></div><div style="font-size:.7rem;color:var(--text-s)">Establece metas de la semana</div></div>
+      <div style="background:#fdf0e8;border-radius:12px;padding:12px;text-align:center"><div style="font-size:.72rem;font-weight:700;color:#e8a020;text-transform:uppercase">Mar</div><div style="font-size:1.2rem;margin:8px 0"><i class="bi bi-handshake"></i></div><div style="font-size:.7rem;color:var(--text-s)">Conecta con alguien significativo</div></div>
+      <div style="background:#eef0fe;border-radius:12px;padding:12px;text-align:center"><div style="font-size:.72rem;font-weight:700;color:#6c5ce7;text-transform:uppercase">Mié</div><div style="font-size:1.2rem;margin:8px 0"><i class="bi bi-flower2"></i></div><div style="font-size:.7rem;color:var(--text-s)">Tiempo en la naturaleza</div></div>
+      <div style="background:#fff0e8;border-radius:12px;padding:12px;text-align:center"><div style="font-size:.72rem;font-weight:700;color:#e17055;text-transform:uppercase">Jue</div><div style="font-size:1.2rem;margin:8px 0"><i class="bi bi-book"></i></div><div style="font-size:.7rem;color:var(--text-s)">Lee algo que te inspire</div></div>
+      <div style="background:#e8f8e8;border-radius:12px;padding:12px;text-align:center"><div style="font-size:.72rem;font-weight:700;color:#27ae60;text-transform:uppercase">Vie</div><div style="font-size:1.2rem;margin:8px 0"><i class="bi bi-balloon-fill"></i></div><div style="font-size:.7rem;color:var(--text-s)">Celebra tus logros de la semana</div></div>
+      <div style="background:#fff9e6;border-radius:12px;padding:12px;text-align:center"><div style="font-size:.72rem;font-weight:700;color:#f39c12;text-transform:uppercase">Sáb</div><div style="font-size:1.2rem;margin:8px 0"><i class="bi bi-palette"></i></div><div style="font-size:.7rem;color:var(--text-s)">Actividad creativa y lúdica</div></div>
+      <div style="background:#f8e8f8;border-radius:12px;padding:12px;text-align:center"><div style="font-size:.72rem;font-weight:700;color:#8e44ad;text-transform:uppercase">Dom</div><div style="font-size:1.2rem;margin:8px 0"><i class="bi bi-moon-stars"></i></div><div style="font-size:.7rem;color:var(--text-s)">Descanso y recarga de energía</div></div>
     </div>
   </div>
 </div>

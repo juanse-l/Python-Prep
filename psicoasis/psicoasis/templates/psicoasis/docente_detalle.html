@@ -2,7 +2,7 @@
 {% block title %}{{ docente.nombre }} {{ docente.apellido }} — PsicoAsis{% endblock %}
 {% block topbar_title %}Docente{% endblock %}
 {% block topbar_actions %}
-  <a href="{% url 'docente_editar' docente.pk %}" class="btn btn-outline btn-sm">✏️ Editar</a>
+  <a href="{% url 'docente_editar' docente.pk %}" class="btn btn-outline btn-sm"><i class="bi bi-pencil"></i> Editar</a>
   <a href="{% url 'seguimiento_docente_nuevo' %}?docente={{ docente.pk }}" class="btn btn-primary btn-sm">+ Nuevo seguimiento</a>
 {% endblock %}
 {% block content %}
@@ -11,7 +11,7 @@
   <div>
     <h1 style="font-size:1.5rem;margin-bottom:4px">{{ docente.nombre }} {{ docente.apellido }}</h1>
     <div style="color:var(--text-s);font-size:.88rem">{{ docente.get_area_display }} {% if docente.grados_a_cargo %}· Grados: {{ docente.grados_a_cargo }}{% endif %}</div>
-    {% if docente.email %}<div style="color:var(--text-xs);font-size:.8rem;margin-top:4px">✉️ {{ docente.email }} {% if docente.telefono %}· 📞 {{ docente.telefono }}{% endif %}</div>{% endif %}
+    {% if docente.email %}<div style="color:var(--text-xs);font-size:.8rem;margin-top:4px"><i class="bi bi-envelope"></i> {{ docente.email }} {% if docente.telefono %}· <i class="bi bi-telephone"></i> {{ docente.telefono }}{% endif %}</div>{% endif %}
   </div>
 </div>
 
@@ -38,7 +38,7 @@
   </div>
   {% else %}
   <div class="empty-state" style="padding:24px">
-    <span class="empty-icon">📋</span>
+    <span class="empty-icon"><i class="bi bi-clipboard"></i></span>
     <div class="empty-title">Sin seguimientos</div>
     <a href="{% url 'seguimiento_docente_nuevo' %}?docente={{ docente.pk }}" class="btn btn-primary btn-sm mt-2">Registrar primer seguimiento</a>
   </div>

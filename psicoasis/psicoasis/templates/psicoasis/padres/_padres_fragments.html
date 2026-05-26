@@ -15,7 +15,7 @@ Crea un archivo .html separado para cada uno.
 {# {% block content %} #}
 
 <div class="section-hd">
-  <div class="section-title">👨‍👩‍👧 Padres y Tutores registrados</div>
+  <div class="section-title"><i class="bi bi-house-heart"></i> Padres y Tutores registrados</div>
   <a href="{% url 'padre_nuevo' %}" class="btn btn-primary">+ Registrar padre</a>
 </div>
 
@@ -53,8 +53,8 @@ Crea un archivo .html separado para cada uno.
           </td>
           <td style="padding:14px 18px;">
             <div style="display:flex;gap:6px;">
-              <a href="{% url 'padre_vincular' padre.id %}" class="btn btn-outline btn-sm">🔗 Vincular</a>
-              <a href="{% url 'bandeja_mensajes_padres' %}?padre_id={{ padre.id }}" class="btn btn-outline btn-sm">✉️ Mensajes</a>
+              <a href="{% url 'padre_vincular' padre.id %}" class="btn btn-outline btn-sm"><i class="bi bi-link-45deg"></i> Vincular</a>
+              <a href="{% url 'bandeja_mensajes_padres' %}?padre_id={{ padre.id }}" class="btn btn-outline btn-sm"><i class="bi bi-envelope"></i> Mensajes</a>
             </div>
           </td>
         </tr>
@@ -65,7 +65,7 @@ Crea un archivo .html separado para cada uno.
 </div>
 {% else %}
 <div style="text-align:center;padding:48px;color:var(--text-xs);">
-  <div style="font-size:2.5rem;margin-bottom:12px;">👨‍👩‍👧</div>
+  <div style="font-size:2.5rem;margin-bottom:12px;"><i class="bi bi-house-heart"></i></div>
   <div style="font-weight:600;margin-bottom:6px;">Aún no hay padres registrados</div>
   <div style="font-size:.85rem;">Registra el primer padre/tutor para vincularlos con sus hijos.</div>
   <a href="{% url 'padre_nuevo' %}" class="btn btn-primary" style="margin-top:16px;">+ Registrar padre</a>

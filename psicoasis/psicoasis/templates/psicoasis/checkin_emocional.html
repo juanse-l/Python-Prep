@@ -1,6 +1,6 @@
 {% extends 'psicoasis/base_estudiante.html' %}
 {% block title %}Cómo me siento hoy — PsicoAsis{% endblock %}
-{% block topbar_title %}💚 Cómo me siento{% endblock %}
+{% block topbar_title %}<i class="bi bi-heart-fill" style="color:#4f8a5a"></i> Cómo me siento{% endblock %}
 {% block content %}
 
 <div class="page-header">
@@ -45,7 +45,7 @@
 
   <div class="card">
     <div class="card-body">
-      <div class="card-title" style="margin-bottom:16px">📊 Historial reciente</div>
+      <div class="card-title" style="margin-bottom:16px"><i class="bi bi-bar-chart"></i> Historial reciente</div>
       {% if historial %}
         <div style="display:flex;flex-direction:column;gap:10px">
           {% for c in historial %}
@@ -56,14 +56,14 @@
               <div style="font-size:.7rem;color:var(--text-xs)">{{ c.fecha|date:"l d M" }}</div>
             </div>
             {% if c.nota_privada %}
-            <span title="Tiene nota privada" style="font-size:.75rem;color:var(--teal-d)">📝</span>
+            <span title="Tiene nota privada" style="font-size:.75rem;color:var(--teal-d)"><i class="bi bi-pencil"></i></span>
             {% endif %}
           </div>
           {% endfor %}
         </div>
       {% else %}
         <div style="text-align:center;padding:30px;color:var(--text-xs)">
-          <div style="font-size:2rem;margin-bottom:8px">📅</div>
+          <div style="font-size:2rem;margin-bottom:8px"><i class="bi bi-calendar3"></i></div>
           Aún no tienes registros anteriores.
         </div>
       {% endif %}

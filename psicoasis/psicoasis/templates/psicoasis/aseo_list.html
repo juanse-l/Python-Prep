@@ -9,7 +9,7 @@
 <div class="page-header">
   <div class="page-header-row">
     <div>
-      <h1>Servicio de Aseo 🧹</h1>
+      <h1>Servicio de Aseo <i class="bi bi-brush"></i></h1>
       <p>{{ total }} persona{{ total|pluralize }} registrada{{ total|pluralize }}</p>
     </div>
   </div>
@@ -84,7 +84,7 @@
   </div>
   {% else %}
   <div class="empty-state">
-    <span class="empty-icon">🧹</span>
+    <span class="empty-icon"><i class="bi bi-brush"></i></span>
     <div class="empty-title">Sin personal registrado</div>
     <p class="empty-desc">{% if query %}No se encontraron resultados para "{{ query }}".{% else %}Aún no hay personal de aseo registrado.{% endif %}</p>
     <a href="{% url 'aseo_nuevo' %}" class="btn btn-primary btn-sm">+ Registrar personal</a>

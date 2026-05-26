@@ -1,11 +1,11 @@
 {% extends "psicoasis/profesores/base_profesor.html" %}
 {% block title %}Inicio — Panel Docente{% endblock %}
-{% block topbar_title %}👩‍🏫 Mi Panel Docente{% endblock %}
+{% block topbar_title %}<i class="bi bi-person-workspace"></i> Mi Panel Docente{% endblock %}
 
 {% block content %}
 <div style="margin-bottom:24px;">
   <h1 style="font-family:'Playfair Display',serif;font-size:1.6rem;font-weight:700;color:var(--text);">
-    Bienvenido/a, {{ request.user.first_name|default:request.user.username }} 👋
+    Bienvenido/a, {{ request.user.first_name|default:request.user.username }} <i class="bi bi-hand-wave"></i>
   </h1>
   <p style="color:var(--text-xs);font-size:.88rem;margin-top:4px;">
     {% if grados %}Grados a cargo: <strong>{{ grados|join:", " }}</strong>{% endif %}
@@ -15,22 +15,22 @@
 <!-- STAT GRID -->
 <div class="stat-grid">
   <div class="stat-card">
-    <div class="stat-icon">🔔</div>
+    <div class="stat-icon"><i class="bi bi-bell"></i></div>
     <div class="stat-val">{{ contadores.notif_no_leidas }}</div>
     <div class="stat-label">Notificaciones sin leer</div>
   </div>
   <div class="stat-card">
-    <div class="stat-icon">🚨</div>
+    <div class="stat-icon"><i class="bi bi-exclamation-octagon-fill"></i></div>
     <div class="stat-val">{{ contadores.alertas_pendientes }}</div>
     <div class="stat-label">Alertas pendientes</div>
   </div>
   <div class="stat-card">
-    <div class="stat-icon">📅</div>
+    <div class="stat-icon"><i class="bi bi-calendar3"></i></div>
     <div class="stat-val">{{ contadores.citas_proximas }}</div>
     <div class="stat-label">Citas confirmadas</div>
   </div>
   <div class="stat-card">
-    <div class="stat-icon">💬</div>
+    <div class="stat-icon"><i class="bi bi-chat-dots"></i></div>
     <div class="stat-val">{{ contadores.mensajes_no_leidos }}</div>
     <div class="stat-label">Mensajes sin leer</div>
   </div>
@@ -41,7 +41,7 @@
   <!-- Alertas recientes -->
   <div class="card">
     <div class="card-header">
-      <div class="card-title">🚨 Mis alertas recientes</div>
+      <div class="card-title"><i class="bi bi-exclamation-octagon-fill"></i> Mis alertas recientes</div>
       <div class="card-sub">Estudiantes que has reportado a orientación</div>
     </div>
     <div class="card-body">
@@ -67,7 +67,7 @@
   <div>
     {% if proxima_cita %}
     <div class="card" style="margin-bottom:16px;">
-      <div class="card-header"><div class="card-title">📅 Próxima cita</div></div>
+      <div class="card-header"><div class="card-title"><i class="bi bi-calendar3"></i> Próxima cita</div></div>
       <div class="card-body">
         <div style="font-size:1rem;font-weight:700;color:var(--indigo);">{{ proxima_cita.fecha_confirmada|date:"l d/m/Y" }}</div>
         <div style="font-size:.85rem;color:var(--text-s);">{{ proxima_cita.hora_confirmada|time:"H:i" }} — {{ proxima_cita.get_tipo_display }}</div>
@@ -80,22 +80,22 @@
 
     <!-- Mi bienestar esta semana -->
     <div class="card">
-      <div class="card-header"><div class="card-title">🧘 Mi bienestar esta semana</div></div>
+      <div class="card-header"><div class="card-title"><i class="bi bi-peace"></i> Mi bienestar esta semana</div></div>
       <div class="card-body">
         {% if ultima_autoevaluacion %}
           <div style="font-size:2rem;text-align:center;margin-bottom:8px;">
-            {% if ultima_autoevaluacion.bienestar == 'excelente' %}😄
-            {% elif ultima_autoevaluacion.bienestar == 'bien' %}🙂
-            {% elif ultima_autoevaluacion.bienestar == 'regular' %}😐
-            {% elif ultima_autoevaluacion.bienestar == 'agotado' %}😔
-            {% else %}😢{% endif %}
+            {% if ultima_autoevaluacion.bienestar == 'excelente' %}<i class="bi bi-emoji-laughing"></i>
+            {% elif ultima_autoevaluacion.bienestar == 'bien' %}<i class="bi bi-emoji-smile"></i>
+            {% elif ultima_autoevaluacion.bienestar == 'regular' %}<i class="bi bi-emoji-neutral"></i>
+            {% elif ultima_autoevaluacion.bienestar == 'agotado' %}<i class="bi bi-emoji-frown"></i>
+            {% else %}<i class="bi bi-emoji-tear"></i>{% endif %}
           </div>
           <div style="text-align:center;font-size:.88rem;font-weight:600;">{{ ultima_autoevaluacion.get_bienestar_display }}</div>
           <div style="text-align:center;font-size:.75rem;color:var(--text-xs);">Semana del {{ ultima_autoevaluacion.semana|date:"d/m" }}</div>
           <a href="{% url 'bienestar_profesor' %}" class="btn btn-secondary btn-sm" style="margin-top:12px;width:100%;justify-content:center;">Ver historial</a>
         {% else %}
           <p style="color:var(--text-xs);font-size:.85rem;text-align:center;">Aún no has hecho tu check-in de esta semana.</p>
-          <a href="{% url 'bienestar_profesor' %}" class="btn btn-primary btn-sm" style="margin-top:10px;width:100%;justify-content:center;">Hacer check-in 🧘</a>
+          <a href="{% url 'bienestar_profesor' %}" class="btn btn-primary btn-sm" style="margin-top:10px;width:100%;justify-content:center;">Hacer check-in <i class="bi bi-peace"></i></a>
         {% endif %}
       </div>
     </div>
@@ -107,7 +107,7 @@
 {% if recursos %}
 <div class="card" style="margin-top:8px;">
   <div class="card-header">
-    <div class="card-title">📚 Recursos recientes de orientación</div>
+    <div class="card-title"><i class="bi bi-book"></i> Recursos recientes de orientación</div>
     <div class="card-sub">Materiales compartidos por la psicóloga para docentes</div>
   </div>
   <div class="card-body">
@@ -115,7 +115,7 @@
       {% for r in recursos %}
       <div style="padding:14px;border:1.5px solid var(--indigo-xl);border-radius:12px;background:var(--indigo-xxl);">
         <div style="font-size:1.1rem;margin-bottom:6px;">
-          {% if r.tipo == 'guia' %}📄{% elif r.tipo == 'estrategia' %}🛠️{% elif r.tipo == 'protocolo' %}📋{% elif r.tipo == 'video' %}🎥{% else %}🖼️{% endif %}
+          {% if r.tipo == 'guia' %}<i class="bi bi-file-earmark"></i>{% elif r.tipo == 'estrategia' %}<i class="bi bi-tools"></i>️{% elif r.tipo == 'protocolo' %}<i class="bi bi-clipboard"></i>{% elif r.tipo == 'video' %}<i class="bi bi-camera-video"></i>{% else %}<i class="bi bi-image"></i>️{% endif %}
         </div>
         <div style="font-size:.85rem;font-weight:700;margin-bottom:4px;">{{ r.titulo|truncatechars:50 }}</div>
         <div style="font-size:.75rem;color:var(--text-xs);">{{ r.get_categoria_display }}</div>

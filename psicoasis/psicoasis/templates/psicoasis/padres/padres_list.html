@@ -4,7 +4,7 @@
 {% block content %}
 <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
   <div>
-    <h1 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;">👨‍👩‍👧 Padres y Tutores</h1>
+    <h1 style="font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;"><i class="bi bi-house-heart"></i> Padres y Tutores</h1>
     <p style="color:#7a9aaa;font-size:.85rem;margin-top:4px;">{{ padres|length }} cuenta{{ padres|length|pluralize }} registrada{{ padres|length|pluralize }}</p>
   </div>
   <a href="{% url 'padre_nuevo' %}" class="btn btn-primary">+ Nuevo padre/tutor</a>
@@ -60,7 +60,7 @@
   <a href="{% url 'citas_padres_psicologo' %}" style="text-decoration:none;">
     <div class="card" style="margin-bottom:0;">
       <div class="card-body" style="display:flex;align-items:center;gap:14px;">
-        <span style="font-size:1.8rem;">📅</span>
+        <span style="font-size:1.8rem;"><i class="bi bi-calendar3"></i></span>
         <div><div style="font-weight:700;">Citas de padres</div><div style="font-size:.78rem;color:#7a9aaa;">Gestionar citas</div></div>
       </div>
     </div>
@@ -68,7 +68,7 @@
   <a href="{% url 'bandeja_mensajes_padres' %}" style="text-decoration:none;">
     <div class="card" style="margin-bottom:0;">
       <div class="card-body" style="display:flex;align-items:center;gap:14px;">
-        <span style="font-size:1.8rem;">💬</span>
+        <span style="font-size:1.8rem;"><i class="bi bi-chat-dots"></i></span>
         <div><div style="font-weight:700;">Mensajes</div><div style="font-size:.78rem;color:#7a9aaa;">Chat con padres</div></div>
       </div>
     </div>

@@ -3,7 +3,7 @@
 {% block topbar_title %}Búsqueda{% endblock %}
 {% block content %}
 
-<div class="page-header"><h1>Búsqueda 🔍</h1></div>
+<div class="page-header"><h1>Búsqueda <i class="bi bi-search"></i></h1></div>
 <form method="get" class="flex gap-2 mb-6">
   <input type="text" name="q" class="form-control" placeholder="Buscar estudiantes, reuniones, informes..." value="{{ query }}" style="flex:1">
   <button type="submit" class="btn btn-primary">Buscar</button>
@@ -13,7 +13,7 @@
 <div style="display:flex;flex-direction:column;gap:20px">
   {% if estudiantes %}
   <div class="card">
-    <div class="card-header"><span class="card-title">👥 Estudiantes ({{ estudiantes.count }})</span></div>
+    <div class="card-header"><span class="card-title"><i class="bi bi-people"></i> Estudiantes ({{ estudiantes.count }})</span></div>
     <div class="table-wrap"><table><thead><tr><th>Nombre</th><th>Grado</th></tr></thead><tbody>
     {% for e in estudiantes %}
     <tr><td><a href="{% url 'estudiante_detalle' e.pk %}" style="color:var(--sage);font-weight:600">{{ e.get_full_name }}</a></td><td>{{ e.grado }}</td></tr>
@@ -22,7 +22,7 @@
   </div>
   {% endif %}
   {% if not estudiantes and not reuniones and not informes %}
-  <div class="card"><div class="empty-state"><span class="empty-icon">🔍</span><div class="empty-title">Sin resultados</div><p class="empty-desc">No se encontró nada para "{{ query }}".</p></div></div>
+  <div class="card"><div class="empty-state"><span class="empty-icon"><i class="bi bi-search"></i></span><div class="empty-title">Sin resultados</div><p class="empty-desc">No se encontró nada para "{{ query }}".</p></div></div>
   {% endif %}
 </div>
 {% endif %}

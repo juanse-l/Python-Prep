@@ -1,6 +1,6 @@
 {% extends 'psicoasis/base_estudiante.html' %}
 {% block title %}Foro Emocional — PsicoAsis{% endblock %}
-{% block topbar_title %}💌 Foro Emocional{% endblock %}
+{% block topbar_title %}<i class="bi bi-envelope-heart"></i> Foro Emocional{% endblock %}
 {% block extra_css %}
 <style>
   .pub-card { background:white; border-radius:18px; border:1px solid var(--teal-xl); margin-bottom:18px; overflow:hidden; transition:box-shadow .2s; }
@@ -21,13 +21,13 @@
 {% block content %}
 
 <div class="page-header">
-  <h1>💌 Foro Emocional</h1>
+  <h1><i class="bi bi-envelope-heart"></i> Foro Emocional</h1>
   <p>Estrategias, mensajes y recursos de bienestar emocional publicados por tu psicóloga.</p>
 </div>
 
 <!-- Filtros -->
 <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px">
-  <a href="{% url 'foro_emocional_estudiante' %}" class="cat-pill {% if not cat_activa %}active{% endif %}">🌿 Todos</a>
+  <a href="{% url 'foro_emocional_estudiante' %}" class="cat-pill {% if not cat_activa %}active{% endif %}"><i class="bi bi-flower2"></i> Todos</a>
   {% for val, label in categorias %}
   <a href="?cat={{ val }}" class="cat-pill {% if cat_activa == val %}active{% endif %}">{{ label }}</a>
   {% endfor %}
@@ -43,7 +43,7 @@
     </div>
     <div style="flex:1">
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:4px">
-        {% if pub.fijado %}<span class="pin-badge">📌 Destacado</span>{% endif %}
+        {% if pub.fijado %}<span class="pin-badge"><i class="bi bi-pin-fill"></i> Destacado</span>{% endif %}
         <span class="badge-tipo" style="{% if pub.tipo == 'estrategia' %}background:#e8f5e9;color:#2a6a3a;{% elif pub.tipo == 'reflexion' %}background:#f0eef9;color:#5a4298;{% elif pub.tipo == 'recurso' %}background:#fff3e8;color:#8a4a10;{% else %}background:#e8f7fa;color:#1a5a6a;{% endif %}">
           {{ pub.get_tipo_display }}
         </span>
@@ -67,12 +67,12 @@
 
   <div class="pub-footer">
     <a href="{% url 'foro_publicacion_detalle' pub.pk %}" class="btn btn-sm btn-outline">Leer completo →</a>
-    <span style="margin-left:auto;font-size:.75rem;color:var(--text-xs)">💚 De tu psicóloga para ti</span>
+    <span style="margin-left:auto;font-size:.75rem;color:var(--text-xs)"><i class="bi bi-heart-fill" style="color:#4f8a5a"></i> De tu psicóloga para ti</span>
   </div>
 </div>
 {% empty %}
 <div style="text-align:center;padding:60px 20px;color:var(--text-xs)">
-  <div style="font-size:3rem;margin-bottom:14px">📭</div>
+  <div style="font-size:3rem;margin-bottom:14px"><i class="bi bi-envelope-open"></i></div>
   <div style="font-weight:600;color:var(--text-s);margin-bottom:6px">Aún no hay publicaciones</div>
   <p style="font-size:.85rem">Tu psicóloga publicará estrategias y mensajes de bienestar muy pronto.</p>
 </div>

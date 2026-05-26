@@ -6,7 +6,7 @@
 {% endblock %}
 {% block content %}
 <div class="page-header">
-  <h1>Docentes 🎓</h1>
+  <h1>Docentes <i class="bi bi-mortarboard"></i></h1>
   <p>{{ total }} docente{{ total|pluralize }} registrado{{ total|pluralize }}</p>
 </div>
 
@@ -45,10 +45,10 @@
           </div>
         </div>
         {% if d.grados_a_cargo %}
-        <div style="font-size:.75rem;color:var(--text-s);margin-bottom:8px">📚 Grados: {{ d.grados_a_cargo }}</div>
+        <div style="font-size:.75rem;color:var(--text-s);margin-bottom:8px"><i class="bi bi-book"></i> Grados: {{ d.grados_a_cargo }}</div>
         {% endif %}
         {% if d.email %}
-        <div style="font-size:.75rem;color:var(--text-xs)">✉️ {{ d.email }}</div>
+        <div style="font-size:.75rem;color:var(--text-xs)"><i class="bi bi-envelope"></i> {{ d.email }}</div>
         {% endif %}
         <div style="margin-top:10px;font-size:.72rem;color:var(--text-xs)">{{ d.seguimientos.count }} seguimiento{{ d.seguimientos.count|pluralize }}</div>
       </div>
@@ -58,7 +58,7 @@
 </div>
 {% else %}
 <div class="card"><div class="empty-state">
-  <span class="empty-icon">🎓</span>
+  <span class="empty-icon"><i class="bi bi-mortarboard"></i></span>
   <div class="empty-title">Sin docentes registrados</div>
   <p class="empty-desc">Agrega el primer docente para comenzar su seguimiento psicológico.</p>
   <a href="{% url 'docente_nuevo' %}" class="btn btn-primary btn-sm">+ Registrar docente</a>

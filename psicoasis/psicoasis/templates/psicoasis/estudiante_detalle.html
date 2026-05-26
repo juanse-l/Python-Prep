@@ -22,7 +22,7 @@
 <div class="grid-2 mb-6">
   <!-- Info básica -->
   <div class="card">
-    <div class="card-header"><span class="card-title">📋 Información del estudiante</span></div>
+    <div class="card-header"><span class="card-title"><i class="bi bi-clipboard"></i> Información del estudiante</span></div>
     <div class="card-body">
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
         <div>
@@ -47,7 +47,7 @@
 
   <!-- Acudiente -->
   <div class="card">
-    <div class="card-header"><span class="card-title">👨‍👩‍👧 Acudiente</span></div>
+    <div class="card-header"><span class="card-title"><i class="bi bi-house-heart"></i> Acudiente</span></div>
     <div class="card-body">
       <div style="display:flex;flex-direction:column;gap:12px">
         <div>
@@ -72,7 +72,7 @@
 <!-- Casos -->
 <div class="card mb-6">
   <div class="card-header">
-    <span class="card-title">📊 Casos ({{ casos.count }})</span>
+    <span class="card-title"><i class="bi bi-bar-chart"></i> Casos ({{ casos.count }})</span>
     <a href="{% url 'caso_nuevo' %}?estudiante={{ estudiante.pk }}" class="btn btn-outline btn-sm">+ Nuevo caso</a>
   </div>
   {% if casos %}
@@ -86,7 +86,7 @@
           <td><span class="badge badge-blue">{{ c.get_tipo_atencion_display }}</span></td>
           <td><span class="badge {% if c.estado == 'activo' %}badge-green{% elif c.estado == 'cerrado' %}badge-gray{% else %}badge-yellow{% endif %}">{{ c.get_estado_display }}</span></td>
           <td style="font-size:.8rem;color:var(--text-xs)">{{ c.fecha_apertura|date:"d M Y" }}</td>
-          <td style="white-space:nowrap"><a href="{% url 'caso_editar' c.pk %}" class="btn btn-outline btn-sm">✏️</a> <a href="{% url 'caso_eliminar' c.pk %}" class="btn btn-sm" style="background:var(--red);color:white;border:none">🗑️</a></td>
+          <td style="white-space:nowrap"><a href="{% url 'caso_editar' c.pk %}" class="btn btn-outline btn-sm"><i class="bi bi-pencil"></i></a> <a href="{% url 'caso_eliminar' c.pk %}" class="btn btn-sm" style="background:var(--red);color:white;border:none"><i class="bi bi-trash"></i></a></td>
         </tr>
         {% endfor %}
       </tbody>
@@ -94,7 +94,7 @@
   </div>
   {% else %}
   <div class="empty-state" style="padding:30px">
-    <span class="empty-icon" style="font-size:2rem">📊</span>
+    <span class="empty-icon" style="font-size:2rem"><i class="bi bi-bar-chart"></i></span>
     <div class="empty-title">Sin casos registrados</div>
     <a href="{% url 'caso_nuevo' %}?estudiante={{ estudiante.pk }}" class="btn btn-primary btn-sm" style="margin-top:10px">+ Abrir caso</a>
   </div>
@@ -104,7 +104,7 @@
 <!-- Reuniones -->
 <div class="card">
   <div class="card-header">
-    <span class="card-title">📅 Reuniones ({{ reuniones.count }})</span>
+    <span class="card-title"><i class="bi bi-calendar3"></i> Reuniones ({{ reuniones.count }})</span>
     <a href="{% url 'reunion_nueva' %}?estudiante={{ estudiante.pk }}" class="btn btn-outline btn-sm">+ Agendar</a>
   </div>
   {% if reuniones %}
@@ -125,7 +125,7 @@
   </div>
   {% else %}
   <div class="empty-state" style="padding:30px">
-    <span class="empty-icon" style="font-size:2rem">📅</span>
+    <span class="empty-icon" style="font-size:2rem"><i class="bi bi-calendar3"></i></span>
     <div class="empty-title">Sin reuniones</div>
     <a href="{% url 'reunion_nueva' %}?estudiante={{ estudiante.pk %}" class="btn btn-primary btn-sm" style="margin-top:10px">+ Agendar reunión</a>
   </div>
@@ -135,13 +135,13 @@
 <!-- Informes -->
 <div class="card" style="margin-top:24px">
   <div class="card-header">
-    <span class="card-title">📄 Informes ({{ informes.count }})</span>
+    <span class="card-title"><i class="bi bi-file-earmark"></i> Informes ({{ informes.count }})</span>
     <div style="display:flex;gap:8px;align-items:center">
       {% if informes.count > 1 %}
       <a href="{% url 'informes_estudiante_todos' estudiante.pk %}" target="_blank"
          class="btn btn-primary btn-sm"
          title="Abrir todos los informes en una sola página para imprimir o guardar como PDF">
-        🖨️ Imprimir / descargar todos ({{ informes.count }})
+        <i class="bi bi-printer"></i> Imprimir / descargar todos ({{ informes.count }})
       </a>
       {% endif %}
       <a href="{% url 'informe_nuevo' %}?estudiante={{ estudiante.pk }}" class="btn btn-outline btn-sm">+ Nuevo informe</a>
@@ -166,19 +166,19 @@
           <td><span class="badge badge-blue">{{ inf.get_tipo_display }}</span></td>
           <td>
             {% if inf.nivel_riesgo %}
-              {% if inf.nivel_riesgo == 'bajo' %}<span class="badge badge-green">🟢 Bajo</span>
-              {% elif inf.nivel_riesgo == 'medio' %}<span class="badge badge-yellow">🟡 Medio</span>
-              {% elif inf.nivel_riesgo == 'alto' %}<span style="background:#ffedd5;color:#9a3412;padding:2px 8px;border-radius:8px;font-size:.75rem;font-weight:700">🟠 Alto</span>
-              {% else %}<span class="badge badge-red">🔴 Crítico</span>{% endif %}
+              {% if inf.nivel_riesgo == 'bajo' %}<span class="badge badge-green"><span style="color:#198754">●</span> Bajo</span>
+              {% elif inf.nivel_riesgo == 'medio' %}<span class="badge badge-yellow"><span style="color:#ffc107">●</span> Medio</span>
+              {% elif inf.nivel_riesgo == 'alto' %}<span style="background:#ffedd5;color:#9a3412;padding:2px 8px;border-radius:8px;font-size:.75rem;font-weight:700"><span style="color:#fd7e14">●</span> Alto</span>
+              {% else %}<span class="badge badge-red"><span style="color:#dc3545">●</span> Crítico</span>{% endif %}
             {% else %}<span style="color:var(--text-xs);font-size:.8rem">—</span>{% endif %}
           </td>
           <td style="font-size:.8rem;color:var(--text-xs)">{{ inf.fecha_creacion|date:"d M Y" }}</td>
           <td style="white-space:nowrap;text-align:center">
-            <a href="{% url 'informe_detalle' inf.pk %}" class="btn btn-outline btn-sm" title="Ver informe">👁️ Ver</a>
+            <a href="{% url 'informe_detalle' inf.pk %}" class="btn btn-outline btn-sm" title="Ver informe"><i class="bi bi-eye"></i> Ver</a>
             <a href="{% url 'informe_detalle' inf.pk %}" target="_blank"
                class="btn btn-sm" style="background:var(--sage-xxl);color:var(--sage);border:1px solid var(--sage-xl)"
-               title="Imprimir / descargar este informe">🖨️</a>
-            <a href="{% url 'informe_editar' inf.pk %}" class="btn btn-outline btn-sm" title="Editar">✏️</a>
+               title="Imprimir / descargar este informe"><i class="bi bi-printer"></i></a>
+            <a href="{% url 'informe_editar' inf.pk %}" class="btn btn-outline btn-sm" title="Editar"><i class="bi bi-pencil"></i></a>
           </td>
         </tr>
         {% endfor %}
@@ -187,7 +187,7 @@
   </div>
   {% else %}
   <div class="empty-state" style="padding:30px">
-    <span class="empty-icon" style="font-size:2rem">📄</span>
+    <span class="empty-icon" style="font-size:2rem"><i class="bi bi-file-earmark"></i></span>
     <div class="empty-title">Sin informes registrados</div>
     <a href="{% url 'informe_nuevo' %}?estudiante={{ estudiante.pk %}" class="btn btn-primary btn-sm" style="margin-top:10px">+ Crear primer informe</a>
   </div>
@@ -197,9 +197,9 @@
 {% if checkins or usuario_vinculado %}
 <div class="card" style="margin-bottom:20px">
   <div style="padding:16px 20px;border-bottom:1px solid var(--sage-xl);display:flex;justify-content:space-between;align-items:center">
-    <span class="card-title">💚 Historial Emocional (check-ins)</span>
+    <span class="card-title"><i class="bi bi-heart-fill" style="color:#4f8a5a"></i> Historial Emocional (check-ins)</span>
     {% if usuario_vinculado %}
-    <a href="{% url 'bandeja_mensajes_psicologo' %}?con={{ usuario_vinculado.pk }}" class="btn btn-sm btn-outline">💬 Enviar mensaje</a>
+    <a href="{% url 'bandeja_mensajes_psicologo' %}?con={{ usuario_vinculado.pk }}" class="btn btn-sm btn-outline"><i class="bi bi-chat-dots"></i> Enviar mensaje</a>
     {% endif %}
   </div>
   {% if checkins %}
@@ -210,7 +210,7 @@
       <div style="font-size:.72rem;font-weight:600;color:var(--text-s);margin-top:3px">{{ c.get_emocion_display|slice:"3:" }}</div>
       <div style="font-size:.65rem;color:var(--text-xs)">{{ c.fecha|date:"d M" }}</div>
       {% if c.nota_privada %}
-      <div title="{{ c.nota_privada }}" style="cursor:help;font-size:.7rem;color:var(--sage-d);margin-top:3px">📝 nota</div>
+      <div title="{{ c.nota_privada }}" style="cursor:help;font-size:.7rem;color:var(--sage-d);margin-top:3px"><i class="bi bi-pencil"></i> nota</div>
       {% endif %}
     </div>
     {% endfor %}
@@ -220,7 +220,7 @@
     {% if usuario_vinculado %}
       Este estudiante aún no ha registrado check-ins emocionales.
     {% else %}
-      <span style="color:var(--orange)">⚠️ Este estudiante no tiene cuenta vinculada.</span><br>
+      <span style="color:var(--orange)"><i class="bi bi-exclamation-triangle"></i> Este estudiante no tiene cuenta vinculada.</span><br>
       <a href="{% url 'cuentas_estudiantes' %}" style="color:var(--sage-d);font-size:.8rem;font-weight:600">Gestionar cuentas →</a>
     {% endif %}
   </div>

@@ -1,7 +1,7 @@
 {% comment %}recomendaciones_padre.html{% endcomment %}
 {% extends "psicoasis/base_padre.html" %}
 {% block title %}Recomendaciones — PsicoAsis{% endblock %}
-{% block topbar_title %}💡 Recomendaciones{% endblock %}
+{% block topbar_title %}<i class="bi bi-lightbulb"></i> Recomendaciones{% endblock %}
 {% block nav_rec %}active{% endblock %}
 
 {% block content %}
@@ -25,7 +25,7 @@
         <div style="font-size:.8rem;color:var(--text-s);line-height:1.6;margin-bottom:12px;">{{ rec.contenido }}</div>
         {% if rec.hijo %}
         <div style="font-size:.72rem;color:var(--text-xs);margin-bottom:10px;">
-          💡 Relacionado con el estado de <strong>{{ rec.hijo.get_full_name }}</strong>
+          <i class="bi bi-lightbulb"></i> Relacionado con el estado de <strong>{{ rec.hijo.get_full_name }}</strong>
           {% if rec.trigger_emocion %}· emoción: {{ rec.trigger_emocion }}{% endif %}
         </div>
         {% endif %}
@@ -41,7 +41,7 @@
   </div>
 {% else %}
   <div style="text-align:center;padding:60px;color:var(--text-xs);">
-    <div style="font-size:2.5rem;margin-bottom:10px;">💡</div>
+    <div style="font-size:2.5rem;margin-bottom:10px;"><i class="bi bi-lightbulb"></i></div>
     <div style="font-weight:600;margin-bottom:6px;">Aún no tienes recomendaciones</div>
     <div style="font-size:.85rem;">La psicóloga y el sistema te enviarán recursos según el estado emocional de tu hijo/a.</div>
   </div>

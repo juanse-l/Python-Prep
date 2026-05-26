@@ -2,11 +2,11 @@
 {% block title %}Notificaciones — PsicoAsis{% endblock %}
 {% block topbar_title %}Notificaciones{% endblock %}
 {% block topbar_actions %}
-  <a href="{% url 'citas_publicas' %}" class="btn btn-outline btn-sm">📋 Ver solicitudes de cita</a>
+  <a href="{% url 'citas_publicas' %}" class="btn btn-outline btn-sm"><i class="bi bi-clipboard"></i> Ver solicitudes de cita</a>
 {% endblock %}
 {% block content %}
 <div class="page-header">
-  <h1>Notificaciones 🔔</h1>
+  <h1>Notificaciones <i class="bi bi-bell"></i></h1>
   <p>Solicitudes de cita y alertas del sistema</p>
 </div>
 
@@ -15,7 +15,7 @@
   {% for n in notificaciones %}
   <div class="card" style="border-left:4px solid {% if n.tipo == 'cita_publica' %}#7a9e7e{% else %}#a0a8b4{% endif %};{% if n.leida %}opacity:.7{% endif %}">
     <div class="card-body" style="display:flex;gap:16px;align-items:flex-start;padding:18px 20px">
-      <div style="font-size:2rem;flex-shrink:0">{% if n.tipo == 'cita_publica' %}📅{% else %}ℹ️{% endif %}</div>
+      <div style="font-size:2rem;flex-shrink:0">{% if n.tipo == 'cita_publica' %}<i class="bi bi-calendar3"></i>{% else %}<i class="bi bi-info-circle-fill"></i>{% endif %}</div>
       <div style="flex:1">
         <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
           <span style="font-weight:600;font-size:.9rem">{{ n.titulo }}</span>
@@ -48,7 +48,7 @@
 </div>
 {% else %}
 <div class="card"><div class="empty-state">
-  <span class="empty-icon">🔔</span>
+  <span class="empty-icon"><i class="bi bi-bell"></i></span>
   <div class="empty-title">Sin notificaciones</div>
   <p class="empty-desc">Aquí aparecerán las solicitudes de cita y alertas del sistema.</p>
 </div></div>

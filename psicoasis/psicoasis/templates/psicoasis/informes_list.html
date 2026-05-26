@@ -6,7 +6,7 @@
 {% endblock %}
 {% block content %}
 
-<div class="page-header"><h1>Informes 📋</h1><p>Documentación de casos y seguimientos</p></div>
+<div class="page-header"><h1>Informes <i class="bi bi-clipboard"></i></h1><p>Documentación de casos y seguimientos</p></div>
 
 <div class="card">
   {% if informes %}
@@ -27,7 +27,7 @@
   </div>
   {% else %}
   <div class="empty-state">
-    <span class="empty-icon">📋</span>
+    <span class="empty-icon"><i class="bi bi-clipboard"></i></span>
     <div class="empty-title">Sin informes</div>
     <p class="empty-desc">Aún no hay informes creados.</p>
     <a href="{% url 'informe_nuevo' %}" class="btn btn-primary btn-sm">+ Crear informe</a>

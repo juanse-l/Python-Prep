@@ -1,6 +1,6 @@
 {% extends "psicoasis/profesores/base_profesor.html" %}
 {% block title %}Notificaciones — Panel Docente{% endblock %}
-{% block topbar_title %}🔔 Notificaciones{% endblock %}
+{% block topbar_title %}<i class="bi bi-bell"></i> Notificaciones{% endblock %}
 {% block content %}
 <div class="card" style="max-width:750px;">
   <div class="card-header">
@@ -12,13 +12,13 @@
       {% for n in notificaciones %}
       <div style="display:flex;gap:14px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--indigo-xxl);{% if not n.leida %}background:var(--indigo-xxl);margin:0 -22px;padding-left:22px;padding-right:22px;{% endif %}">
         <div style="font-size:1.4rem;min-width:28px;text-align:center;">
-          {% if n.tipo == 'alerta_respondida' %}✅
-          {% elif n.tipo == 'cita_confirmada' %}📅
-          {% elif n.tipo == 'cita_cancelada' %}❌
-          {% elif n.tipo == 'mensaje_nuevo' %}💬
-          {% elif n.tipo == 'recurso_compartido' %}📎
-          {% elif n.tipo == 'caso_derivado' %}🗂️
-          {% else %}🔔{% endif %}
+          {% if n.tipo == 'alerta_respondida' %}<i class="bi bi-check-circle-fill"></i>
+          {% elif n.tipo == 'cita_confirmada' %}<i class="bi bi-calendar3"></i>
+          {% elif n.tipo == 'cita_cancelada' %}<i class="bi bi-x-circle-fill"></i>
+          {% elif n.tipo == 'mensaje_nuevo' %}<i class="bi bi-chat-dots"></i>
+          {% elif n.tipo == 'recurso_compartido' %}<i class="bi bi-paperclip"></i>
+          {% elif n.tipo == 'caso_derivado' %}<i class="bi bi-folder2"></i>
+          {% else %}<i class="bi bi-bell"></i>{% endif %}
         </div>
         <div style="flex:1;">
           <div style="font-weight:{% if not n.leida %}700{% else %}600{% endif %};font-size:.9rem;">{{ n.titulo }}</div>

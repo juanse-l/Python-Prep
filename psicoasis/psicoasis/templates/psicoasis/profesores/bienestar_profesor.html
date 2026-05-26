@@ -1,6 +1,6 @@
 {% extends "psicoasis/profesores/base_profesor.html" %}
 {% block title %}Mi Bienestar — Panel Docente{% endblock %}
-{% block topbar_title %}🧘 Mi Bienestar Semanal{% endblock %}
+{% block topbar_title %}<i class="bi bi-peace"></i> Mi Bienestar Semanal{% endblock %}
 
 {% block extra_head %}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -12,23 +12,23 @@
   <!-- CHECK-IN -->
   <div class="card">
     <div class="card-header">
-      <div class="card-title">🧘 Check-in de esta semana</div>
+      <div class="card-title"><i class="bi bi-peace"></i> Check-in de esta semana</div>
       <div class="card-sub">Cuéntanos cómo te has sentido</div>
     </div>
     <div class="card-body">
       {% if ya_hizo_checkin %}
         <div class="alert alert-success">
-          ✅ Ya registraste tu check-in de esta semana. ¡Gracias por cuidarte!
+          <i class="bi bi-check-circle-fill"></i> Ya registraste tu check-in de esta semana. ¡Gracias por cuidarte!
         </div>
         {% with historial|first as ultimo %}
         {% if ultimo %}
         <div style="text-align:center;padding:20px 0;">
           <div style="font-size:3rem;">
-            {% if ultimo.bienestar == 'excelente' %}😄
-            {% elif ultimo.bienestar == 'bien' %}🙂
-            {% elif ultimo.bienestar == 'regular' %}😐
-            {% elif ultimo.bienestar == 'agotado' %}😔
-            {% else %}😢{% endif %}
+            {% if ultimo.bienestar == 'excelente' %}<i class="bi bi-emoji-laughing"></i>
+            {% elif ultimo.bienestar == 'bien' %}<i class="bi bi-emoji-smile"></i>
+            {% elif ultimo.bienestar == 'regular' %}<i class="bi bi-emoji-neutral"></i>
+            {% elif ultimo.bienestar == 'agotado' %}<i class="bi bi-emoji-frown"></i>
+            {% else %}<i class="bi bi-emoji-tear"></i>{% endif %}
           </div>
           <div style="font-size:1.1rem;font-weight:700;margin-top:8px;">{{ ultimo.get_bienestar_display }}</div>
           <div style="font-size:.8rem;color:var(--text-xs);">Carga laboral: {{ ultimo.get_carga_laboral_display }}</div>
@@ -69,7 +69,7 @@
             {{ form.solicita_atencion }}
             <label style="font-size:.85rem;color:var(--text-s);">Quiero que la psicóloga me contacte esta semana</label>
           </div>
-          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Registrar mi check-in ✅</button>
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center;">Registrar mi check-in <i class="bi bi-check-circle-fill"></i></button>
         </form>
       {% endif %}
     </div>
@@ -78,7 +78,7 @@
   <!-- HISTORIAL -->
   <div class="card">
     <div class="card-header">
-      <div class="card-title">📈 Historial de bienestar</div>
+      <div class="card-title"><i class="bi bi-graph-up"></i> Historial de bienestar</div>
       <div class="card-sub">Últimas {{ historial|length }} semanas</div>
     </div>
     <div class="card-body">
@@ -88,7 +88,7 @@
           const datos = {{ data_grafica|safe }};
           const labels = datos.map(d => d.semana);
           const valores = datos.map(d => d.valor);
-          const emojis = {5:'😄',4:'🙂',3:'😐',2:'😔',1:'😢'};
+          const emojis = {5:'<i class="bi bi-emoji-laughing"></i>',4:'<i class="bi bi-emoji-smile"></i>',3:'<i class="bi bi-emoji-neutral"></i>',2:'<i class="bi bi-emoji-frown"></i>',1:'<i class="bi bi-emoji-tear"></i>'};
           new Chart(document.getElementById('grafica-bienestar'), {
             type: 'line',
             data: {
@@ -128,11 +128,11 @@
           <span style="color:var(--text-xs);"> — {{ ae.get_carga_laboral_display }}</span>
         </div>
         <span>
-          {% if ae.bienestar == 'excelente' %}😄 Excelente
-          {% elif ae.bienestar == 'bien' %}🙂 Bien
-          {% elif ae.bienestar == 'regular' %}😐 Regular
-          {% elif ae.bienestar == 'agotado' %}😔 Agotado/a
-          {% else %}😢 En crisis{% endif %}
+          {% if ae.bienestar == 'excelente' %}<i class="bi bi-emoji-laughing"></i> Excelente
+          {% elif ae.bienestar == 'bien' %}<i class="bi bi-emoji-smile"></i> Bien
+          {% elif ae.bienestar == 'regular' %}<i class="bi bi-emoji-neutral"></i> Regular
+          {% elif ae.bienestar == 'agotado' %}<i class="bi bi-emoji-frown"></i> Agotado/a
+          {% else %}<i class="bi bi-emoji-tear"></i> En crisis{% endif %}
         </span>
       </div>
       {% empty %}

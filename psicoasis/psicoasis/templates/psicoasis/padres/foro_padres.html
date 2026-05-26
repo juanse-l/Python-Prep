@@ -1,6 +1,6 @@
 {% extends "psicoasis/base_padre.html" %}
 {% block title %}Foro de Padres — PsicoAsis{% endblock %}
-{% block topbar_title %}💬 Foro de Padres{% endblock %}
+{% block topbar_title %}<i class="bi bi-chat-dots"></i> Foro de Padres{% endblock %}
 {% block nav_foro %}active{% endblock %}
 
 {% block content %}
@@ -29,11 +29,11 @@
         <div class="card-body" style="padding:16px 20px;">
           <div style="display:flex;align-items:flex-start;gap:14px;">
             <div class="item-av" style="background:linear-gradient(135deg,#c4bfe6,#7a72a8);">
-              {% if tema.es_anonimo %}👤{% else %}{{ tema.autor_display|first|upper }}{% endif %}
+              {% if tema.es_anonimo %}<i class="bi bi-person"></i>{% else %}{{ tema.autor_display|first|upper }}{% endif %}
             </div>
             <div style="flex:1;">
               <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
-                {% if tema.fijado %}<span style="font-size:.7rem;background:#ffe4cc;color:#7a3200;padding:2px 8px;border-radius:20px;font-weight:700;">📌 Fijado</span>{% endif %}
+                {% if tema.fijado %}<span style="font-size:.7rem;background:#ffe4cc;color:#7a3200;padding:2px 8px;border-radius:20px;font-weight:700;"><i class="bi bi-pin-fill"></i> Fijado</span>{% endif %}
                 {% if tema.destacado %}<span style="font-size:.7rem;background:#fff3cc;color:#7a5500;padding:2px 8px;border-radius:20px;font-weight:700;">⭐ Destacado</span>{% endif %}
                 <span style="font-size:.7rem;background:var(--sage-xxl);color:var(--sage-d);padding:2px 8px;border-radius:20px;">{{ tema.get_categoria_display }}</span>
               </div>
@@ -44,9 +44,9 @@
               <div style="font-size:.78rem;color:var(--text-s);margin-top:4px;">{{ tema.descripcion|truncatechars:100 }}</div>
               {% endif %}
               <div style="font-size:.7rem;color:var(--text-xs);margin-top:8px;display:flex;gap:14px;">
-                <span>👤 {{ tema.autor_display }}</span>
-                <span>🕐 {{ tema.fecha_creacion|date:"d/m/Y" }}</span>
-                <span>💬 {{ tema.total_respuestas }} respuesta{{ tema.total_respuestas|pluralize }}</span>
+                <span><i class="bi bi-person"></i> {{ tema.autor_display }}</span>
+                <span><i class="bi bi-clock"></i> {{ tema.fecha_creacion|date:"d/m/Y" }}</span>
+                <span><i class="bi bi-chat-dots"></i> {{ tema.total_respuestas }} respuesta{{ tema.total_respuestas|pluralize }}</span>
               </div>
             </div>
             {% if es_psicologo %}
@@ -66,7 +66,7 @@
       {% endfor %}
     {% else %}
       <div style="text-align:center;padding:40px;color:var(--text-xs);">
-        <div style="font-size:2rem;margin-bottom:10px;">🌿</div>
+        <div style="font-size:2rem;margin-bottom:10px;"><i class="bi bi-flower2"></i></div>
         <div>Aún no hay temas en esta categoría. ¡Sé el primero en publicar!</div>
       </div>
     {% endif %}
@@ -77,7 +77,7 @@
     {% if es_padre %}
     <div class="card">
       <div class="card-header">
-        <div class="card-title">✍️ Crear nuevo tema</div>
+        <div class="card-title"><i class="bi bi-pencil"></i>️ Crear nuevo tema</div>
         <div class="card-sub">Comparte tu experiencia o pregunta</div>
       </div>
       <div class="card-body">
@@ -99,7 +99,7 @@
             {{ form.es_anonimo }}
             <label style="font-size:.82rem;color:var(--text-s);">Publicar de forma anónima</label>
           </div>
-          {% if form.errors %}<div class="alert-card alert-alta">❌ {{ form.errors }}</div>{% endif %}
+          {% if form.errors %}<div class="alert-card alert-alta"><i class="bi bi-x-circle-fill"></i> {{ form.errors }}</div>{% endif %}
           <button type="submit" class="btn btn-primary" style="width:100%;">Publicar tema</button>
         </form>
       </div>
@@ -108,7 +108,7 @@
 
     <div class="card" style="margin-top:16px;">
       <div class="card-body">
-        <div style="font-size:.82rem;font-weight:600;color:var(--text);margin-bottom:8px;">💡 Guía del foro</div>
+        <div style="font-size:.82rem;font-weight:600;color:var(--text);margin-bottom:8px;"><i class="bi bi-lightbulb"></i> Guía del foro</div>
         <ul style="font-size:.75rem;color:var(--text-s);padding-left:16px;line-height:1.8;">
           <li>Respeta la experiencia de otros padres</li>
           <li>No compartas información personal de menores</li>

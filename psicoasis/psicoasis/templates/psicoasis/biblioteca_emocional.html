@@ -2,7 +2,7 @@
 {% block title %}Biblioteca Emocional — PsicoAsis{% endblock %}
 {% block topbar_title %}Biblioteca Emocional{% endblock %}
 {% block content %}
-<div class="page-header"><h1>Biblioteca Emocional 📚</h1><p>Recursos educativos sobre emociones, inteligencia emocional y desarrollo personal</p></div>
+<div class="page-header"><h1>Biblioteca Emocional <i class="bi bi-book"></i></h1><p>Recursos educativos sobre emociones, inteligencia emocional y desarrollo personal</p></div>
 
 {% if recursos %}
 <div class="grid-3">{% for r in recursos %}<div class="card"><div class="card-body"><h3>{{ r.titulo }}</h3><p style="font-size:.84rem;color:var(--text-s);line-height:1.7">{{ r.descripcion }}</p></div></div>{% endfor %}</div>
@@ -11,32 +11,32 @@
 <!-- Las 6 emociones básicas -->
 <div style="margin-bottom:12px"><span style="font-family:'Playfair Display',serif;font-size:1.1rem;color:var(--text)">Las 6 Emociones Básicas</span></div>
 <div style="display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:28px">
-  <div style="background:#fff9e6;border-radius:14px;padding:16px;text-align:center"><div style="font-size:1.8rem">😊</div><div style="font-size:.78rem;font-weight:600;color:var(--text);margin-top:6px">Alegría</div><div style="font-size:.7rem;color:var(--text-xs);margin-top:4px">Bienestar · conexión · motivación</div></div>
-  <div style="background:#ffe8e8;border-radius:14px;padding:16px;text-align:center"><div style="font-size:1.8rem">😢</div><div style="font-size:.78rem;font-weight:600;color:var(--text);margin-top:6px">Tristeza</div><div style="font-size:.7rem;color:var(--text-xs);margin-top:4px">Pérdida · reflexión · empatía</div></div>
-  <div style="background:#ffe4c4;border-radius:14px;padding:16px;text-align:center"><div style="font-size:1.8rem">😠</div><div style="font-size:.78rem;font-weight:600;color:var(--text);margin-top:6px">Enojo</div><div style="font-size:.7rem;color:var(--text-xs);margin-top:4px">Injusticia · frustración · límites</div></div>
-  <div style="background:#e8f4e8;border-radius:14px;padding:16px;text-align:center"><div style="font-size:1.8rem">😨</div><div style="font-size:.78rem;font-weight:600;color:var(--text);margin-top:6px">Miedo</div><div style="font-size:.7rem;color:var(--text-xs);margin-top:4px">Peligro · incertidumbre · cautela</div></div>
-  <div style="background:#e8e8f8;border-radius:14px;padding:16px;text-align:center"><div style="font-size:1.8rem">🤢</div><div style="font-size:.78rem;font-weight:600;color:var(--text);margin-top:6px">Asco</div><div style="font-size:.7rem;color:var(--text-xs);margin-top:4px">Rechazo · valores · protección</div></div>
-  <div style="background:#f8e8f8;border-radius:14px;padding:16px;text-align:center"><div style="font-size:1.8rem">😲</div><div style="font-size:.78rem;font-weight:600;color:var(--text);margin-top:6px">Sorpresa</div><div style="font-size:.7rem;color:var(--text-xs);margin-top:4px">Novedad · adaptación · alerta</div></div>
+  <div style="background:#fff9e6;border-radius:14px;padding:16px;text-align:center"><div style="font-size:1.8rem"><i class="bi bi-emoji-smile"></i></div><div style="font-size:.78rem;font-weight:600;color:var(--text);margin-top:6px">Alegría</div><div style="font-size:.7rem;color:var(--text-xs);margin-top:4px">Bienestar · conexión · motivación</div></div>
+  <div style="background:#ffe8e8;border-radius:14px;padding:16px;text-align:center"><div style="font-size:1.8rem"><i class="bi bi-emoji-tear"></i></div><div style="font-size:.78rem;font-weight:600;color:var(--text);margin-top:6px">Tristeza</div><div style="font-size:.7rem;color:var(--text-xs);margin-top:4px">Pérdida · reflexión · empatía</div></div>
+  <div style="background:#ffe4c4;border-radius:14px;padding:16px;text-align:center"><div style="font-size:1.8rem"><i class="bi bi-emoji-angry"></i></div><div style="font-size:.78rem;font-weight:600;color:var(--text);margin-top:6px">Enojo</div><div style="font-size:.7rem;color:var(--text-xs);margin-top:4px">Injusticia · frustración · límites</div></div>
+  <div style="background:#e8f4e8;border-radius:14px;padding:16px;text-align:center"><div style="font-size:1.8rem"><i class="bi bi-emoji-frown"></i></div><div style="font-size:.78rem;font-weight:600;color:var(--text);margin-top:6px">Miedo</div><div style="font-size:.7rem;color:var(--text-xs);margin-top:4px">Peligro · incertidumbre · cautela</div></div>
+  <div style="background:#e8e8f8;border-radius:14px;padding:16px;text-align:center"><div style="font-size:1.8rem"><i class="bi bi-emoji-frown"></i></div><div style="font-size:.78rem;font-weight:600;color:var(--text);margin-top:6px">Asco</div><div style="font-size:.7rem;color:var(--text-xs);margin-top:4px">Rechazo · valores · protección</div></div>
+  <div style="background:#f8e8f8;border-radius:14px;padding:16px;text-align:center"><div style="font-size:1.8rem"><i class="bi bi-emoji-surprise"></i></div><div style="font-size:.78rem;font-weight:600;color:var(--text);margin-top:6px">Sorpresa</div><div style="font-size:.7rem;color:var(--text-xs);margin-top:4px">Novedad · adaptación · alerta</div></div>
 </div>
 
 <div class="grid-2 mb-4">
   <div class="card">
     <div class="card-body">
-      <div style="font-size:1.8rem;margin-bottom:12px">🧠</div>
+      <div style="font-size:1.8rem;margin-bottom:12px"><i class="bi bi-cpu"></i></div>
       <h3 style="font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:10px">Inteligencia Emocional</h3>
       <p style="font-size:.84rem;color:var(--text-s);line-height:1.8;margin-bottom:14px">La IE es la capacidad de reconocer, comprender y gestionar nuestras emociones y las de los demás. Es tan importante como el coeficiente intelectual.</p>
       <div style="display:flex;flex-direction:column;gap:8px">
-        <div style="display:flex;gap:10px;font-size:.8rem"><span>🔍</span><div><strong>Autoconciencia</strong> — Reconocer mis propias emociones</div></div>
-        <div style="display:flex;gap:10px;font-size:.8rem"><span>🎛️</span><div><strong>Autorregulación</strong> — Gestionar impulsos y emociones</div></div>
-        <div style="display:flex;gap:10px;font-size:.8rem"><span>🚀</span><div><strong>Motivación</strong> — Orientarse a metas con energía emocional</div></div>
-        <div style="display:flex;gap:10px;font-size:.8rem"><span>🫶</span><div><strong>Empatía</strong> — Comprender las emociones de otros</div></div>
-        <div style="display:flex;gap:10px;font-size:.8rem"><span>🤝</span><div><strong>Habilidades sociales</strong> — Relacionarse de forma efectiva</div></div>
+        <div style="display:flex;gap:10px;font-size:.8rem"><span><i class="bi bi-search"></i></span><div><strong>Autoconciencia</strong> — Reconocer mis propias emociones</div></div>
+        <div style="display:flex;gap:10px;font-size:.8rem"><span><i class="bi bi-sliders"></i>️</span><div><strong>Autorregulación</strong> — Gestionar impulsos y emociones</div></div>
+        <div style="display:flex;gap:10px;font-size:.8rem"><span><i class="bi bi-rocket"></i></span><div><strong>Motivación</strong> — Orientarse a metas con energía emocional</div></div>
+        <div style="display:flex;gap:10px;font-size:.8rem"><span><i class="bi bi-heart-fill"></i></span><div><strong>Empatía</strong> — Comprender las emociones de otros</div></div>
+        <div style="display:flex;gap:10px;font-size:.8rem"><span><i class="bi bi-handshake"></i></span><div><strong>Habilidades sociales</strong> — Relacionarse de forma efectiva</div></div>
       </div>
     </div>
   </div>
   <div class="card">
     <div class="card-body">
-      <div style="font-size:1.8rem;margin-bottom:12px">📖</div>
+      <div style="font-size:1.8rem;margin-bottom:12px"><i class="bi bi-book-open"></i></div>
       <h3 style="font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:10px">Lecturas Recomendadas</h3>
       <div style="display:flex;flex-direction:column;gap:12px">
         <div style="background:var(--sage-xxl);border-radius:10px;padding:12px">
@@ -62,15 +62,15 @@
 <!-- Termómetro emocional -->
 <div class="card">
   <div class="card-body">
-    <div style="font-size:1.8rem;margin-bottom:12px">🌈</div>
+    <div style="font-size:1.8rem;margin-bottom:12px"><i class="bi bi-rainbow"></i></div>
     <h3 style="font-family:'Playfair Display',serif;font-size:1rem;margin-bottom:14px">El Termómetro Emocional</h3>
     <p style="font-size:.84rem;color:var(--text-s);line-height:1.8;margin-bottom:16px">Herramienta para que los estudiantes identifiquen y comuniquen su estado emocional actual. Útil al inicio de clases o sesiones.</p>
     <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;text-align:center">
-      <div style="background:#ffe8e8;border-radius:12px;padding:14px"><div style="font-size:1.6rem">😰</div><div style="font-size:.7rem;font-weight:600;margin-top:6px;color:#c0392b">Muy mal</div><div style="font-size:.65rem;color:var(--text-xs);margin-top:3px">Necesito ayuda</div></div>
-      <div style="background:#ffe4c4;border-radius:12px;padding:14px"><div style="font-size:1.6rem">😟</div><div style="font-size:.7rem;font-weight:600;margin-top:6px;color:#e67e22">Mal</div><div style="font-size:.65rem;color:var(--text-xs);margin-top:3px">Me cuesta hoy</div></div>
-      <div style="background:#fff9e6;border-radius:12px;padding:14px"><div style="font-size:1.6rem">😐</div><div style="font-size:.7rem;font-weight:600;margin-top:6px;color:#f39c12">Regular</div><div style="font-size:.65rem;color:var(--text-xs);margin-top:3px">Más o menos</div></div>
-      <div style="background:#e8f8e8;border-radius:12px;padding:14px"><div style="font-size:1.6rem">😊</div><div style="font-size:.7rem;font-weight:600;margin-top:6px;color:#27ae60">Bien</div><div style="font-size:.65rem;color:var(--text-xs);margin-top:3px">Me siento bien</div></div>
-      <div style="background:#d4e8d6;border-radius:12px;padding:14px"><div style="font-size:1.6rem">😄</div><div style="font-size:.7rem;font-weight:600;margin-top:6px;color:#1a7a3a">¡Muy bien!</div><div style="font-size:.65rem;color:var(--text-xs);margin-top:3px">Excelente día</div></div>
+      <div style="background:#ffe8e8;border-radius:12px;padding:14px"><div style="font-size:1.6rem"><i class="bi bi-emoji-frown"></i></div><div style="font-size:.7rem;font-weight:600;margin-top:6px;color:#c0392b">Muy mal</div><div style="font-size:.65rem;color:var(--text-xs);margin-top:3px">Necesito ayuda</div></div>
+      <div style="background:#ffe4c4;border-radius:12px;padding:14px"><div style="font-size:1.6rem"><i class="bi bi-emoji-frown"></i></div><div style="font-size:.7rem;font-weight:600;margin-top:6px;color:#e67e22">Mal</div><div style="font-size:.65rem;color:var(--text-xs);margin-top:3px">Me cuesta hoy</div></div>
+      <div style="background:#fff9e6;border-radius:12px;padding:14px"><div style="font-size:1.6rem"><i class="bi bi-emoji-neutral"></i></div><div style="font-size:.7rem;font-weight:600;margin-top:6px;color:#f39c12">Regular</div><div style="font-size:.65rem;color:var(--text-xs);margin-top:3px">Más o menos</div></div>
+      <div style="background:#e8f8e8;border-radius:12px;padding:14px"><div style="font-size:1.6rem"><i class="bi bi-emoji-smile"></i></div><div style="font-size:.7rem;font-weight:600;margin-top:6px;color:#27ae60">Bien</div><div style="font-size:.65rem;color:var(--text-xs);margin-top:3px">Me siento bien</div></div>
+      <div style="background:#d4e8d6;border-radius:12px;padding:14px"><div style="font-size:1.6rem"><i class="bi bi-emoji-laughing"></i></div><div style="font-size:.7rem;font-weight:600;margin-top:6px;color:#1a7a3a">¡Muy bien!</div><div style="font-size:.65rem;color:var(--text-xs);margin-top:3px">Excelente día</div></div>
     </div>
   </div>
 </div>

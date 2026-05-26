@@ -7,7 +7,7 @@
 <title>{% block title %}PsicoAsis{% endblock %}</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
@@ -292,87 +292,87 @@
   <nav class="sb-nav">
     <div class="sb-section">Principal</div>
     <a href="{% url 'dashboard' %}" class="nav-item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
-      <i class="fa-solid fa-house ni-icon"></i> Panel principal
+      <i class="bi bi-house-door ni-icon"></i> Panel principal
     </a>
     <a href="{% url 'notificaciones' %}" class="nav-item {% if 'notificacion' in request.resolver_match.url_name or request.resolver_match.url_name == 'citas_publicas' %}active{% endif %}">
-      <i class="fa-solid fa-bell ni-icon"></i>
+      <i class="bi bi-bell ni-icon"></i>
       <span style="flex:1">Notificaciones</span>
       {% with notif_count=notif_no_leidas %}{% if notif_count %}<span class="nav-badge">{{ notif_count }}</span>{% endif %}{% endwith %}
     </a>
     <div class="sb-section">Comunidad</div>
     <a href="{% url 'estudiantes_list' %}" class="nav-item {% if 'estudiante' in request.resolver_match.url_name or 'caso' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fa-solid fa-user-graduate ni-icon"></i> Estudiantes
+      <i class="bi bi-mortarboard ni-icon"></i> Estudiantes
     </a>
     <a href="{% url 'docentes_list' %}" class="nav-item {% if 'docente' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fa-solid fa-chalkboard-user ni-icon"></i> Docentes
+      <i class="bi bi-person-workspace ni-icon"></i> Docentes
     </a>
     <a href="{% url 'aseo_list' %}" class="nav-item {% if 'aseo' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fa-solid fa-broom ni-icon"></i> Servicio de Aseo
+      <i class="bi bi-brush ni-icon"></i> Servicio de Aseo
     </a>
     <a href="{% url 'reuniones_list' %}" class="nav-item {% if 'reunion' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fa-solid fa-handshake ni-icon"></i> Reuniones
+      <i class="bi bi-handshake ni-icon"></i> Reuniones
     </a>
     <a href="{% url 'calendario' %}" class="nav-item {% if 'calendario' in request.resolver_match.url_name or 'agenda' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fa-solid fa-calendar-days ni-icon"></i> Calendario
+      <i class="bi bi-calendar3 ni-icon"></i> Calendario
     </a>
     <a href="{% url 'informes_list' %}" class="nav-item {% if 'informe' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fa-solid fa-file-lines ni-icon"></i> Informes
+      <i class="bi bi-file-earmark-text ni-icon"></i> Informes
     </a>
     <div class="sb-section">Bienestar</div>
     <a href="{% url 'bienestar' %}" class="nav-item {% if request.resolver_match.url_name in 'bienestar,herramientas_autocuidado,biblioteca_emocional,recursos_multimedia,mini_planes,vlog_salud_mental' %}active{% endif %}">
-      <i class="fa-solid fa-seedling ni-icon"></i> Centro Bienestar
+      <i class="bi bi-flower2 ni-icon"></i> Centro Bienestar
     </a>
     <a href="{% url 'foros' %}" class="nav-item {% if 'foro' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fa-solid fa-comments ni-icon"></i> Foros
+      <i class="bi bi-chat-dots ni-icon"></i> Foros
     </a>
     <div class="sb-section">Comunicación</div>
     <a href="{% url 'bandeja_mensajes_psicologo' %}" class="nav-item {% if 'mensajes' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fa-solid fa-envelope ni-icon"></i> Mensajes estudiantes
+      <i class="bi bi-envelope ni-icon"></i> Mensajes estudiantes
     </a>
     <a href="{% url 'cuentas_estudiantes' %}" class="nav-item {% if 'cuentas' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fa-solid fa-users-gear ni-icon"></i> Cuentas estudiantes
+      <i class="bi bi-people-gear ni-icon"></i> Cuentas estudiantes
     </a>
     <a href="{% url 'foro_emocional_psicologo' %}" class="nav-item {% if 'foro_emocional' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fa-solid fa-heart-pulse ni-icon"></i> Foro Emocional
+      <i class="bi bi-heart-pulse ni-icon"></i> Foro Emocional
     </a>
     <div class="sb-section">Profesores</div>
     <a href="{% url 'profesores_list' %}" class="nav-item {% if 'profesores' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fa-solid fa-person-chalkboard ni-icon"></i> Profesores
+      <i class="bi bi-person-workspace ni-icon"></i> Profesores
     </a>
     <a href="{% url 'alertas_docentes_psicologo' %}" class="nav-item {% if 'alertas_docentes' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fa-solid fa-triangle-exclamation ni-icon"></i> Alertas docentes
+      <i class="bi bi-exclamation-triangle ni-icon"></i> Alertas docentes
     </a>
     <a href="{% url 'bienestar_docentes_psicologo' %}" class="nav-item {% if 'bienestar_docentes' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fa-solid fa-spa ni-icon"></i> Bienestar docente
+      <i class="bi bi-flower1 ni-icon"></i> Bienestar docente
     </a>
     <div class="sb-section">Padres y Tutores</div>
     <a href="{% url 'padres_list' %}" class="nav-item {% if 'padres' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fa-solid fa-people-roof ni-icon"></i> Padres / Tutores
+      <i class="bi bi-house-heart ni-icon"></i> Padres / Tutores
     </a>
     <a href="{% url 'citas_padres_psicologo' %}" class="nav-item {% if 'citas_padres' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fa-solid fa-calendar-check ni-icon"></i> Citas de padres
+      <i class="bi bi-calendar-check ni-icon"></i> Citas de padres
     </a>
     <a href="{% url 'bandeja_mensajes_padres' %}" class="nav-item {% if 'bandeja_mensajes_padres' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fa-solid fa-message ni-icon"></i> Mensajes padres
+      <i class="bi bi-chat ni-icon"></i> Mensajes padres
     </a>
     <div class="sb-section">Inteligencia Artificial</div>
     <a href="{% url 'asistente_ia' %}" class="nav-item {% if 'asistente' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fa-solid fa-robot ni-icon"></i> PsicoIA
+      <i class="bi bi-robot ni-icon"></i> PsicoIA
     </a>
     <div class="sb-section">General</div>
     <a href="{% url 'buscar' %}" class="nav-item {% if 'buscar' in request.resolver_match.url_name %}active{% endif %}">
-      <i class="fa-solid fa-magnifying-glass ni-icon"></i> Buscar
+      <i class="bi bi-search ni-icon"></i> Buscar
     </a>
     <a href="{% url 'home' %}" class="nav-item">
-      <i class="fa-solid fa-globe ni-icon"></i> Sitio público
+      <i class="bi bi-globe ni-icon"></i> Sitio público
     </a>
   </nav>
   <div class="sb-foot">
     <a href="{% url 'registro' %}" class="nav-item" style="margin-bottom:4px">
-      <i class="fa-solid fa-user-plus ni-icon"></i> Nuevo usuario
+      <i class="bi bi-person-plus ni-icon"></i> Nuevo usuario
     </a>
     <a href="{% url 'logout' %}" class="sb-logout">
-      <i class="fa-solid fa-right-from-bracket" style="width:18px;text-align:center;font-size:.8rem"></i>
+      <i class="bi bi-box-arrow-right" style="width:18px;text-align:center;font-size:.8rem"></i>
       Cerrar sesión
     </a>
   </div>
@@ -381,11 +381,11 @@
 <div class="main">
   <header class="topbar">
     <button id="menuBtn" onclick="toggleSidebar()" aria-label="Menú" style="display:none">
-      <i class="fa-solid fa-bars" style="font-size:.87rem"></i>
+      <i class="bi bi-list" style="font-size:.87rem"></i>
     </button>
     <span class="tb-title">{% block topbar_title %}PsicoAsis{% endblock %}</span>
     <form action="{% url 'buscar' %}" method="get" class="tb-search">
-      <i class="fa-solid fa-magnifying-glass tb-search-icon"></i>
+      <i class="bi bi-search tb-search-icon"></i>
       <input type="text" name="q" placeholder="Buscar estudiantes, reuniones..." value="{{ request.GET.q|default:'' }}">
     </form>
     <div class="tb-actions">{% block topbar_actions %}{% endblock %}</div>
@@ -395,7 +395,7 @@
   <div class="messages">
     {% for m in messages %}
     <div class="msg {% if m.tags == 'error' %}msg-err{% elif m.tags == 'success' %}msg-ok{% else %}msg-info{% endif %}">
-      <i class="fa-solid {% if m.tags == 'error' %}fa-circle-xmark{% elif m.tags == 'success' %}fa-circle-check{% else %}fa-circle-info{% endif %}" style="font-size:.88rem;flex-shrink:0"></i>
+      <i class="bi {% if m.tags == 'error' %}bi-x-circle-fill{% elif m.tags == 'success' %}bi-check-circle-fill{% else %}bi-info-circle-fill{% endif %}" style="font-size:.88rem;flex-shrink:0"></i>
       {{ m }}
     </div>
     {% endfor %}

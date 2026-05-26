@@ -1,10 +1,10 @@
 {% extends 'psicoasis/base.html' %}
 {% block title %}Mensajes de Estudiantes — PsicoAsis{% endblock %}
-{% block topbar_title %}💬 Mensajes de Estudiantes{% endblock %}
+{% block topbar_title %}<i class="bi bi-chat-dots"></i> Mensajes de Estudiantes{% endblock %}
 {% block content %}
 
 <div class="page-header">
-  <h1>💬 Mensajes de Estudiantes</h1>
+  <h1><i class="bi bi-chat-dots"></i> Mensajes de Estudiantes</h1>
   <p>Conversaciones privadas con tus estudiantes.</p>
 </div>
 
@@ -59,7 +59,7 @@
       {% for m in mensajes_chat %}
       <div style="display:flex;flex-direction:column;{% if m.remitente == request.user %}align-items:flex-end{% else %}align-items:flex-start{% endif %}">
         {% if m.es_anonimo %}
-        <div style="font-size:.63rem;color:var(--text-xs);margin-bottom:2px">🎭 Mensaje anónimo</div>
+        <div style="font-size:.63rem;color:var(--text-xs);margin-bottom:2px"><i class="bi bi-mask"></i> Mensaje anónimo</div>
         {% endif %}
         <div style="max-width:72%;padding:10px 14px;border-radius:14px;font-size:.85rem;line-height:1.6;
           {% if m.remitente == request.user %}
@@ -87,7 +87,7 @@
     {% else %}
     <div style="flex:1;display:flex;align-items:center;justify-content:center;color:var(--text-xs);text-align:center;padding:40px">
       <div>
-        <div style="font-size:3rem;margin-bottom:12px">💬</div>
+        <div style="font-size:3rem;margin-bottom:12px"><i class="bi bi-chat-dots"></i></div>
         Selecciona una conversación de la izquierda para responder.
       </div>
     </div>

@@ -1,10 +1,10 @@
 {% extends 'psicoasis/base.html' %}
 {% block title %}Cuentas de Estudiantes — PsicoAsis{% endblock %}
-{% block topbar_title %}🔗 Cuentas de Estudiantes{% endblock %}
+{% block topbar_title %}<i class="bi bi-link-45deg"></i> Cuentas de Estudiantes{% endblock %}
 {% block content %}
 
 <div class="page-header">
-  <h1>🔗 Cuentas de Estudiantes</h1>
+  <h1><i class="bi bi-link-45deg"></i> Cuentas de Estudiantes</h1>
   <p>Vincula las cuentas de usuario de los estudiantes con sus registros en el sistema.</p>
 </div>
 
@@ -13,7 +13,7 @@
   <!-- Cuentas registradas -->
   <div class="card">
     <div class="card-header">
-      <div class="card-title">👤 Cuentas registradas como estudiante</div>
+      <div class="card-title"><i class="bi bi-person"></i> Cuentas registradas como estudiante</div>
       <div class="card-sub">{{ usuarios_estudiante|length }} cuenta(s) con rol estudiante</div>
     </div>
     <div class="card-body">
@@ -31,11 +31,11 @@
 
         {% if u.perfil.estudiante_vinculado %}
         <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;background:#e8f8ef;border-radius:8px;border:1px solid #b8e6c8">
-          <span style="color:#2d7a50;font-size:.8rem">✅ Vinculado/a con <strong>{{ u.perfil.estudiante_vinculado.get_full_name }}</strong> ({{ u.perfil.estudiante_vinculado.grado }})</span>
+          <span style="color:#2d7a50;font-size:.8rem"><i class="bi bi-check-circle-fill"></i> Vinculado/a con <strong>{{ u.perfil.estudiante_vinculado.get_full_name }}</strong> ({{ u.perfil.estudiante_vinculado.grado }})</span>
         </div>
         {% else %}
         <div style="margin-bottom:10px">
-          <div style="font-size:.72rem;color:var(--orange);font-weight:600;margin-bottom:6px">⚠️ Sin vincular — el estudiante no verá sus citas</div>
+          <div style="font-size:.72rem;color:var(--orange);font-weight:600;margin-bottom:6px"><i class="bi bi-exclamation-triangle"></i> Sin vincular — el estudiante no verá sus citas</div>
         </div>
         <form method="post" action="{% url 'vincular_estudiante' u.pk %}" style="display:flex;gap:8px">
           {% csrf_token %}
@@ -51,7 +51,7 @@
       </div>
       {% empty %}
       <div style="text-align:center;padding:28px;color:var(--text-xs);font-size:.85rem">
-        <div style="font-size:2rem;margin-bottom:8px">👤</div>
+        <div style="font-size:2rem;margin-bottom:8px"><i class="bi bi-person"></i></div>
         Ningún estudiante ha creado cuenta aún.
       </div>
       {% endfor %}
@@ -61,7 +61,7 @@
   <!-- Estudiantes sin cuenta -->
   <div class="card">
     <div class="card-header">
-      <div class="card-title">📋 Estudiantes sin cuenta de acceso</div>
+      <div class="card-title"><i class="bi bi-clipboard"></i> Estudiantes sin cuenta de acceso</div>
       <div class="card-sub">{{ estudiantes_sin_cuenta|length }} estudiante(s) registrados sin cuenta de usuario</div>
     </div>
     <div class="card-body">
@@ -78,14 +78,14 @@
       </div>
       {% empty %}
       <div style="text-align:center;padding:28px;color:var(--text-xs);font-size:.85rem">
-        <div style="font-size:2rem;margin-bottom:8px">✅</div>
+        <div style="font-size:2rem;margin-bottom:8px"><i class="bi bi-check-circle-fill"></i></div>
         ¡Todos los estudiantes registrados tienen cuenta vinculada!
       </div>
       {% endfor %}
 
       {% if estudiantes_sin_cuenta %}
       <div class="alert alert-info" style="margin-top:14px;font-size:.8rem">
-        💡 Pide a los estudiantes que se registren en PsicoAsis con su nombre y correo del colegio. Luego vincúlalos aquí.
+        <i class="bi bi-lightbulb"></i> Pide a los estudiantes que se registren en PsicoAsis con su nombre y correo del colegio. Luego vincúlalos aquí.
       </div>
       {% endif %}
     </div>

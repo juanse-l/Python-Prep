@@ -1,6 +1,6 @@
 {% extends 'psicoasis/base.html' %}
 {% block title %}Asistente IA — PsicoAsis{% endblock %}
-{% block topbar_title %}Asistente IA 🤖{% endblock %}
+{% block topbar_title %}Asistente IA <i class="bi bi-robot"></i>{% endblock %}
 {% block content %}
 <style>
   .chat-wrap { display:flex; flex-direction:column; height:calc(100vh - 200px); min-height:500px; }
@@ -26,7 +26,7 @@
 </style>
 
 <div class="page-header">
-  <h1>🤖 PsicoIA — Asistente de Psicología Escolar</h1>
+  <h1><i class="bi bi-robot"></i> PsicoIA — Asistente de Psicología Escolar</h1>
   <p>Consulta estrategias de intervención, redacción de informes, señales de alerta y más.</p>
 </div>
 
@@ -39,7 +39,7 @@
           <span class="msg-meta">PsicoIA</span>
         </div>
         <div class="bubble">
-¡Hola! Soy <strong>PsicoIA</strong>, tu asistente especializado en psicología escolar integrado en PsicoAsis. 🌿
+¡Hola! Soy <strong>PsicoIA</strong>, tu asistente especializado en psicología escolar integrado en PsicoAsis. <i class="bi bi-flower2"></i>
 
 Puedo ayudarte con:
 • Estrategias de intervención para casos específicos
@@ -62,7 +62,7 @@ Puedo ayudarte con:
       <button class="sugerencia-btn" onclick="usarSugerencia(this)">Estrategias para bajo rendimiento académico</button>
     </div>
 
-    <div class="disclaimer">⚠️ PsicoIA es un apoyo profesional, no reemplaza el juicio clínico. No ingreses datos personales reales de estudiantes.</div>
+    <div class="disclaimer"><i class="bi bi-exclamation-triangle"></i> PsicoIA es un apoyo profesional, no reemplaza el juicio clínico. No ingreses datos personales reales de estudiantes.</div>
 
     <div class="chat-input-area">
       <textarea id="inputMsj" rows="1" placeholder="Escribe tu consulta..." onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
@@ -144,11 +144,11 @@ async function enviarMensaje() {
       agregarMensaje('assistant', data.respuesta);
       historial.push({ role: 'assistant', content: data.respuesta });
     } else {
-      agregarMensaje('assistant', '⚠️ ' + (data.error || 'Ocurrió un error. Verifica que ANTHROPIC_API_KEY esté configurada en el servidor.'));
+      agregarMensaje('assistant', '<i class="bi bi-exclamation-triangle"></i> ' + (data.error || 'Ocurrió un error. Verifica que ANTHROPIC_API_KEY esté configurada en el servidor.'));
     }
   } catch (e) {
     quitarTyping();
-    agregarMensaje('assistant', '⚠️ No pude conectar con el servidor. Inténtalo de nuevo.');
+    agregarMensaje('assistant', '<i class="bi bi-exclamation-triangle"></i> No pude conectar con el servidor. Inténtalo de nuevo.');
   }
   document.getElementById('btnEnviar').disabled = false;
   input.focus();

@@ -5,7 +5,7 @@
 
 {% extends "psicoasis/base_padre.html" %}
 {% block title %}Mis Citas — PsicoAsis{% endblock %}
-{% block topbar_title %}📅 Mis Citas{% endblock %}
+{% block topbar_title %}<i class="bi bi-calendar3"></i> Mis Citas{% endblock %}
 {% block nav_citas %}active{% endblock %}
 
 {% block content %}
@@ -53,9 +53,9 @@
             </div>
           </div>
           {% if form.errors %}
-            <div class="alert-card alert-alta" style="margin-bottom:14px;">❌ {{ form.errors }}</div>
+            <div class="alert-card alert-alta" style="margin-bottom:14px;"><i class="bi bi-x-circle-fill"></i> {{ form.errors }}</div>
           {% endif %}
-          <button type="submit" class="btn btn-primary" style="width:100%;">📅 Solicitar cita</button>
+          <button type="submit" class="btn btn-primary" style="width:100%;"><i class="bi bi-calendar3"></i> Solicitar cita</button>
         </form>
       </div>
     </div>
@@ -65,7 +65,7 @@
   <div>
     {% if proximas_citas %}
     <div class="card">
-      <div class="card-header"><div class="card-title">📌 Próximas citas</div></div>
+      <div class="card-header"><div class="card-title"><i class="bi bi-pin-fill"></i> Próximas citas</div></div>
       <div class="card-body">
         {% for cita in proximas_citas %}
         <div class="item-row">
@@ -76,7 +76,7 @@
           <div class="item-info">
             <div class="item-name">{{ cita.get_tipo_cita_display }}</div>
             <div class="item-meta">{{ cita.hora|time:"H:i" }} · {{ cita.get_motivo_display }}</div>
-            {% if cita.hijo %}<div class="item-meta" style="margin-top:2px;">👧 {{ cita.hijo.get_full_name }}</div>{% endif %}
+            {% if cita.hijo %}<div class="item-meta" style="margin-top:2px;"><i class="bi bi-person"></i> {{ cita.hijo.get_full_name }}</div>{% endif %}
           </div>
           <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px;">
             <span class="badge badge-{{ cita.estado }}">{{ cita.get_estado_display }}</span>
@@ -95,7 +95,7 @@
 
     {% if historial_citas %}
     <div class="card">
-      <div class="card-header"><div class="card-title">🗂️ Historial de citas</div></div>
+      <div class="card-header"><div class="card-title"><i class="bi bi-folder2"></i> Historial de citas</div></div>
       <div class="card-body">
         {% for cita in historial_citas %}
         <div class="item-row" style="opacity:.75;">

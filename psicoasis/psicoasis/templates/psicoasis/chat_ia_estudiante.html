@@ -1,6 +1,6 @@
 {% extends 'psicoasis/base_estudiante.html' %}
 {% block title %}PsicoIA — PsicoAsis{% endblock %}
-{% block topbar_title %}🤖 PsicoIA — Asistente de bienestar{% endblock %}
+{% block topbar_title %}<i class="bi bi-robot"></i> PsicoIA — Asistente de bienestar{% endblock %}
 {% block extra_css %}
 <style>
   .chat-wrap { display:flex; flex-direction:column; height:calc(100vh - 170px); min-height:500px; }
@@ -50,7 +50,7 @@
 
 <div style="margin-bottom:16px">
   <div style="display:flex;align-items:center;gap:12px">
-    <div style="width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--teal),var(--teal-d));display:flex;align-items:center;justify-content:center;font-size:1.4rem">🤖</div>
+    <div style="width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--teal),var(--teal-d));display:flex;align-items:center;justify-content:center;font-size:1.4rem"><i class="bi bi-robot"></i></div>
     <div>
       <h1 style="font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--text)">PsicoIA</h1>
       <p style="font-size:.78rem;color:var(--text-xs)">Tu asistente de bienestar emocional · Privado y seguro · Agenda citas automáticamente</p>
@@ -68,27 +68,27 @@
 
     {% if not historial %}
     <div class="welcome-msg">
-      <div class="big-emoji">💚</div>
-      <h2>Hola, {{ user.first_name|default:"estudiante" }} 👋</h2>
+      <div class="big-emoji"><i class="bi bi-heart-fill" style="color:#4f8a5a"></i></div>
+      <h2>Hola, {{ user.first_name|default:"estudiante" }} <i class="bi bi-hand-wave"></i></h2>
       <p>Soy PsicoIA, tu asistente de bienestar emocional. Puedes contarme cómo te sientes, hacer preguntas sobre emociones o pedir estrategias para situaciones difíciles.<br><br>
-      Si tu consulta lo requiere, <strong>agendaré automáticamente una cita</strong> con tu psicóloga. 🗓️</p>
+      Si tu consulta lo requiere, <strong>agendaré automáticamente una cita</strong> con tu psicóloga. <i class="bi bi-calendar3"></i>️</p>
     </div>
     {% else %}
       {% for conv in historial %}
       <div class="msg-row user">
-        <div class="msg-avatar">🎒</div>
+        <div class="msg-avatar"><i class="bi bi-backpack2"></i></div>
         <div class="msg-bubble-wrap">
           <div class="msg-text">{{ conv.pregunta }}</div>
           <div class="msg-meta">{{ conv.fecha|date:"d M · H:i" }}</div>
         </div>
       </div>
       <div class="msg-row ia">
-        <div class="msg-avatar">🤖</div>
+        <div class="msg-avatar"><i class="bi bi-robot"></i></div>
         <div class="msg-bubble-wrap">
           <div class="msg-text">{{ conv.respuesta|linebreaksbr }}</div>
           {% if conv.cita_sugerida %}
           <div class="cita-card {% if 'urgente' in conv.tema_detectado or 'suicidio' in conv.tema_detectado or 'autolesion' in conv.tema_detectado %}cita-urgente{% endif %}">
-            <strong>🗓️ Cita agendada automáticamente</strong>
+            <strong><i class="bi bi-calendar3"></i>️ Cita agendada automáticamente</strong>
             {{ conv.cita_sugerida.fecha_preferida|date:"l d \d\e F" }} · {{ conv.cita_sugerida.hora_preferida|time:"H:i" }} hrs<br>
             <span style="opacity:.8">Motivo: {{ conv.cita_sugerida.motivo|slice:"6:"|truncatechars:80 }}</span>
           </div>
@@ -106,23 +106,23 @@
 
   <div class="quick-questions" id="quickQuestions">
     <span style="font-size:.72rem;color:var(--text-xs);align-self:center;margin-right:4px">Preguntas rápidas:</span>
-    <button class="quick-btn" onclick="setQuestion('Me siento muy ansioso/a y no sé cómo manejar esta situación')">😰 Tengo ansiedad</button>
-    <button class="quick-btn" onclick="setQuestion('Me he sentido muy triste últimamente y no sé por qué')">😔 Estoy triste</button>
-    <button class="quick-btn" onclick="setQuestion('Tengo problemas con mis compañeros y no sé cómo manejar el conflicto')">🤝 Conflicto con compañeros</button>
-    <button class="quick-btn" onclick="setQuestion('Me cuesta concentrarme en el estudio y mis notas han bajado')">📚 Problemas de estudio</button>
-    <button class="quick-btn" onclick="setQuestion('Necesito estrategias para manejar mejor mis emociones')">💚 Manejar emociones</button>
-    <button class="quick-btn" onclick="setQuestion('Tengo problemas para dormir y me siento muy cansado/a')">😴 Problemas de sueño</button>
+    <button class="quick-btn" onclick="setQuestion('Me siento muy ansioso/a y no sé cómo manejar esta situación')"><i class="bi bi-emoji-frown"></i> Tengo ansiedad</button>
+    <button class="quick-btn" onclick="setQuestion('Me he sentido muy triste últimamente y no sé por qué')"><i class="bi bi-emoji-frown"></i> Estoy triste</button>
+    <button class="quick-btn" onclick="setQuestion('Tengo problemas con mis compañeros y no sé cómo manejar el conflicto')"><i class="bi bi-handshake"></i> Conflicto con compañeros</button>
+    <button class="quick-btn" onclick="setQuestion('Me cuesta concentrarme en el estudio y mis notas han bajado')"><i class="bi bi-book"></i> Problemas de estudio</button>
+    <button class="quick-btn" onclick="setQuestion('Necesito estrategias para manejar mejor mis emociones')"><i class="bi bi-heart-fill" style="color:#4f8a5a"></i> Manejar emociones</button>
+    <button class="quick-btn" onclick="setQuestion('Tengo problemas para dormir y me siento muy cansado/a')"><i class="bi bi-moon-stars"></i> Problemas de sueño</button>
   </div>
 
   <div class="input-area">
     <textarea id="inputPregunta" placeholder="Cuéntame cómo te sientes o qué necesitas..." rows="2"
       onkeydown="if(event.key==='Enter' && !event.shiftKey){event.preventDefault(); enviarMensaje();}"></textarea>
-    <button class="send-btn" id="sendBtn" onclick="enviarMensaje()" title="Enviar (Enter)">➤</button>
+    <button class="send-btn" id="sendBtn" onclick="enviarMensaje()" title="Enviar (Enter)"><i class="bi bi-send-fill"></i></button>
   </div>
 </div>
 
 <div class="alert alert-info" style="margin-top:12px;font-size:.8rem">
-  🔒 <strong>Privacidad:</strong> Tus conversaciones son confidenciales. Solo la psicóloga puede ver el historial y las citas generadas.
+  <i class="bi bi-lock-fill"></i> <strong>Privacidad:</strong> Tus conversaciones son confidenciales. Solo la psicóloga puede ver el historial y las citas generadas.
   · PsicoIA no reemplaza a la psicóloga, es un primer apoyo.
 </div>
 
@@ -158,14 +158,14 @@ function addBubble(text, role, cita) {
   if (cita && cita.agendada) {
     const urgClass = (cita.urgencia === 'urgente') ? 'cita-urgente' : '';
     citaHtml = `<div class="cita-card ${urgClass}">
-      <strong>🗓️ Cita agendada automáticamente</strong>
+      <strong><i class="bi bi-calendar3"></i>️ Cita agendada automáticamente</strong>
       ${cita.fecha} · ${cita.hora} hrs<br>
       <span style="opacity:.8">Motivo: ${cita.motivo}</span>
     </div>`;
   }
 
   const isUser = role === 'user';
-  const avatar = isUser ? '🎒' : '🤖';
+  const avatar = isUser ? '<i class="bi bi-backpack2"></i>' : '<i class="bi bi-robot"></i>';
   const label = isUser ? '' : 'PsicoIA · ';
 
   const div = document.createElement('div');
@@ -211,7 +211,7 @@ async function enviarMensaje() {
     addBubble(data.respuesta || 'Lo siento, hubo un error. Por favor intenta de nuevo.', 'ia', data.cita || null);
   } catch (e) {
     hideTyping();
-    addBubble('Tuve un problema de conexión. Por favor intenta de nuevo en unos momentos. 💚', 'ia', null);
+    addBubble('Tuve un problema de conexión. Por favor intenta de nuevo en unos momentos. <i class="bi bi-heart-fill" style="color:#4f8a5a"></i>', 'ia', null);
   }
   btn.disabled = false;
   input.focus();
