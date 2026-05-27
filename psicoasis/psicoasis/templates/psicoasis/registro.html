@@ -31,7 +31,7 @@
   .lp-logo span { color: var(--sage-l); }
   .lp-tagline { font-size: .75rem; color: rgba(255,255,255,.4); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 4px; }
   .lp-center { position: relative; z-index: 1; text-align: center; flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-  .lp-emoji { font-size: 4rem; margin-bottom: 20px; animation: breathe 4s ease-in-out infinite; }
+  .lp-emoji { font-size: 4rem; margin-bottom: 20px; animation: breathe 4s ease-in-out infinite; color: rgba(255,255,255,.85); line-height: 1; }
   @keyframes breathe { 0%,100%{transform:scale(1)} 50%{transform:scale(1.06)} }
   .lp-headline { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-style: italic; color: white; line-height: 1.35; margin-bottom: 16px; }
   .lp-quote { font-size: .85rem; color: rgba(255,255,255,.5); line-height: 1.8; max-width: 300px; }
@@ -127,7 +127,7 @@
         <label class="rol-card" id="cardPsicologo" onclick="selectRol('psicologo')">
           <input type="radio" name="rol" value="psicologo" {% if not form.rol.value or form.rol.value == 'psicologo' %}checked{% endif %}>
           <div class="rol-check"><i class="bi bi-check2"></i></div>
-          <span class="rol-icon"><i class="bi bi-cpu"></i></span>
+          <span class="rol-icon"><i class="bi bi-person-hearts"></i></span>
           <div class="rol-name">Psicólogo/a</div>
           <div class="rol-desc">Soy parte del equipo de orientación o psicología del colegio</div>
         </label>
@@ -188,7 +188,7 @@
 
 <script>
 const rolData = {
-  psicologo: { emoji: '<i class="bi bi-cpu"></i>', headline: 'Gestiona el bienestar escolar', quote: 'Tu espacio para acompañar a estudiantes, registrar casos y gestionar el bienestar emocional de toda la comunidad.', btn: 'Crear cuenta de psicólogo/a →' },
+  psicologo: { emoji: '<i class="bi bi-person-hearts"></i>', headline: 'Gestiona el bienestar escolar', quote: 'Tu espacio para acompañar a estudiantes, registrar casos y gestionar el bienestar emocional de toda la comunidad.', btn: 'Crear cuenta de psicólogo/a →' },
   estudiante: { emoji: '<i class="bi bi-backpack2"></i>', headline: 'Tu espacio de bienestar', quote: 'Accede a tus citas, registra cómo te sientes cada día, comunícate con la psicóloga y descubre recursos de bienestar.', btn: 'Crear mi cuenta de estudiante →' }
 };
 
@@ -197,7 +197,7 @@ function selectRol(rol) {
   document.getElementById('cardEstudiante').classList.toggle('selected', rol === 'estudiante');
   document.getElementById('campoGrado').style.display = rol === 'estudiante' ? 'block' : 'none';
   const d = rolData[rol];
-  document.getElementById('lpEmoji').textContent = d.emoji;
+  document.getElementById('lpEmoji').innerHTML = d.emoji;
   document.getElementById('lpHeadline').textContent = d.headline;
   document.getElementById('lpQuote').textContent = d.quote;
   document.getElementById('btnSubmit').textContent = d.btn;
